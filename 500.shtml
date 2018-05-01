@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title><!--#echo var="REDIRECT_STATUS" --></title>
+<link href="/styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+
+<div class="horiz">
+  <div class="main">
+  <div class="text">
+  
+<span class="code"><!--#echo var="HTTP_USER_AGENT" --></span> calling from <span class="code"><!--#echo var="REMOTE_ADDR" --></span> coming through <span class="code"><!--#echo var="HTTP_REFERER" --></span>
+crashed to a <span class="code"><!--#echo var="REDIRECT_STATUS" --></span>
+when reaching <span class="code"><!--#echo var="HTTP_HOST" --> <!--#echo var="REQUEST_URI" --></span>
+
+OOOOOOOOOOOOH!
+
+  </div>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+
+RewriteEngine on
+Options All -Indexes
+
+
+
+# BEGIN WordPress
+
+# END WordPress
+
+RewriteCond %{HTTP_HOST} ^.*$
+RewriteRule ^wp\/?$ "http\:\/\/nacho\.saski\.com\/" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^.*$
+RewriteRule ^wp\/feed\/?$ "http\:\/\/nacho\.saski\.com\/feed\/" [R=301,L]
+
+RewriteCond %{HTTP_HOST} ^elenagrimaldi\.es$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.elenagrimaldi\.es$
+RewriteRule ^/?$ "http\:\/\/www\.elenagrimaldiphoto\.com\/" [R=301,L]
+

@@ -1,0 +1,394 @@
+/*body {
+	margin: 0;
+	background:#fff url(../img/fondocolor2.jpg) top left repeat;
+	width:100%;
+	text-align:center;
+}
+*/
+
+body {
+    background-color: black;
+    color: #eeeeee;
+}
+
+body,
+p,
+td,
+pre {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 10px;
+    color: #fff;
+}
+
+a {
+    color: #000000;
+    text-decoration: none
+}
+
+a:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+a:active {
+    background: #000000;
+    color: #ffffff;
+}
+
+.nlnk {
+    color: #000000;
+    text-decoration: underline
+}
+
+.nlnk:hover {
+    background: #000000;
+    color: #ffffff;
+}
+
+.nlnk:active {
+    background: #000000;
+    color: #ffffff;
+}
+
+i {
+    color: #909090;
+    font-style: normal
+}
+
+x {
+    font-size: 1px
+}
+
+pre {
+    padding-bottom: 0px;
+    margin-bottom: 0px
+}
+
+#puerta {
+    margin: 3em auto;
+    width: 640px;
+    height: 480px;
+    background: #fff url(../img/prao.jpg) no-repeat 50% 0%;
+}
+
+#puerta a {
+    display: block;
+    width: 300px;
+    height: 480px;
+}
+
+#izqda a {
+    float: left
+}
+
+#dcha a {
+    float: right
+}
+
+#izqda a:hover {
+    float: left;
+    background: #FF0066 url(../img/prao.jpg) no-repeat 20% 0%;
+    height: 485px;
+}
+
+#dcha a:hover {
+    float: right;
+    background: #FF6600 url(../img/prao.jpg) no-repeat 65% 0%;
+    height: 485px;
+}
+
+#izqda span.letreru {
+    display: none
+}
+
+#dcha span.letreru {
+    display: none
+}
+
+#izqda a:hover span.letreru {
+    display: inline;
+    position: relative;
+    top: 480px;
+    color: #FF0066
+}
+
+#dcha a:hover span.letreru {
+    display: inline;
+    position: relative;
+    top: 480px;
+    color: #FF6600
+}
+
+.menu_active {
+    color: #ffffff;
+    background: #000000;
+    text-decoration: none;
+}
+
+.menu {
+    color: #000000;
+    line-height: 13px;
+}
+
+.sqr {
+    background: #acacac;
+    color: #000000;
+}
+
+.sqr2 {
+    margin-top: 6px;
+    background: #acacac;
+    color: #000000;
+}
+
+.elegant {
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #777777;
+    padding-left: 15px;
+}
+
+#Layer1 {
+    position: absolute;
+    width: 200px;
+    height: 115px;
+    z-index: 1;
+    left: 21px;
+    top: 26px;
+}
+
+#box {
+    border: 1px dotted #ddd;
+    position: absolute;
+    top: 30px;
+    left: 0px;
+    height: 3px;
+    line-height: 3px
+}
+
+#bigCross {
+    position: absolute;
+    /*top:100px;left:280px;*/
+}
+
+#label {
+    float: left;
+    width: 97%;
+    margin: 20px 5px;
+    border-top: 1px solid #99CC33;
+    border-bottom: 1px solid #99CC33;
+    padding: 10px 20px 50px 20px;
+    color: #99CC33;
+    font: bold 40px Georgia, serif;
+    letter-spacing: -3px;
+}
+
+#subtitle {
+    display: block;
+    font-size: 16px;
+    letter-spacing: -1px;
+}
+
+#blogHolder {
+    position: absolute;
+    right: 40px;
+    top: 150px;
+    width: 500px;
+    background-color: #FFFF00;
+    height: 100px;
+    display: none
+}
+
+#feature {
+    float: left;
+    margin: 5px 5px
+}
+
+rss {
+    width: 500px;
+    background: orange;
+}
+
+channel {
+    color: #99CC33;
+    font: bold 10px Georgia, serif;
+    letter-spacing: -3px;
+}
+
+title {
+    color: #99CC33;
+    font: bold 40px Georgia, serif;
+    letter-spacing: -3px;
+}
+
+link {
+    color: #99CC33;
+    font: bold 12px Arial, sans-serif;
+    letter-spacing: -3px;
+}
+
+description {
+    color: #362008
+}
+
+language {
+    color: #99CC33;
+    font: bold 12px Arial, sans-serif;
+    letter-spacing: -3px;
+}
+
+webMasterlink {
+    color: #99CC33;
+    font: bold 12px Arial, sans-serif;
+    letter-spacing: -3px;
+}
+
+-itemlink {
+    color: red;
+    font: bold 12px Arial, sans-serif;
+    letter-spacing: -3px;
+}
+
+item title {
+    color: #99CC33;
+    font: bold 20px Georgia, serif;
+    letter-spacing: -3px;
+}
+
+/* ACIIIED */
+
+#layer1 {
+    position: absolute;
+    width: 200px;
+    height: 115px;
+    z-index: 1;
+    left: 31px;
+    top: 33px;
+}
+
+#layer2 {
+    position: absolute;
+    width: 200px;
+    height: 115px;
+    z-index: 2;
+    left: 29px;
+    top: 28px;
+}
+
+#layer3 {
+    position: absolute;
+    width: 400px;
+    height: 115px;
+    z-index: 3;
+    left: 31px;
+    top: 233px;
+}
+
+#layer31 {
+    position: absolute;
+    width: 400px;
+    height: 115px;
+    z-index: 4;
+    left: 45px;
+    top: 234px;
+}
+
+#layer4 {
+    position: absolute;
+    width: 400px;
+    height: 115px;
+    z-index: 5;
+    left: 31px;
+    top: 433px;
+}
+
+#layer41 {
+    position: absolute;
+    width: 400px;
+    height: 115px;
+    z-index: 6;
+    left: 31px;
+    top: 433px;
+}
+
+#layer42 {
+    position: absolute;
+    width: 400px;
+    height: 39px;
+    z-index: 7;
+    left: 22px;
+    top: 400px;
+}
+
+#layer5 {
+    position: absolute;
+    width: 400px;
+    height: 115px;
+    z-index: 8;
+    left: 31px;
+    top: 633px;
+}
+
+#layer51 {
+    position: absolute;
+    width: 400px;
+    height: 115px;
+    z-index: 9;
+    left: 31px;
+    top: 633px;
+}
+
+.style1 {
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-size: 86px;
+    font-weight: bold;
+    color: #CC00FF;
+    color: #06D6CE;
+}
+
+.style2 {
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-size: 86px;
+    font-weight: bold;
+    color: #fff;
+    letter-spacing: 12px;
+}
+
+.style3 {
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-size: 86px;
+    font-weight: bold;
+    color: #66FF00;
+    color: #29566D;
+    color: #7A4B6C;
+}
+
+.style4 {
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-size: 86px;
+    font-weight: bold;
+    color: #ddd;
+    letter-spacing: 12px;
+}
+
+.style5 {
+    font-family: Arial Black, Arial, Helvetica, sans-serif;
+    font-size: 86px;
+    font-weight: bold;
+    color: #FF00FF;
+    color: #29566D;
+    ;
+    letter-spacing: 12px;
+}
+
+.style6 {
+    color: #3A4925
+}
+
+.style7 {
+    color: #FFFF00;
+    color: #29566D;
+    ;
+    font-style: italic;
+}
