@@ -1,7 +1,7 @@
 # saskiweb - Project Status
 
 **Last Updated**: 2026-03-01  
-**Overall Status**: 🟢 **92% Complete** - FTPS certificate mismatch handling and safer host configuration added
+**Overall Status**: 🟢 **95% Complete** - HTML, CSS, and JS split into dedicated files for clearer boundaries
 
 ---
 
@@ -40,6 +40,24 @@
 - Added opt-in `SITE5_FTPS_INSECURE=1` emergency bypass with explicit warning output.
 - Updated README guidance for `subjectAltName does not match` failures and safe remediation flow.
 - Updated `.env.deploy.example` with FTPS host and emergency override variables.
+
+### XP simple-design refactor for score controls (2026-03-01)
+
+- Added `syncScoreToggleUi(isPlaying)` to centralize score button text and ARIA-label updates.
+- Made `startScore()` idempotent to avoid creating duplicate scheduling intervals.
+- Made `stopScore()` idempotent for safer repeated calls (including unload and future call sites).
+
+### XP simple-design refactor for accent color selection (2026-03-01)
+
+- Added `randomAccentColor(alphaSuffix = '')` helper to remove repeated random color picking expressions.
+- Replaced 4 duplicated inline expressions across harmonic lines, musician accents, stitches, and figure sparks.
+- Kept rendering behavior unchanged while making intent clearer and reducing future edit surface.
+
+### XP simple-design separation of concerns (2026-03-01)
+
+- Extracted inline page styles into `css/index.css` and referenced it from `index.htm`.
+- Extracted inline animation/audio logic into `js/index.js` and referenced it from `index.htm`.
+- Reduced `index.htm` to structure + resource wiring only, improving readability and maintainability.
 
 ---
 
