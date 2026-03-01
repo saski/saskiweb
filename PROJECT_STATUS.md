@@ -1,7 +1,7 @@
 # saskiweb - Project Status
 
 **Last Updated**: 2026-03-01  
-**Overall Status**: 🟢 **95% Complete** - HTML, CSS, and JS split into dedicated files for clearer boundaries
+**Overall Status**: 🟢 **96% Complete** - Scene refresh now user-controlled with dedicated bottom controls
 
 ---
 
@@ -58,6 +58,12 @@
 - Extracted inline page styles into `css/index.css` and referenced it from `index.htm`.
 - Extracted inline animation/audio logic into `js/index.js` and referenced it from `index.htm`.
 - Reduced `index.htm` to structure + resource wiring only, improving readability and maintainability.
+
+### Manual scene refresh control (2026-03-01)
+
+- Removed automatic scene reinitialization timer so the scene no longer refreshes by itself.
+- Added `Reload scene` button next to score control at the bottom of the page.
+- Wired reload action to rebuild the whole scene state (`init()`) and redraw immediately.
 
 ---
 

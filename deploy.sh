@@ -10,6 +10,7 @@ FORCE_FTPS=0
 TARGET_FILE=""
 FULL_DEPLOY=0
 CHANGED_FILES=()
+ALWAYS_DEPLOY_DIRS=("js" "css")
 
 usage() {
   cat <<'USAGE'
@@ -82,12 +83,30 @@ collect_changed_files() {
     fi
   done < <(git ls-files --others --exclude-standard)
 
+  add_always_deploy_files files
+
   if [[ "${#files[@]}" -eq 0 ]]; then
     CHANGED_FILES=()
     return
   fi
 
   mapfile -t CHANGED_FILES < <(printf '%s\n' "${files[@]}" | awk '!seen[$0]++')
+}
+
+add_always_deploy_files() {
+  local -n file_list_ref="$1"
+  local folder
+  local folder_file
+
+  for folder in "${ALWAYS_DEPLOY_DIRS[@]}"; do
+    [[ -d "$folder" ]] || continue
+
+    while IFS= read -r folder_file; do
+      if [[ -n "$folder_file" ]] && ! is_excluded_file "$folder_file"; then
+        file_list_ref+=("$folder_file")
+      fi
+    done < <(find "$folder" -type f)
+  done
 }
 
 is_excluded_file() {

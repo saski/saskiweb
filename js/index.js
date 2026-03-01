@@ -1,6 +1,7 @@
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 const scoreToggle = document.getElementById('scoreToggle');
+const sceneReload = document.getElementById('sceneReload');
 
 let W, H;
 function resize() {
@@ -163,6 +164,11 @@ scoreToggle.addEventListener('click', () => {
   } else {
     startScore();
   }
+});
+
+sceneReload.addEventListener('click', () => {
+  init();
+  drawFrame();
 });
 
 window.addEventListener('beforeunload', stopScore);
@@ -908,8 +914,7 @@ function drawFrame() {
 }
 
 let animationFrameId = null;
-let sceneRefreshTimerId = null;
-function startAutoRefresh() {
+function startAnimation() {
   if (animationFrameId !== null) return;
 
   const animate = () => {
@@ -919,16 +924,10 @@ function startAutoRefresh() {
 
   drawFrame();
   animationFrameId = window.requestAnimationFrame(animate);
-
-  if (sceneRefreshTimerId === null) {
-    sceneRefreshTimerId = window.setInterval(() => {
-      initScene();
-    }, 500);
-  }
 }
 
 if (document.readyState === 'complete') {
-  startAutoRefresh();
+  startAnimation();
 } else {
-  window.addEventListener('load', startAutoRefresh, { once: true });
+  window.addEventListener('load', startAnimation, { once: true });
 }
