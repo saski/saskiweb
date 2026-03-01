@@ -8,6 +8,8 @@ DRY_RUN=0
 CHECK_ONLY=0
 FORCE_FTPS=0
 TARGET_FILE=""
+FULL_DEPLOY=0
+CHANGED_FILES=()
 
 usage() {
   cat <<'USAGE'
@@ -31,6 +33,7 @@ Options:
   --check                      Check if non-interactive SSH is available
   --dry-run                    Print actions without transferring files
   --target-file <path>         Deploy a single file (example: index.htm)
+  --full-site                  Deploy the full site mirror (previous behavior)
   --force-ftps                 Skip SSH/rsync and use FTPS fallback
   -h, --help                   Show this help
 USAGE
@@ -52,6 +55,53 @@ validate_target_file() {
   fi
 }
 
+collect_changed_files() {
+  if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo "Changed-file deploy requires a git repository. Use --full-site instead." >&2
+    exit 1
+  fi
+
+  local -a files=()
+  local changed_file
+
+  while IFS= read -r changed_file; do
+    if [[ -n "$changed_file" ]] && ! is_excluded_file "$changed_file"; then
+      files+=("$changed_file")
+    fi
+  done < <(git diff --name-only --diff-filter=ACMRTUXB)
+
+  while IFS= read -r changed_file; do
+    if [[ -n "$changed_file" ]] && ! is_excluded_file "$changed_file"; then
+      files+=("$changed_file")
+    fi
+  done < <(git diff --cached --name-only --diff-filter=ACMRTUXB)
+
+  while IFS= read -r changed_file; do
+    if [[ -n "$changed_file" ]] && ! is_excluded_file "$changed_file"; then
+      files+=("$changed_file")
+    fi
+  done < <(git ls-files --others --exclude-standard)
+
+  if [[ "${#files[@]}" -eq 0 ]]; then
+    CHANGED_FILES=()
+    return
+  fi
+
+  mapfile -t CHANGED_FILES < <(printf '%s\n' "${files[@]}" | awk '!seen[$0]++')
+}
+
+is_excluded_file() {
+  local file_path="$1"
+  case "$file_path" in
+    .git/*|.git|.DS_Store|deploy.sh|.env*)
+      return 0
+      ;;
+    *)
+      return 1
+      ;;
+  esac
+}
+
 can_use_ssh() {
   ssh \
     -o BatchMode=yes \
@@ -67,7 +117,6 @@ run_rsync() {
   ssh_rsh="ssh -p ${SITE5_SSH_PORT} -o StrictHostKeyChecking=accept-new"
   local -a base_args=(
     -avz
-    --delete
     --exclude=.git/
     --exclude=.gitignore
     --exclude=.DS_Store
@@ -86,8 +135,24 @@ run_rsync() {
     return
   fi
 
-  echo "Deploying full site with rsync over SSH"
-  rsync "${base_args[@]}" ./ "${SITE5_USER}@${SITE5_HOST}:${SITE5_REMOTE_PATH}/"
+  if [[ "$FULL_DEPLOY" -eq 1 ]]; then
+    echo "Deploying full site with rsync over SSH"
+    rsync "${base_args[@]}" --delete ./ "${SITE5_USER}@${SITE5_HOST}:${SITE5_REMOTE_PATH}/"
+    return
+  fi
+
+  if [[ "${#CHANGED_FILES[@]}" -eq 0 ]]; then
+    echo "No changed files detected. Nothing to deploy."
+    return
+  fi
+
+  local changed_file_list
+  changed_file_list="$(mktemp)"
+  printf '%s\n' "${CHANGED_FILES[@]}" > "$changed_file_list"
+  trap 'rm -f "$changed_file_list"' RETURN
+
+  echo "Deploying ${#CHANGED_FILES[@]} changed file(s) with rsync over SSH"
+  rsync "${base_args[@]}" --files-from="$changed_file_list" ./ "${SITE5_USER}@${SITE5_HOST}:${SITE5_REMOTE_PATH}/"
 }
 
 run_ftps() {
@@ -116,8 +181,29 @@ run_ftps() {
       remote_target_dir="${SITE5_REMOTE_PATH}/${target_dir}"
       lftp_cmds="set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate ${ssl_verify_value}; mkdir -p ${remote_target_dir}; put -O ${remote_target_dir} ${TARGET_FILE}; bye"
     fi
-  else
+  elif [[ "$FULL_DEPLOY" -eq 1 ]]; then
     lftp_cmds="set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate ${ssl_verify_value}; mirror --reverse --delete --verbose --exclude-glob .git/ --exclude-glob .env* --exclude-glob .DS_Store --exclude-glob deploy.sh ./ ${SITE5_REMOTE_PATH}; bye"
+  else
+    if [[ "${#CHANGED_FILES[@]}" -eq 0 ]]; then
+      echo "No changed files detected. Nothing to deploy."
+      return
+    fi
+
+    lftp_cmds="set ftp:ssl-force true; set ftp:ssl-protect-data true; set ssl:verify-certificate ${ssl_verify_value};"
+    local changed_file
+    local changed_dir
+    local remote_changed_dir
+    for changed_file in "${CHANGED_FILES[@]}"; do
+      changed_dir="$(dirname "$changed_file")"
+      if [[ "$changed_dir" == "." ]]; then
+        remote_changed_dir="${SITE5_REMOTE_PATH}"
+      else
+        remote_changed_dir="${SITE5_REMOTE_PATH}/${changed_dir}"
+        lftp_cmds+=" mkdir -p ${remote_changed_dir};"
+      fi
+      lftp_cmds+=" put -O ${remote_changed_dir} ${changed_file};"
+    done
+    lftp_cmds+=" bye"
   fi
 
   if [[ "$DRY_RUN" -eq 1 ]]; then
@@ -154,6 +240,10 @@ while [[ $# -gt 0 ]]; do
       fi
       shift 2
       ;;
+    --full-site)
+      FULL_DEPLOY=1
+      shift
+      ;;
     --force-ftps)
       FORCE_FTPS=1
       shift
@@ -177,6 +267,10 @@ SITE5_SSH_PORT="${SITE5_SSH_PORT:-22}"
 
 if [[ -n "$TARGET_FILE" ]]; then
   validate_target_file "$TARGET_FILE"
+fi
+
+if [[ "$CHECK_ONLY" -eq 0 && -z "$TARGET_FILE" && "$FULL_DEPLOY" -eq 0 ]]; then
+  collect_changed_files
 fi
 
 if [[ "$CHECK_ONLY" -eq 1 ]]; then
