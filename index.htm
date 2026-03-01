@@ -35,6 +35,8 @@ const BEIGE_LAYER_1 = '#ddcfaf';
 const BEIGE_LAYER_2 = '#cdbc95';
 const BEIGE_LAYER_3 = '#e8dcc2';
 const BEIGE_LAYER_4 = '#bfae85';
+const BEIGE_LAYER_5 = '#efe4ce';
+const BEIGE_LAYER_6 = '#b7a47a';
 const LIQUID_COLORS = ['#c9b98a','#d8c9a3','#bfaf88','#e2d4b0','#cabb95'];
 const BLACK_BODY = 'rgba(18,12,6,0.92)';
 const WHITE_STITCH = 'rgba(255,252,245,0.88)';
@@ -43,6 +45,7 @@ const ACCENT_COLORS = ['#c0392b','#2471a3','#1e8449','#d4ac0d','#884ea0','#e67e2
 let musicians = [];
 let liquidBlobs = [];
 let stitches = [];
+let figureSparks = [];
 
 // --- LIQUID BACKGROUND BLOBS ---
 function initBlobs() {
@@ -64,8 +67,8 @@ function initBlobs() {
 function drawLiquid(t) {
   // Base de beige en capas superpuestas (sin depender de imágenes)
   const baseGrad = ctx.createLinearGradient(0, 0, W, H);
-  baseGrad.addColorStop(0, BEIGE_LAYER_3);
-  baseGrad.addColorStop(0.45, BEIGE_BG);
+  baseGrad.addColorStop(0, BEIGE_LAYER_5);
+  baseGrad.addColorStop(0.38, BEIGE_BG);
   baseGrad.addColorStop(1, BEIGE_LAYER_1);
   ctx.fillStyle = baseGrad;
   ctx.fillRect(0, 0, W, H);
@@ -86,6 +89,26 @@ function drawLiquid(t) {
   g3.addColorStop(0, BEIGE_LAYER_4 + '4a');
   g3.addColorStop(1, BEIGE_LAYER_4 + '00');
   ctx.fillStyle = g3;
+  ctx.fillRect(0, 0, W, H);
+
+  const g4 = ctx.createRadialGradient(W * 0.5, H * 0.48, 0, W * 0.5, H * 0.48, Math.max(W, H) * 0.72);
+  g4.addColorStop(0, BEIGE_LAYER_5 + '55');
+  g4.addColorStop(1, BEIGE_LAYER_5 + '00');
+  ctx.fillStyle = g4;
+  ctx.fillRect(0, 0, W, H);
+
+  const drift = Math.sin(t * 0.0032) * 0.04;
+  const g5 = ctx.createLinearGradient(0, H * (0.2 + drift), W, H * (0.95 - drift));
+  g5.addColorStop(0, BEIGE_LAYER_6 + '1f');
+  g5.addColorStop(0.5, BEIGE_LAYER_2 + '00');
+  g5.addColorStop(1, BEIGE_LAYER_6 + '28');
+  ctx.fillStyle = g5;
+  ctx.fillRect(0, 0, W, H);
+
+  const edge = ctx.createRadialGradient(W * 0.5, H * 0.55, Math.min(W, H) * 0.25, W * 0.5, H * 0.55, Math.max(W, H) * 0.78);
+  edge.addColorStop(0, 'rgba(0,0,0,0)');
+  edge.addColorStop(1, 'rgba(70,50,20,0.12)');
+  ctx.fillStyle = edge;
   ctx.fillRect(0, 0, W, H);
 
   // Blobs orgánicos que se mueven lentamente
@@ -194,6 +217,24 @@ class Musician {
       headPhase: Math.random() * Math.PI * 2,
       nodShape: 0.45 + Math.random() * 0.45,
     };
+
+    this.jitter = {
+      headHz1: 0.008 + Math.random() * 0.025,
+      headHz2: 0.02 + Math.random() * 0.055,
+      armLHz1: 0.012 + Math.random() * 0.03,
+      armLHz2: 0.026 + Math.random() * 0.06,
+      armRHz1: 0.011 + Math.random() * 0.03,
+      armRHz2: 0.024 + Math.random() * 0.06,
+      headP1: Math.random() * Math.PI * 2,
+      headP2: Math.random() * Math.PI * 2,
+      armLP1: Math.random() * Math.PI * 2,
+      armLP2: Math.random() * Math.PI * 2,
+      armRP1: Math.random() * Math.PI * 2,
+      armRP2: Math.random() * Math.PI * 2,
+      headAmp: 0.18 + Math.random() * 0.45,
+      armLAmp: 0.25 + Math.random() * 0.65,
+      armRAmp: 0.25 + Math.random() * 0.65,
+    };
   }
 
   _o(key, t) { // oscillator shorthand
@@ -228,6 +269,15 @@ class Musician {
     const rHead = this._r('head', t);
     const rArmL = this._r('armL', t);
     const rArmR = this._r('armR', t);
+    const jHead =
+      Math.sin(t * this.jitter.headHz1 + this.jitter.headP1) * this.jitter.headAmp +
+      Math.sin(t * this.jitter.headHz2 + this.jitter.headP2) * this.jitter.headAmp * 0.55;
+    const jArmL =
+      Math.sin(t * this.jitter.armLHz1 + this.jitter.armLP1) * this.jitter.armLAmp +
+      Math.sin(t * this.jitter.armLHz2 + this.jitter.armLP2) * this.jitter.armLAmp * 0.5;
+    const jArmR =
+      Math.sin(t * this.jitter.armRHz1 + this.jitter.armRP1) * this.jitter.armRAmp +
+      Math.sin(t * this.jitter.armRHz2 + this.jitter.armRP2) * this.jitter.armRAmp * 0.5;
 
     ctx.save();
     ctx.translate(this.x, this.y);
@@ -240,16 +290,16 @@ class Musician {
     if (this.variant === 0) {
       // violinista
       this._bodyStroke(s, oBody);
-      ctx.moveTo(-s*0.35, -s*0.2 + oAL*0.3 + rArmL*s*0.06);
-      ctx.lineTo(-s*0.7,  -s*0.55 + oAL + rArmL*s*0.08);
+      ctx.moveTo(-s*0.35, -s*0.2 + oAL*0.3 + rArmL*s*0.06 + jArmL*s*0.025);
+      ctx.lineTo(-s*0.7,  -s*0.55 + oAL + rArmL*s*0.08 + jArmL*s*0.035);
       ctx.stroke();
       ctx.beginPath();
       ctx.ellipse(-s*0.7, -s*0.6 + oInst, s*0.13, s*0.28, -0.4 + oInst*0.04, 0, Math.PI*2);
       ctx.fill();
       // arco
       ctx.beginPath();
-      ctx.moveTo(s*0.2,  -s*0.4 + oAR*0.3 + rArmR*s*0.05);
-      ctx.lineTo(s*0.75, -s*0.1 + oBow*0.5 + rArmR*s*0.08);
+      ctx.moveTo(s*0.2,  -s*0.4 + oAR*0.3 + rArmR*s*0.05 + jArmR*s*0.02);
+      ctx.lineTo(s*0.75, -s*0.1 + oBow*0.5 + rArmR*s*0.08 + jArmR*s*0.03);
       ctx.lineWidth = s*0.05;
       ctx.strokeStyle = WHITE_STITCH;
       ctx.stroke();
@@ -258,14 +308,14 @@ class Musician {
       // cellista
       this._bodyStroke(s * 1.1, oBody);
       ctx.moveTo(0,     s*0.1);
-      ctx.lineTo(s*0.2, s*0.55 + oAR*0.4 + rArmR*s*0.06);
+      ctx.lineTo(s*0.2, s*0.55 + oAR*0.4 + rArmR*s*0.06 + jArmR*s*0.03);
       ctx.stroke();
       ctx.beginPath();
       ctx.ellipse(s*0.25, s*0.55 + oInst, s*0.18, s*0.42, 0.25 + oInst*0.03, 0, Math.PI*2);
       ctx.fill();
       ctx.beginPath();
-      ctx.moveTo(-s*0.3,  oAL*0.3 + rArmL*s*0.05);
-      ctx.lineTo( s*0.55, s*0.35 + oBow*0.4 + rArmR*s*0.08);
+      ctx.moveTo(-s*0.3,  oAL*0.3 + rArmL*s*0.05 + jArmL*s*0.02);
+      ctx.lineTo( s*0.55, s*0.35 + oBow*0.4 + rArmR*s*0.08 + jArmR*s*0.03);
       ctx.lineWidth = s*0.05;
       ctx.strokeStyle = WHITE_STITCH;
       ctx.stroke();
@@ -274,9 +324,9 @@ class Musician {
       // viento
       this._bodyStroke(s, oBody);
       ctx.moveTo(-s*0.25, -s*0.25);
-      ctx.lineTo(-s*0.28,  s*0.15 + oAL*0.4 + rArmL*s*0.05);
+      ctx.lineTo(-s*0.28,  s*0.15 + oAL*0.4 + rArmL*s*0.05 + jArmL*s*0.025);
       ctx.moveTo( s*0.25, -s*0.25);
-      ctx.lineTo( s*0.28,  s*0.15 + oAR*0.4 + rArmR*s*0.05);
+      ctx.lineTo( s*0.28,  s*0.15 + oAR*0.4 + rArmR*s*0.05 + jArmR*s*0.025);
       ctx.stroke();
       ctx.beginPath();
       ctx.roundRect(-s*0.07, -s*0.25 + oInst*0.2, s*0.14, s*0.7, s*0.04);
@@ -285,8 +335,8 @@ class Musician {
     } else {
       // metales
       this._bodyStroke(s, oBody);
-      ctx.moveTo(s*0.3,  -s*0.1 + oAR*0.3 + rArmR*s*0.05);
-      ctx.lineTo(s*0.65, -s*0.05 + oInst*0.4 + rArmR*s*0.06);
+      ctx.moveTo(s*0.3,  -s*0.1 + oAR*0.3 + rArmR*s*0.05 + jArmR*s*0.02);
+      ctx.lineTo(s*0.65, -s*0.05 + oInst*0.4 + rArmR*s*0.06 + jArmR*s*0.03);
       ctx.stroke();
       ctx.beginPath();
       ctx.arc(s*0.72, -s*0.05 + oInst*0.4, s*0.2, 0, Math.PI*2);
@@ -296,12 +346,24 @@ class Musician {
     // Cabeza — su propio ritmo
     ctx.fillStyle = BLACK_BODY;
     ctx.beginPath();
-    ctx.arc(oHead * 0.08 + rHead * s * 0.018, -s*0.82 + oHead*0.12 + rHead * s * 0.028, s*0.18, 0, Math.PI*2);
+    ctx.arc(
+      oHead * 0.08 + rHead * s * 0.018 + jHead * s * 0.014,
+      -s*0.82 + oHead*0.12 + rHead * s * 0.028 + jHead * s * 0.02,
+      s*0.18,
+      0,
+      Math.PI*2
+    );
     ctx.fill();
 
     // Collar blanco
     ctx.beginPath();
-    ctx.arc(oHead * 0.05 + rHead * s * 0.012, -s*0.6 + rHead * s * 0.01, s*0.09, 0, Math.PI*2);
+    ctx.arc(
+      oHead * 0.05 + rHead * s * 0.012 + jHead * s * 0.008,
+      -s*0.6 + rHead * s * 0.01 + jHead * s * 0.008,
+      s*0.09,
+      0,
+      Math.PI*2
+    );
     ctx.fillStyle = WHITE_STITCH;
     ctx.fill();
 
@@ -360,6 +422,48 @@ class Stitch {
   }
 }
 
+class FigureSpark {
+  constructor() { this.reset(true); }
+  reset(init) {
+    const cx = W * 0.5;
+    const cy = H * 0.56;
+    const spreadX = Math.min(W, H) * (0.2 + Math.random() * 0.16);
+    const spreadY = Math.min(W, H) * (0.1 + Math.random() * 0.12);
+    this.x = cx + (Math.random() - 0.5) * spreadX * 2;
+    this.y = cy + (Math.random() - 0.5) * spreadY * 2;
+    this.vx = (Math.random() - 0.5) * 0.45;
+    this.vy = -0.08 - Math.random() * 0.28;
+    this.size = 1.2 + Math.random() * 3.1;
+    this.color = ACCENT_COLORS[Math.floor(Math.random() * ACCENT_COLORS.length)];
+    this.life = init ? Math.random() : 0;
+    this.speed = 0.01 + Math.random() * 0.025;
+    this.maxLife = 0.45 + Math.random() * 0.55;
+    this.twinkle = 0.04 + Math.random() * 0.08;
+    this.phase = Math.random() * Math.PI * 2;
+  }
+  draw(t) {
+    this.life += this.speed;
+    if (this.life > this.maxLife) this.reset(false);
+    this.x += this.vx + Math.sin(t * this.twinkle + this.phase) * 0.25;
+    this.y += this.vy + Math.cos(t * this.twinkle * 0.7 + this.phase) * 0.16;
+    const alpha = Math.sin((this.life / this.maxLife) * Math.PI);
+    ctx.save();
+    ctx.globalAlpha = alpha * 0.85;
+    const glow = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size * 2.8);
+    glow.addColorStop(0, this.color + 'ee');
+    glow.addColorStop(1, this.color + '00');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * 2.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = this.color + 'ff';
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * 0.65, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
 function init() {
   initBlobs();
   musicians = [];
@@ -400,6 +504,8 @@ function init() {
   // Stitches
   stitches = [];
   for (let i = 0; i < 180; i++) stitches.push(new Stitch());
+  figureSparks = [];
+  for (let i = 0; i < 120; i++) figureSparks.push(new FigureSpark());
 
   initHarmonicLines();
 }
@@ -420,6 +526,7 @@ function loop() {
 
   // Capa 3: pespuntes blancos y de color
   for (const s of stitches) s.draw(t);
+  for (const fs of figureSparks) fs.draw(t);
 
   // Capa 4: líneas armónicas que caen
   drawHarmonicLines(t);
