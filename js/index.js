@@ -102,18 +102,17 @@ function scheduleScore() {
   const lookAhead = 0.18;
 
   while (score.nextTime < audioCtx.currentTime + lookAhead) {
-    const scaleLen = score.scale.length;
-    const arpLen = score.arp.length;
-
-    const upIdx = score.beat % scaleLen;
-    const downIdx = (scaleLen - 1) - (score.beat % scaleLen);
-    const arpUpIdx = score.beat % arpLen;
-    const arpDownIdx = (arpLen - 1) - (score.beat % arpLen);
-
-    const upScaleMidi = score.baseMidi + score.scale[upIdx];
-    const downScaleMidi = score.baseMidi + 12 + score.scale[downIdx];
-    const upArpMidi = score.baseMidi - 12 + score.arp[arpUpIdx];
-    const downArpMidi = score.baseMidi + score.arp[arpDownIdx];
+    const {
+      upScaleMidi,
+      downScaleMidi,
+      upArpMidi,
+      downArpMidi,
+    } = window.ScoreNoteSelection.getScheduledMidiNotes({
+      beat: score.beat,
+      baseMidi: score.baseMidi,
+      scale: score.scale,
+      arp: score.arp,
+    });
 
     playCelloNote(score.nextTime, upScaleMidi, step * 1.35, 0.045, -0.34);
     playCelloNote(score.nextTime, downScaleMidi, step * 1.35, 0.038, 0.32);

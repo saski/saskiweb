@@ -53,6 +53,14 @@
 - Replaced 4 duplicated inline expressions across harmonic lines, musician accents, stitches, and figure sparks.
 - Kept rendering behavior unchanged while making intent clearer and reducing future edit surface.
 
+### XP simple-design refactor for score note selection (2026-03-01)
+
+- Added `js/score-note-selection.js` with `getScheduledMidiNotes(...)` to centralize ascending/descending note picking logic.
+- Updated `scheduleScore()` in `js/index.js` to call the shared helper instead of duplicating index math.
+- Added one focused Node test in `tests/score-note-selection.test.js` and validated it with `node --test`.
+- Loaded the new helper in `index.htm` before `js/index.js` to preserve runtime behavior.
+- Added one additional wrap-around test case to verify modulo cycling behavior when `beat` exceeds `scale`/`arp` lengths.
+
 ### XP simple-design separation of concerns (2026-03-01)
 
 - Extracted inline page styles into `css/index.css` and referenced it from `index.htm`.
