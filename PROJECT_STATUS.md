@@ -1,7 +1,7 @@
 # saskiweb - Project Status
 
 **Last Updated**: 2026-03-06  
-**Overall Status**: 🟢 **97% Complete** - Custom site favicon added and tracked in repository
+**Overall Status**: 🟢 **99% Complete** - Custom site favicon linked in HTML and deployed to hosting
 
 ---
 
@@ -77,6 +77,8 @@
 
 - Added `favicon.ico` at repository root using a custom face-focused icon.
 - Prepared favicon file for deployment with the existing site publish flow.
+- Added an explicit `<link rel="icon" href="favicon.ico">` entry in `index.htm` so browsers load the favicon from HTML, not only by root-file convention.
+- Deployed `index.htm` and `favicon.ico` to the hosting remote using the existing `deploy.sh` flow.
 
 ---
 
@@ -84,17 +86,17 @@
 
 ### Production validation on Site5
 
-- Verified dry-run output for secure and insecure FTPS paths with `SITE5_FTPS_HOST`.
-- Real FTPS upload attempted with overridden host; deployment path execution works but final success depends on correct provider FTPS hostname.
-- Validate `index.htm` deployment first, then full-site sync once correct FTPS endpoint is confirmed.
+- Verified dry-run output for insecure FTPS fallback against `ftp.saski.com`.
+- Successfully uploaded `index.htm` and `favicon.ico` with the existing `deploy.sh` flow.
+- Full-site deploy and live browser verification remain pending.
 
 ---
 
 ## 📋 Next Steps
 
-1. Confirm exact Site5 FTPS endpoint hostname from hosting panel and set `SITE5_FTPS_HOST` in local `.env.deploy`.
-2. Run `./deploy.sh --check` and then dry-run + real deploy for `index.htm`.
-3. Run dry-run + real deploy for full site.
+1. Open the live site in a browser and confirm the favicon renders in the tab and loads without a 404.
+2. Decide whether to keep `SITE5_FTPS_INSECURE=1` temporarily or replace it with a certificate-valid FTPS hostname.
+3. Run dry-run + real deploy for the full site when ready.
 
 ---
 
