@@ -1,7 +1,7 @@
 # saskiweb - Project Status
 
-**Last Updated**: 2026-03-01  
-**Overall Status**: 🟢 **96% Complete** - Scene refresh now user-controlled with dedicated bottom controls
+**Last Updated**: 2026-03-06  
+**Overall Status**: 🟢 **97% Complete** - Custom site favicon added and tracked in repository
 
 ---
 
@@ -72,6 +72,11 @@
 - Removed automatic scene reinitialization timer so the scene no longer refreshes by itself.
 - Added `Reload scene` button next to score control at the bottom of the page.
 - Wired reload action to rebuild the whole scene state (`init()`) and redraw immediately.
+
+### Site favicon added (2026-03-06)
+
+- Added `favicon.ico` at repository root using a custom face-focused icon.
+- Prepared favicon file for deployment with the existing site publish flow.
 
 ---
 
