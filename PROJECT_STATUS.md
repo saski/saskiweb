@@ -1,7 +1,7 @@
 # saskiweb - Project Status
 
 **Last Updated**: 2026-03-06  
-**Overall Status**: 🟢 **99% Complete** - Custom site favicon linked in HTML and deployed to hosting
+**Overall Status**: 🟢 **99% Complete** - Custom site favicon linked in HTML and local mobile audio autoplay fallback implemented
 
 ---
 
@@ -19,6 +19,12 @@
 ---
 
 ## ✅ Completed Components
+
+### Mobile audio playback research (2026-03-06)
+
+- Documented the current `Play score` audio path in `js/index.js` and `js/score-note-selection.js`.
+- Recorded the current playback lifecycle, event bindings, and browser-audio surface in `thoughts/shared/research/2026-03-06-saskiweb-mobile-audio-playback-research.md`.
+- Captured that the current runtime exposes one click-based audio entry point and no separate mobile-specific audio handling code in the local codebase.
 
 ### Site5 deploy automation (2026-03-01)
 
@@ -90,13 +96,21 @@
 - Successfully uploaded `index.htm` and `favicon.ico` with the existing `deploy.sh` flow.
 - Full-site deploy and live browser verification remain pending.
 
+### Mobile browser audio issue investigation
+
+- Researched the current local implementation and saved findings in `thoughts/shared/research/2026-03-06-saskiweb-mobile-audio-playback-research.md`.
+- Updated the smallest-step implementation plan to include a startup autoplay attempt plus a `pointerdown` fallback for browsers that block Web Audio autoplay.
+- Implemented a local startup autoplay attempt plus `pointerdown` fallback in `saskiweb/js/index.js`.
+- Verified the existing Node test suite still passes with `node --test saskiweb/tests/score-note-selection.test.js`.
+- Browser and device verification remain pending.
+
 ---
 
 ## 📋 Next Steps
 
 1. Open the live site in a browser and confirm the favicon renders in the tab and loads without a 404.
-2. Decide whether to keep `SITE5_FTPS_INSECURE=1` temporarily or replace it with a certificate-valid FTPS hostname.
-3. Run dry-run + real deploy for the full site when ready.
+2. Manually verify desktop and mobile browser behavior for the new autoplay-plus-fallback audio flow.
+3. Decide whether to keep `SITE5_FTPS_INSECURE=1` temporarily or replace it with a certificate-valid FTPS hostname.
 
 ---
 

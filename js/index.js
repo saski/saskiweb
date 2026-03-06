@@ -157,7 +157,7 @@ function stopScore() {
   syncScoreToggleUi(false);
 }
 
-scoreToggle.addEventListener('click', () => {
+scoreToggle.addEventListener('pointerdown', () => {
   if (score.isPlaying) {
     stopScore();
   } else {
@@ -925,8 +925,14 @@ function startAnimation() {
   animationFrameId = window.requestAnimationFrame(animate);
 }
 
+function attemptStartupScore() {
+  startScore();
+}
+
 if (document.readyState === 'complete') {
+  attemptStartupScore();
   startAnimation();
 } else {
+  window.addEventListener('load', attemptStartupScore, { once: true });
   window.addEventListener('load', startAnimation, { once: true });
 }
