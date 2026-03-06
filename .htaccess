@@ -1,8 +1,12 @@
 
 RewriteEngine on
-Options All -Indexes
-
-
+Options All -Indexes
+
+# Canonical host: force apex traffic onto www to avoid split caches/behavior.
+RewriteCond %{HTTP_HOST} ^saski\.com$ [NC]
+RewriteRule ^(.*)$ https://www.saski.com/$1 [R=301,L]
+
+
 
 # BEGIN WordPress
 

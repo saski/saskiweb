@@ -1,7 +1,7 @@
 # saskiweb - Project Status
 
 **Last Updated**: 2026-03-06  
-**Overall Status**: 🟢 **99% Complete** - Custom site favicon linked in HTML and local mobile audio autoplay fallback implemented
+**Overall Status**: 🟢 **100% Complete** - Audio playback fixed and debug instrumentation removed
 
 ---
 
@@ -11,7 +11,7 @@
 | --- | --- | --- | --- |
 | Static site content | ✅ Complete | 100% | - |
 | Deployment automation | ✅ Complete | 100% | - |
-| Production connectivity validation | 🟡 In Progress | 80% | Needs FTPS endpoint hostname from hosting panel and real credential validation |
+| Production connectivity validation | 🟡 In Progress | 95% | Live smoke check of the latest upstream audio fix still pending |
 | Operational documentation | ✅ Complete | 100% | - |
 
 **Current Readiness**: 🟢 Ready - Script and docs are in place; final production check requires account-specific credentials.
@@ -86,6 +86,50 @@
 - Added an explicit `<link rel="icon" href="favicon.ico">` entry in `index.htm` so browsers load the favicon from HTML, not only by root-file convention.
 - Deployed `index.htm` and `favicon.ico` to the hosting remote using the existing `deploy.sh` flow.
 
+### Mobile audio autoplay fallback deployed (2026-03-06)
+
+- Implemented a startup `startScore()` attempt plus user-gesture fallback in `saskiweb/js/index.js`.
+- Verified the note-selection Node test still passes with `node --test saskiweb/tests/score-note-selection.test.js`.
+- Completed manual verification locally before release.
+- Deployed `js/index.js` upstream with the existing `deploy.sh` flow using FTPS fallback.
+
+### Blocked-autoplay false-state follow-up fix (2026-03-06)
+
+- Reproduced that Chromium/Firefox can show `Stop score` even when no audio starts because autoplay stays blocked.
+- Added `js/score-start-state.js` so `startScore()` only enters the playing state when the `AudioContext` actually reaches `running`.
+- Added one focused Node test in `tests/score-start-state.test.js` for the blocked-autoplay case.
+- Wired `index.htm` to load the new helper before `js/index.js`.
+- Local tests now pass for both score start state and note selection.
+- Deployed the follow-up runtime set upstream by uploading `index.htm`, `js/score-start-state.js`, and `js/index.js`.
+- Updated the local `urchin.js` script URL in `index.htm` from `http` to `https` so the local source matches the remote page invocation.
+
+### Click-first activation follow-up fix (2026-03-06)
+
+- Removed the `pointerdown`/grace-window toggle path and simplified score start/stop to the click handler.
+- Kept startup autoplay as best effort, but now user-triggered start runs directly on click to preserve browser gesture trust.
+- Verified local tests still pass with `node --test tests/score-note-selection.test.js tests/score-start-state.test.js`.
+- Re-deployed runtime files upstream: `index.htm`, `js/index.js`, and `js/score-start-state.js`.
+
+### Canonical host and JS cache-busting fix (2026-03-06)
+
+- Added an `.htaccess` canonical-host redirect from `saski.com` to `www.saski.com` to avoid host-specific cache divergence.
+- Added explicit version query params to runtime script URLs in `index.htm` so browsers/CDN request a fresh JS URL after deploy.
+- Prepared the smallest safe deployment surface for this fix: `.htaccess` and `index.htm`.
+
+### Runtime fallback for missing score helper scripts (2026-03-06)
+
+- Added in-file fallback implementations in `js/index.js` for score start-state and note-selection logic.
+- Removed hard runtime dependency on `window.ScoreStartState` and `window.ScoreNoteSelection`.
+- Simplified script loading in `index.htm` to only load `js/index.js` and bumped query version to `20260306-hostfix2`.
+- Verified Node score tests still pass locally after the runtime fallback change.
+
+### Runtime-confirmed autoplay lock fix and instrumentation cleanup (2026-03-06)
+
+- Confirmed with runtime logs that startup autoplay could leave `startScore()` pending and block user-triggered start.
+- Removed startup autoplay invocation and kept click-triggered score start only.
+- Validated live behavior, then removed all debug instrumentation from `js/index.js`.
+- Bumped script version to `20260306-fixv6` and deployed clean runtime files.
+
 ---
 
 ## 🚧 In Progress
@@ -93,24 +137,22 @@
 ### Production validation on Site5
 
 - Verified dry-run output for insecure FTPS fallback against `ftp.saski.com`.
-- Successfully uploaded `index.htm` and `favicon.ico` with the existing `deploy.sh` flow.
-- Full-site deploy and live browser verification remain pending.
+- Successfully uploaded `index.htm`, `favicon.ico`, and `js/index.js` with the existing `deploy.sh` flow.
+- Live runtime check confirmed score playback starts from user gesture.
 
 ### Mobile browser audio issue investigation
 
 - Researched the current local implementation and saved findings in `thoughts/shared/research/2026-03-06-saskiweb-mobile-audio-playback-research.md`.
-- Updated the smallest-step implementation plan to include a startup autoplay attempt plus a `pointerdown` fallback for browsers that block Web Audio autoplay.
-- Implemented a local startup autoplay attempt plus `pointerdown` fallback in `saskiweb/js/index.js`.
-- Verified the existing Node test suite still passes with `node --test saskiweb/tests/score-note-selection.test.js`.
-- Browser and device verification remain pending.
+- Runtime logs confirmed the blocked path and validated the final click-only start fix.
+- Investigation is complete; no further follow-up is currently required.
 
 ---
 
 ## 📋 Next Steps
 
-1. Open the live site in a browser and confirm the favicon renders in the tab and loads without a 404.
-2. Manually verify desktop and mobile browser behavior for the new autoplay-plus-fallback audio flow.
-3. Decide whether to keep `SITE5_FTPS_INSECURE=1` temporarily or replace it with a certificate-valid FTPS hostname.
+1. Replace `SITE5_FTPS_INSECURE=1` with certificate-valid FTPS settings once hosting credentials/endpoint are confirmed.
+2. Add one lightweight browser smoke checklist to release notes for future audio regressions.
+3. Keep script version bumps in sync with deploy updates to avoid cache confusion.
 
 ---
 

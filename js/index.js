@@ -2,6 +2,11 @@ const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 const scoreToggle = document.getElementById('scoreToggle');
 const sceneReload = document.getElementById('sceneReload');
+const versionTag = document.getElementById('versionTag');
+const SITE_VERSION = '2026-03-06-audio-fix-v6';
+
+window.__SASKI_VERSION__ = SITE_VERSION;
+if (versionTag) versionTag.textContent = `build ${SITE_VERSION}`;
 
 let W, H;
 function resize() {
@@ -37,6 +42,7 @@ const score = {
   audioCtx: null,
   master: null,
   isPlaying: false,
+  isStarting: false,
   timer: null,
   beat: 0,
   nextTime: 0,
@@ -48,6 +54,33 @@ const score = {
     14, 15, 17, 19, 20, 22, 24
   ]
 };
+
+async function canPlayScoreFallback(audioCtx) {
+  if (audioCtx.state === 'suspended') {
+    try {
+      await audioCtx.resume();
+    } catch (_error) {
+      return false;
+    }
+  }
+  return audioCtx.state === 'running';
+}
+
+function reverseCycleIndexFallback(length, beat) {
+  return (length - 1) - (beat % length);
+}
+
+function getScheduledMidiNotesFallback({ beat, baseMidi, scale, arp }) {
+  return {
+    upScaleMidi: baseMidi + scale[beat % scale.length],
+    downScaleMidi: baseMidi + 12 + scale[reverseCycleIndexFallback(scale.length, beat)],
+    upArpMidi: baseMidi - 12 + arp[beat % arp.length],
+    downArpMidi: baseMidi + arp[reverseCycleIndexFallback(arp.length, beat)],
+  };
+}
+
+const canPlayScore = window.ScoreStartState?.canPlayScore ?? canPlayScoreFallback;
+const getScheduledMidiNotes = window.ScoreNoteSelection?.getScheduledMidiNotes ?? getScheduledMidiNotesFallback;
 
 function midiToHz(midi) {
   return 440 * Math.pow(2, (midi - 69) / 12);
@@ -107,7 +140,7 @@ function scheduleScore() {
       downScaleMidi,
       upArpMidi,
       downArpMidi,
-    } = window.ScoreNoteSelection.getScheduledMidiNotes({
+    } = getScheduledMidiNotes({
       beat: score.beat,
       baseMidi: score.baseMidi,
       scale: score.scale,
@@ -135,16 +168,25 @@ function syncScoreToggleUi(isPlaying) {
   scoreToggle.setAttribute('aria-label', isPlaying ? 'Stop sound score' : 'Play sound score');
 }
 
-function startScore() {
+async function startScore() {
   if (score.isPlaying) return;
-  ensureAudio();
-  if (score.audioCtx.state === 'suspended') {
-    score.audioCtx.resume();
+  if (score.isStarting) return;
+  score.isStarting = true;
+
+  try {
+    ensureAudio();
+    const canPlay = await canPlayScore(score.audioCtx);
+    if (!canPlay) {
+      syncScoreToggleUi(false);
+      return;
+    }
+    score.isPlaying = true;
+    score.nextTime = score.audioCtx.currentTime + 0.03;
+    score.timer = setInterval(scheduleScore, 45);
+    syncScoreToggleUi(true);
+  } finally {
+    score.isStarting = false;
   }
-  score.isPlaying = true;
-  score.nextTime = score.audioCtx.currentTime + 0.03;
-  score.timer = setInterval(scheduleScore, 45);
-  syncScoreToggleUi(true);
 }
 
 function stopScore() {
@@ -157,11 +199,11 @@ function stopScore() {
   syncScoreToggleUi(false);
 }
 
-scoreToggle.addEventListener('pointerdown', () => {
+scoreToggle.addEventListener('click', () => {
   if (score.isPlaying) {
     stopScore();
   } else {
-    startScore();
+    void startScore();
   }
 });
 
@@ -925,14 +967,8 @@ function startAnimation() {
   animationFrameId = window.requestAnimationFrame(animate);
 }
 
-function attemptStartupScore() {
-  startScore();
-}
-
 if (document.readyState === 'complete') {
-  attemptStartupScore();
   startAnimation();
 } else {
-  window.addEventListener('load', attemptStartupScore, { once: true });
   window.addEventListener('load', startAnimation, { once: true });
 }
