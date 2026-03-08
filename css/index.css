@@ -78,6 +78,7 @@
         z-index: 4;
         color: rgba(34, 24, 12, 0.7);
         font-size: 11px;
+        display: none;
         letter-spacing: 0.05em;
         background: rgba(255, 248, 232, 0.72);
         border: 1px solid rgba(42, 30, 15, 0.2);
