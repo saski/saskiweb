@@ -3,7 +3,10 @@ const ctx = canvas.getContext('2d');
 const scoreToggle = document.getElementById('scoreToggle');
 const sceneReload = document.getElementById('sceneReload');
 const versionTag = document.getElementById('versionTag');
-const SITE_VERSION = '2026-03-06-audio-fix-v6';
+const SITE_VERSION = '2026-05-18-auto-reload';
+const SCENE_SCALE = 0.72;
+const SCENE_OFFSET_X = 0.08;
+const SCENE_OFFSET_Y = -0.02;
 
 window.__SASKI_VERSION__ = SITE_VERSION;
 if (versionTag) versionTag.textContent = `build ${SITE_VERSION}`;
@@ -91,7 +94,7 @@ function ensureAudio() {
   const Ctx = window.AudioContext || window.webkitAudioContext;
   score.audioCtx = new Ctx();
   score.master = score.audioCtx.createGain();
-  score.master.gain.value = 0.12;
+  score.master.gain.value = 0.2;
   score.master.connect(score.audioCtx.destination);
 }
 
@@ -164,8 +167,12 @@ function scheduleScore() {
 }
 
 function syncScoreToggleUi(isPlaying) {
-  scoreToggle.textContent = isPlaying ? 'Stop score' : 'Play score';
+  const label = isPlaying ? 'Stop score' : 'Play score';
+  scoreToggle.classList.toggle('is-playing', isPlaying);
   scoreToggle.setAttribute('aria-label', isPlaying ? 'Stop sound score' : 'Play sound score');
+  scoreToggle.setAttribute('title', label);
+  const labelNode = scoreToggle.querySelector('.control-label');
+  if (labelNode) labelNode.textContent = label;
 }
 
 async function startScore() {
@@ -211,6 +218,11 @@ sceneReload.addEventListener('click', () => {
   init();
   drawFrame();
 });
+
+setInterval(() => {
+  init();
+  drawFrame();
+}, 6000);
 
 window.addEventListener('beforeunload', stopScore);
 
@@ -943,6 +955,11 @@ function drawFrame() {
   drawLiquid(t);
 
   // Capa 2: geometría negra de músicos (ordenados por y para pseudo-perspectiva)
+  ctx.save();
+  ctx.translate(W * (0.5 + SCENE_OFFSET_X), H * (0.5 + SCENE_OFFSET_Y));
+  ctx.scale(SCENE_SCALE, SCENE_SCALE);
+  ctx.translate(W * -0.5, H * -0.5);
+
   const sorted = [...musicians].sort((a,b) => a.y - b.y);
   for (const m of sorted) m.draw(t);
 
@@ -952,6 +969,7 @@ function drawFrame() {
 
   // Capa 4: líneas armónicas que caen
   drawHarmonicLines(t, flowDelta);
+  ctx.restore();
 }
 
 let animationFrameId = null;

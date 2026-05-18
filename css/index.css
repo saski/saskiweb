@@ -8,6 +8,7 @@
 
       body {
         position: relative;
+        color: rgba(34, 24, 12, 0.9);
       }
 
       #c {
@@ -18,57 +19,167 @@
         display: block;
       }
 
-      .title {
+      .site-header {
         position: fixed;
-        top: 16px;
-        left: 50%;
-        transform: translateX(-50%);
-        z-index: 3;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 22px clamp(20px, 5vw, 56px);
+        box-sizing: border-box;
+        pointer-events: none;
+      }
+
+      .site-mark,
+      .social-links a {
+        pointer-events: auto;
+        color: rgba(34, 24, 12, 0.82);
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 0.16em;
+        line-height: 1;
+      }
+
+      .site-mark {
+        font-size: 13px;
+        letter-spacing: 0.22em;
+      }
+
+      .social-links {
+        display: flex;
+        align-items: center;
+        gap: clamp(14px, 2vw, 24px);
+      }
+
+      .social-links a {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid rgba(34, 24, 12, 0);
+        font-family: Arial, Helvetica, sans-serif;
+        font-weight: 600;
+        transition: color 180ms ease, border-color 180ms ease;
+      }
+
+      .social-icon {
+        width: 16px;
+        height: 16px;
+        display: block;
+        fill: currentColor;
+        flex: 0 0 auto;
+      }
+
+      .site-mark:hover,
+      .site-mark:focus-visible,
+      .social-links a:hover,
+      .social-links a:focus-visible {
+        background: transparent;
+        color: rgba(34, 24, 12, 0.98);
+      }
+
+      .social-links a:hover,
+      .social-links a:focus-visible {
+        border-color: rgba(34, 24, 12, 0.55);
+      }
+
+      .site-mark:focus-visible,
+      .social-links a:focus-visible,
+      #scoreToggle:focus-visible,
+      #sceneReload:focus-visible {
+        outline: 1px solid rgba(34, 24, 12, 0.72);
+        outline-offset: 5px;
+      }
+
+      .animation-frame {
+        position: fixed;
+        left: 58%;
+        top: 48%;
+        width: min(60vmin, 560px);
+        aspect-ratio: 1;
+        transform: translate(-50%, -50%);
+        z-index: 2;
+        border: 1px solid rgba(34, 24, 12, 0.48);
+        box-shadow:
+          0 0 0 1px rgba(255, 252, 245, 0.2),
+          0 22px 80px rgba(70, 50, 20, 0.08);
+        pointer-events: none;
       }
 
       .scene-controls {
         position: fixed;
         left: 50%;
-        bottom: 20px;
+        bottom: 24px;
         transform: translateX(-50%);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px;
         z-index: 4;
       }
 
-      #scoreToggle,
-      #sceneReload {
-        border: 1px solid rgba(42, 30, 15, 0.35);
-        background: rgba(255, 248, 232, 0.86);
+      .control-button {
+        width: 44px;
+        height: 44px;
+        display: inline-grid;
+        place-items: center;
+        border: 1px solid rgba(42, 30, 15, 0.28);
+        background: rgba(255, 250, 239, 0.72);
         color: rgba(34, 24, 12, 0.9);
-        border-radius: 999px;
-        padding: 10px 22px;
-        font-size: 14px;
-        letter-spacing: 0.03em;
+        border-radius: 50%;
+        padding: 0;
         cursor: pointer;
-        backdrop-filter: blur(4px);
-        transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
-        box-shadow: 0 4px 18px rgba(60, 45, 24, 0.12);
+        backdrop-filter: blur(6px);
+        transition: transform 180ms ease, background 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+        box-shadow:
+          0 6px 24px rgba(60, 45, 24, 0.1),
+          inset 0 0 0 1px rgba(255, 252, 245, 0.32);
       }
 
-      #scoreToggle:hover,
-      #sceneReload:hover {
-        transform: translateY(-1px);
-        background: rgba(255, 252, 244, 0.94);
+      .control-button:hover {
+        transform: translateY(-2px);
+        background: rgba(255, 252, 244, 0.9);
+        border-color: rgba(42, 30, 15, 0.44);
+        box-shadow:
+          0 10px 30px rgba(60, 45, 24, 0.14),
+          inset 0 0 0 1px rgba(255, 252, 245, 0.45);
       }
 
-      #scoreToggle:active,
-      #sceneReload:active {
+      .control-button:active {
         transform: translateY(0);
       }
 
-      #sceneReload {
-        padding-inline: 18px;
+      .control-icon {
+        width: 18px;
+        height: 18px;
+        display: block;
+        fill: currentColor;
+      }
+
+      .control-icon-stop,
+      #scoreToggle.is-playing .control-icon-play {
+        display: none;
+      }
+
+      #scoreToggle.is-playing .control-icon-stop {
+        display: block;
       }
 
       #scoreToggle {
         z-index: 4;
+      }
+
+      .control-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
       }
 
       #versionTag {
@@ -85,4 +196,43 @@
         border-radius: 999px;
         padding: 4px 10px;
         backdrop-filter: blur(4px);
+      }
+
+      @media (max-width: 640px) {
+        .site-header {
+          padding: 18px 18px;
+          align-items: flex-start;
+        }
+
+        .site-mark,
+        .social-links a {
+          font-size: 10px;
+          letter-spacing: 0.14em;
+        }
+
+        .social-links {
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 9px;
+        }
+
+        .social-links a {
+          gap: 6px;
+        }
+
+        .social-icon {
+          width: 14px;
+          height: 14px;
+        }
+
+        .animation-frame {
+          left: 57%;
+          top: 50%;
+          width: min(74vmin, 420px);
+        }
+
+        .control-button {
+          width: 42px;
+          height: 42px;
+        }
       }
