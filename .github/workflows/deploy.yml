@@ -1,0 +1,38 @@
+name: Deploy Site
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: saskiweb-production-deploy
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install deploy dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y lftp
+
+      - name: Deploy full site
+        env:
+          SITE5_HOST: ${{ secrets.SITE5_HOST }}
+          SITE5_USER: ${{ secrets.SITE5_USER }}
+          SITE5_REMOTE_PATH: ${{ secrets.SITE5_REMOTE_PATH }}
+          SITE5_SSH_PORT: ${{ secrets.SITE5_SSH_PORT }}
+          SITE5_PASSWORD: ${{ secrets.SITE5_PASSWORD }}
+          SITE5_FTPS_PORT: ${{ secrets.SITE5_FTPS_PORT }}
+          SITE5_FTPS_HOST: ${{ secrets.SITE5_FTPS_HOST }}
+          SITE5_FTPS_INSECURE: ${{ secrets.SITE5_FTPS_INSECURE }}
+        run: |
+          chmod +x ./deploy.sh
+          ./deploy.sh --full-site

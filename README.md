@@ -78,6 +78,22 @@ unset SITE5_FTPS_INSECURE
 ./deploy.sh --force-ftps --target-file index.htm
 ```
 
+## GitHub Actions CI/CD
+
+Pushes to `master` or `main` now auto-deploy via `.github/workflows/deploy.yml`.
+The workflow runs `./deploy.sh --full-site` from GitHub Actions.
+
+Configure these repository secrets in GitHub (`Settings > Secrets and variables > Actions`):
+
+- `SITE5_HOST` (required)
+- `SITE5_USER` (required)
+- `SITE5_REMOTE_PATH` (required)
+- `SITE5_SSH_PORT` (optional)
+- `SITE5_PASSWORD` (required when FTPS fallback is used)
+- `SITE5_FTPS_PORT` (optional)
+- `SITE5_FTPS_HOST` (optional)
+- `SITE5_FTPS_INSECURE` (optional; set to `1` only as temporary emergency bypass)
+
 ## Rollback
 
 Rollback uses Git history plus the same deploy script:
