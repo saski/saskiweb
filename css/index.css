@@ -58,7 +58,7 @@
 
       .social-links a {
         display: inline-flex;
-        align-items: center;
+        align-items: baseline;
         gap: 7px;
         padding-bottom: 5px;
         border-bottom: 1px solid rgba(34, 24, 12, 0);
@@ -68,11 +68,12 @@
       }
 
       .social-icon {
-        width: 16px;
-        height: 16px;
+        width: 1.18em;
+        height: 1.18em;
         display: block;
         fill: currentColor;
         flex: 0 0 auto;
+        transform: translateY(0.18em);
       }
 
       .site-mark:hover,
@@ -221,8 +222,8 @@
         }
 
         .social-icon {
-          width: 14px;
-          height: 14px;
+          width: 1.16em;
+          height: 1.16em;
         }
 
         .animation-frame {
