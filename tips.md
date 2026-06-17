@@ -1,2 +1,2 @@
 
-ssh-agent $(ssh-add ~/.ssh/id_rsa_saski; git clone git@github.com:saski/saskiweb.git)
+ssh-agent $(ssh-add ~/.ssh/id_rsa_saski; git clone git@github.com-saski:saski/saskiweb.git)
