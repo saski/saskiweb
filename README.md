@@ -1,5 +1,10 @@
 # saskiweb
 
+## Public pages
+
+- `/` — generative audiovisual home page
+- `/cv/` — responsive, print-friendly professional CV
+
 ## Site5 deployment
 
 This project now deploys with `deploy.sh` instead of manual FTP uploads.
