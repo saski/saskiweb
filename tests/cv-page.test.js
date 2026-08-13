@@ -5,6 +5,7 @@ const test = require('node:test');
 
 const cvPath = path.join(__dirname, '..', 'cv', 'index.html');
 const socialCardPath = path.join(__dirname, '..', 'cv', 'og.png');
+const portraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo.png');
 
 function loadCv() {
   assert.ok(existsSync(cvPath), 'The public CV page should exist at /cv/');
@@ -44,6 +45,16 @@ test('provides direct contact links and print-friendly presentation', () => {
   assert.match(html, /@media print/);
   assert.match(html, /@media \(max-width: 760px\)/);
   assert.match(html, /class="print-action"/);
+});
+
+test('uses a professional portrait online without adding it to the printed CV', () => {
+  const html = loadCv();
+
+  assert.ok(existsSync(portraitPath), 'The public CV portrait should exist');
+  assert.match(html, /<figure class="portrait"[^>]*>/);
+  assert.match(html, /src="nacho-viejo\.png"/);
+  assert.match(html, /alt="Portrait of Nacho Viejo"/);
+  assert.match(html, /\.portrait\s*\{\s*display:\s*none;/);
 });
 
 test('provides a site-specific social preview', () => {

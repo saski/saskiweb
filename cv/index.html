@@ -180,6 +180,28 @@
       line-height: 1.45;
     }
 
+    .masthead-aside {
+      display: grid;
+      justify-items: start;
+      gap: 24px;
+    }
+
+    .portrait {
+      width: min(100%, 210px);
+      margin: 0;
+    }
+
+    .portrait img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+      object-position: center 30%;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      filter: saturate(0.86) contrast(1.04);
+    }
+
     .contact-list li:first-child {
       color: var(--muted);
     }
@@ -502,6 +524,24 @@
         padding: 24px 0 42px;
       }
 
+      .masthead-aside {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: end;
+        justify-items: stretch;
+        gap: 24px;
+      }
+
+      .portrait {
+        width: 112px;
+        grid-column: 2;
+        grid-row: 1;
+      }
+
+      .contact-list {
+        grid-column: 1;
+        grid-row: 1;
+      }
+
       h1 {
         font-size: clamp(3.2rem, 18vw, 5.2rem);
       }
@@ -593,7 +633,8 @@
       }
 
       .utility-bar,
-      footer {
+      footer,
+      .portrait {
         display: none;
       }
 
@@ -765,12 +806,17 @@
         <h1>Nacho Viejo</h1>
         <p class="headline">Engineering Manager bridging product, architecture, people leadership, operational excellence, and AI-augmented software engineering.</p>
       </div>
-      <ul class="contact-list" aria-label="Contact details">
-        <li>Madrid, Spain</li>
-        <li><a href="mailto:nacho@saski.com">nacho@saski.com</a></li>
-        <li><a href="https://www.linkedin.com/in/saski/" rel="me">LinkedIn</a></li>
-        <li><a href="https://github.com/saski" rel="me">GitHub</a></li>
-      </ul>
+      <div class="masthead-aside">
+        <figure class="portrait">
+          <img src="nacho-viejo.png" alt="Portrait of Nacho Viejo">
+        </figure>
+        <ul class="contact-list" aria-label="Contact details">
+          <li>Madrid, Spain</li>
+          <li><a href="mailto:nacho@saski.com">nacho@saski.com</a></li>
+          <li><a href="https://www.linkedin.com/in/saski/" rel="me">LinkedIn</a></li>
+          <li><a href="https://github.com/saski" rel="me">GitHub</a></li>
+        </ul>
+      </div>
     </header>
 
     <main>
