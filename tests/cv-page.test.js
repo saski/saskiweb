@@ -6,6 +6,9 @@ const test = require('node:test');
 const cvPath = path.join(__dirname, '..', 'cv', 'index.html');
 const socialCardPath = path.join(__dirname, '..', 'cv', 'og.png');
 const portraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo.png');
+const robotsPath = path.join(__dirname, '..', 'robots.txt');
+const sitemapPath = path.join(__dirname, '..', 'sitemap.xml');
+const homePath = path.join(__dirname, '..', 'index.htm');
 
 function loadCv() {
   assert.ok(existsSync(cvPath), 'The public CV page should exist at /cv/');
@@ -64,4 +67,19 @@ test('provides a site-specific social preview', () => {
   assert.match(html, /property="og:title" content="Nacho Viejo — Engineering Manager"/);
   assert.match(html, /property="og:image" content="https:\/\/www\.saski\.com\/cv\/og\.png"/);
   assert.match(html, /name="twitter:card" content="summary_large_image"/);
+});
+
+test('publishes a crawlable identity layer for the public profile', () => {
+  const html = loadCv();
+  const robots = readFileSync(robotsPath, 'utf8');
+  const sitemap = readFileSync(sitemapPath, 'utf8');
+  const home = readFileSync(homePath, 'utf8');
+
+  assert.match(html, /"@type": "ProfilePage"/);
+  assert.match(html, /"@type": "Person"/);
+  assert.match(html, /"sameAs": \[/);
+  assert.match(robots, /Sitemap: https:\/\/www\.saski\.com\/sitemap\.xml/);
+  assert.match(sitemap, /https:\/\/www\.saski\.com\/cv\//);
+  assert.match(home, /<title>saski — Nacho Viejo, Engineering Manager<\/title>/);
+  assert.match(home, /href="\/cv\/"/);
 });
