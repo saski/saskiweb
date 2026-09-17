@@ -30,7 +30,11 @@ test('keeps the public CV generic and evidence-based', () => {
   const html = loadCv();
 
   assert.doesNotMatch(html, /Technosylva|Tecnosilva|Datadog|Sapira/i);
-  assert.match(html, /7–13 engineers/);
+  assert.match(html, /6–15 engineers/);
+  assert.doesNotMatch(html, /7–13 engineers|Programme not completed/);
+  assert.match(html, /Escuela Oficial de Idiomas de Oviedo/);
+  assert.match(html, /promotion to Senior/);
+  assert.match(html, /interview calibration/);
   assert.match(html, /378,000 incremental orders annually/);
   assert.match(html, /23%/);
   assert.match(html, /90–99%/);
