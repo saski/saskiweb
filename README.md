@@ -8,8 +8,10 @@
 The CV page offers a direct PDF download in addition to printing. The reviewed
 October 2, 2026 PDF includes the newly approved professional portrait and is
 stored alongside the page as `Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2.pdf`.
-The previous October 2 and September 21 public URLs serve the same updated PDF
-for compatibility. Run `node --test`
+The deployed copies at the previous October 2 and September 21 public URLs
+contain the same updated PDF for compatibility; cached responses may temporarily
+retain the previous portrait. The page links to the versioned download above.
+Run `node --test`
 before publishing; the CV tests verify the download target and the reviewed file's
 SHA-256 hash. Replace the PDF and its test reference together when a new revision
 is approved.
