@@ -1,5 +1,6 @@
 const assert = require('node:assert/strict');
 const { existsSync, readFileSync } = require('node:fs');
+const { createHash } = require('node:crypto');
 const path = require('node:path');
 const test = require('node:test');
 
@@ -43,6 +44,24 @@ test('keeps the public CV generic and evidence-based', () => {
   assert.match(html, /Computer Engineering studies \(Systems\)/);
 });
 
+test('aligns employment chronology and leadership outcomes with the reviewed PDF', () => {
+  const html = loadCv();
+
+  assert.match(html, /Jan 2023 — Jun 2026/);
+  assert.doesNotMatch(html, /Jan 2023 — Present/);
+  assert.match(html, /responsibilities began in August 2022/);
+  assert.match(html, /formal title transition in January 2023/);
+  assert.match(html, /100% of production traffic/);
+  assert.match(html, /early June against an October plan/);
+  assert.match(html, /restored the LCP baseline/);
+  assert.match(html, /approximately 70% less CloudFront egress/);
+  assert.match(html, /approximately 30% lower daily infrastructure costs/);
+  assert.match(html, /Owned hiring decisions for my team jointly with HR/);
+  assert.match(html, /interview calibration in 2023/);
+  assert.match(html, /Engineer II/);
+  assert.match(html, /Fluent\. Everyday working language for eight years/);
+});
+
 test('provides direct contact links and print-friendly presentation', () => {
   const html = loadCv();
 
@@ -52,6 +71,22 @@ test('provides direct contact links and print-friendly presentation', () => {
   assert.match(html, /@media print/);
   assert.match(html, /@media \(max-width: 760px\)/);
   assert.match(html, /class="print-action"/);
+});
+
+test('offers the reviewed September 21 CV as a direct PDF download', () => {
+  const html = loadCv();
+  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-09-21.pdf';
+  const pdfPath = path.join(__dirname, '..', 'cv', fileName);
+
+  assert.ok(existsSync(pdfPath), 'The download must resolve to the reviewed CV');
+  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-09-21\.pdf"[^>]+download/);
+  const pdf = readFileSync(pdfPath);
+  assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
+  assert.equal(
+    createHash('sha256').update(pdf).digest('hex'),
+    'ca697aa556d0bb6cbce8a5616fb4222664e7d85deada83f6dd9c7fec594c51b1',
+    'The download must preserve the supplied, reviewed PDF without substitution'
+  );
 });
 
 test('uses a professional portrait online without adding it to the printed CV', () => {

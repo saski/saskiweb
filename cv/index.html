@@ -24,7 +24,7 @@
     {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
-      "dateModified": "2026-09-17",
+      "dateModified": "2026-10-02",
       "mainEntity": {
         "@type": "Person",
         "name": "Nacho Viejo",
@@ -129,9 +129,18 @@
     .home-link {
       color: var(--ink);
       text-decoration: none;
+      white-space: nowrap;
     }
 
-    .print-action {
+    .cv-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+    }
+
+    .print-action,
+    .download-action {
       border: 1px solid var(--line);
       border-radius: 999px;
       background: rgba(251, 248, 242, 0.62);
@@ -141,6 +150,21 @@
       letter-spacing: inherit;
       padding: 10px 16px;
       text-transform: inherit;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .download-action {
+      border-color: var(--accent-dark);
+      background: var(--accent-dark);
+      color: var(--surface);
+    }
+
+    .download-action:hover,
+    .download-action:focus-visible {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--surface);
     }
 
     .print-action:hover {
@@ -828,7 +852,10 @@
   <div class="page-shell">
     <nav class="utility-bar" aria-label="CV utilities">
       <a class="home-link" href="/" aria-label="Back to saski.com">saski / cv</a>
-      <button class="print-action" type="button" onclick="window.print()">Print / save PDF</button>
+      <div class="cv-actions">
+        <a class="download-action" href="Nacho_Viejo_Engineering_Manager_CV_2026-09-21.pdf" download>Download PDF</a>
+        <button class="print-action" type="button" onclick="window.print()">Print</button>
+      </div>
     </nav>
 
     <header class="masthead">
@@ -858,7 +885,7 @@
         </div>
         <div class="intro-copy">
           <p>I'm an Engineering Manager with 26 years in software engineering. I help people grow and teams take ownership of the products they build, combining people development, product thinking, and technical direction.</p>
-          <p>At Eventbrite, I have led multidisciplinary teams of 6–15 engineers across web, mobile, and backend services. My responsibilities have included hiring, performance management, career development, and delivery, working closely with Product, Design, SRE, and Platform.</p>
+          <p>At Eventbrite, I led multidisciplinary teams of 6–15 engineers across web, mobile, and backend services. My responsibilities included hiring, performance management, career development, and delivery, working closely with Product, Design, Analytics, SRE, and Platform.</p>
           <p>My technical background helps me guide architecture and delivery without taking ownership away from the team. I'm also rebuilding my hands-on practice with coding agents, context and harness engineering to help teams adopt AI-assisted workflows with review, testing, and clear human accountability.</p>
         </div>
       </section>
@@ -867,12 +894,12 @@
         <article class="highlight">
           <span class="metric">90–99%</span>
           <h2>Cache hit rates</h2>
-          <p>Achieved through event-driven services and distributed caching while modernizing Eventbrite's highest-traffic Listings experience.</p>
+          <p>An outcome of the team's caching, compression, routing, and operational improvements while modernizing Eventbrite's Listings experience.</p>
         </article>
         <article class="highlight">
-          <span class="metric">70%</span>
+          <span class="metric">≈70%</span>
           <h2>CloudFront egress reduction</h2>
-          <p>Reduced traffic and lowered daily infrastructure costs by approximately 30% through compression, caching, routing, and operational improvements.</p>
+          <p>Approximately 70% less CloudFront egress and approximately 30% lower daily infrastructure costs across the team's caching, compression, routing, and operational improvements.</p>
         </article>
         <article class="highlight">
           <span class="metric">378k</span>
@@ -892,16 +919,19 @@
 
             <article class="role">
               <h3>Engineering Manager</h3>
-              <p class="role-dates">Jan 2023 — Present</p>
+              <p class="role-dates">Jan 2023 — Jun 2026</p>
               <div class="role-body">
                 <p>Led multidisciplinary teams of 6–15 engineers responsible for the Listings experience across web, mobile, and backend services. Engineering Manager responsibilities began in August 2022, with the formal title transition in January 2023.</p>
                 <ul>
-                  <li>Managed performance and career development, sponsored an engineer's promotion to Senior, and coached Staff Engineers exploring a transition into management.</li>
-                  <li>Partnered with HR on hiring and interview calibration, connecting team needs with consistent candidate assessment.</li>
-                  <li>Drove engineering strategy with Product, Design, SRE, Platform, and Analytics partners while keeping architecture, reliability, delivery, and engineering standards close to the team.</li>
-                  <li>Led the team's extraction of Listings pages from a legacy Django monolith into an AWS architecture with independently deployable, event-driven services and a modern web application. Delegated technical ownership to Staff Engineers while aligning scope, sequencing, and rollout decisions.</li>
+                  <li>Led the team through completion of the Listings migration: 100% of production traffic moved to the new application and legacy systems retired in early June against an October plan, maintaining scope and quality. Developed and progressively delegated technical leadership to a Staff Engineer.</li>
+                  <li>Built the team's capability in event-driven architecture across urgency signals, video processing, and the internal Listings cache. Across the team's caching, compression, routing, and operational improvements, outcomes included 90–99% cache hit rates, approximately 70% less CloudFront egress, and approximately 30% lower daily infrastructure costs.</li>
+                  <li>Drove engineering strategy with Product, Design, SRE, and Platform partners, balancing product delivery with quality and operational sustainability. Recommended pausing feature work to address a material Listings performance regression; the team restored the LCP baseline.</li>
+                  <li>Partnered with Product and Analytics to deliver multi-ticket selection, generating approximately 378,000 incremental orders annually.</li>
+                  <li>Led repeating-event improvements that increased indexed Listings pages by 23%.</li>
                   <li>The team's migration more than halved response times, brought Core Web Vitals into green ranges, and strengthened SEO.</li>
                   <li>Directed phased and blue-green rollouts for three critical services, including observability, incident response, on-call readiness, resilience, security, performance, and accessibility.</li>
+                  <li>Owned hiring decisions for my team jointly with HR and helped standardize engineering interview calibration in 2023.</li>
+                  <li>Developed engineers and engineering managers through regular feedback, performance management, career development, and promotion support, including an Engineer II's promotion to Senior and mentoring Staff Engineers exploring management.</li>
                   <li>Introduced responsible AI-augmented engineering through workshops, reusable workflows, coaching, experimentation, and company-wide collaboration with AI Champions and the CTO.</li>
                 </ul>
               </div>
@@ -916,6 +946,7 @@
                   <li>Shaped architecture and engineering practices for React, TypeScript, Node.js, testing, experimentation, and distributed systems.</li>
                   <li>Led complex customer-facing initiatives across multiple squads, translating product goals into technical direction, delivery plans, and coordinated rollouts.</li>
                   <li>Designed quality strategies that expanded scalable end-to-end testing, strengthened delivery guardrails, and supported more autonomous engineering teams.</li>
+                  <li>Mentored engineers, reviewed technical designs, removed blockers, and balanced immediate delivery with system quality.</li>
                 </ul>
               </div>
             </article>
@@ -965,7 +996,7 @@
         <div class="capability-grid">
           <article class="capability">
             <span class="skill-label">Engineering leadership</span>
-            <p>People management, coaching, mentoring, performance management, career development, hiring, interview calibration, promotion sponsorship, team effectiveness, and engineering strategy.</p>
+            <p>People management, coaching, mentoring, performance management, career development, hiring, interview calibration, promotion sponsorship, psychological safety, continuous learning, team effectiveness, and engineering strategy.</p>
           </article>
           <article class="capability">
             <span class="skill-label">Product engineering</span>
@@ -1032,7 +1063,7 @@
         <div class="capability-grid">
           <article class="capability">
             <span class="skill-label">English</span>
-            <p>Full professional proficiency. Everyday working language for eight years at Eventbrite. English qualification from Escuela Oficial de Idiomas de Oviedo.</p>
+            <p>Fluent. Everyday working language for eight years at Eventbrite. English qualification from Escuela Oficial de Idiomas de Oviedo.</p>
           </article>
           <article class="capability">
             <span class="skill-label">Spanish</span>
@@ -1050,7 +1081,7 @@
 
     <footer>
       <span>Nacho Viejo · Engineering Manager</span>
-      <span>Last updated September 2026</span>
+      <span>Last updated October 2026</span>
     </footer>
   </div>
 </body>

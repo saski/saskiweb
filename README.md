@@ -5,6 +5,12 @@
 - `/` — generative audiovisual home page
 - `/cv/` — responsive, print-friendly professional CV
 
+The CV page offers a direct PDF download in addition to printing. The reviewed
+September 21, 2026 PDF is stored alongside the page in `cv/`. Run `node --test`
+before publishing; the CV tests verify the download target and the reviewed file's
+SHA-256 hash. Replace the PDF and its test reference together when a new revision
+is approved.
+
 ## Site5 deployment
 
 This project now deploys with `deploy.sh` instead of manual FTP uploads.
