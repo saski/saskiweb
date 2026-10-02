@@ -18,6 +18,10 @@ is approved.
 
 The canonical portrait approved on October 2, 2026 is published as
 `cv/nacho-viejo-2026-10-02.png`; `cv/nacho-viejo.png` also contains the same image.
+The website displays `cv/nacho-viejo-2026-10-02-bw.png`, a wider monochrome
+derivative with more headroom and soft photographic contrast. The circular frame
+remains 210 px on desktop and 112 px on mobile. The downloadable CV uses the
+approved color source.
 
 ## Site5 deployment
 

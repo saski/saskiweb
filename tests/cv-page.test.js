@@ -6,7 +6,8 @@ const test = require('node:test');
 
 const cvPath = path.join(__dirname, '..', 'cv', 'index.html');
 const socialCardPath = path.join(__dirname, '..', 'cv', 'og.png');
-const portraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo-2026-10-02.png');
+const portraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo-2026-10-02-bw.png');
+const colorPortraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo-2026-10-02.png');
 const robotsPath = path.join(__dirname, '..', 'robots.txt');
 const sitemapPath = path.join(__dirname, '..', 'sitemap.xml');
 const homePath = path.join(__dirname, '..', 'index.htm');
@@ -100,19 +101,26 @@ test('offers the current reviewed CV as a direct PDF download', () => {
   );
 });
 
-test('uses a professional portrait online without adding it to the printed CV', () => {
+test('uses the reframed monochrome portrait online and preserves the canonical color source', () => {
   const html = loadCv();
 
   assert.ok(existsSync(portraitPath), 'The public CV portrait should exist');
   assert.match(html, /<figure class="portrait"[^>]*>/);
-  assert.match(html, /src="nacho-viejo-2026-10-02\.png"/);
+  assert.match(html, /src="nacho-viejo-2026-10-02-bw\.png"/);
+  assert.match(html, /"image": "https:\/\/www\.saski\.com\/cv\/nacho-viejo-2026-10-02-bw\.png"/);
   const portrait = readFileSync(portraitPath);
   assert.equal(
     createHash('sha256').update(portrait).digest('hex'),
+    '424631d628c6f0d4b171cf63f1ce59db9e6803a9cc46992d88b691c49c9e92aa',
+    'The website must use the reviewed wider monochrome derivative'
+  );
+  const colorPortrait = readFileSync(colorPortraitPath);
+  assert.equal(
+    createHash('sha256').update(colorPortrait).digest('hex'),
     '4b9a3b6fe9a8ee4fd017a40877c777d9964889331187041bc0a6dba540c2ef57',
     'The portrait must be the exact image approved by Nacho'
   );
-  assert.deepEqual(readFileSync(path.join(__dirname, '..', 'cv', 'nacho-viejo.png')), portrait);
+  assert.deepEqual(readFileSync(path.join(__dirname, '..', 'cv', 'nacho-viejo.png')), colorPortrait);
   assert.match(html, /alt="Portrait of Nacho Viejo"/);
   assert.match(html, /\.portrait\s*\{\s*display:\s*none;/);
 });
