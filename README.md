@@ -6,11 +6,16 @@
 - `/cv/` — responsive, print-friendly professional CV
 
 The CV page offers a direct PDF download in addition to printing. The reviewed
-October 2, 2026 PDF is stored alongside the page in `cv/`. The previous September
-21 public URL serves the same corrected PDF for compatibility. Run `node --test`
+October 2, 2026 PDF includes the newly approved professional portrait and is
+stored alongside the page as `Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2.pdf`.
+The previous October 2 and September 21 public URLs serve the same updated PDF
+for compatibility. Run `node --test`
 before publishing; the CV tests verify the download target and the reviewed file's
 SHA-256 hash. Replace the PDF and its test reference together when a new revision
 is approved.
+
+The canonical portrait approved on October 2, 2026 is published as
+`cv/nacho-viejo-2026-10-02.png`; `cv/nacho-viejo.png` also contains the same image.
 
 ## Site5 deployment
 

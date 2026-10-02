@@ -6,7 +6,7 @@ const test = require('node:test');
 
 const cvPath = path.join(__dirname, '..', 'cv', 'index.html');
 const socialCardPath = path.join(__dirname, '..', 'cv', 'og.png');
-const portraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo.png');
+const portraitPath = path.join(__dirname, '..', 'cv', 'nacho-viejo-2026-10-02.png');
 const robotsPath = path.join(__dirname, '..', 'robots.txt');
 const sitemapPath = path.join(__dirname, '..', 'sitemap.xml');
 const homePath = path.join(__dirname, '..', 'index.htm');
@@ -76,17 +76,22 @@ test('provides direct contact links and print-friendly presentation', () => {
 
 test('offers the current reviewed CV as a direct PDF download', () => {
   const html = loadCv();
-  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02.pdf';
+  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2.pdf';
   const pdfPath = path.join(__dirname, '..', 'cv', fileName);
 
   assert.ok(existsSync(pdfPath), 'The download must resolve to the reviewed CV');
-  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-10-02\.pdf"[^>]+download/);
+  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2\.pdf"[^>]+download/);
   const pdf = readFileSync(pdfPath);
   assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
   assert.equal(
     createHash('sha256').update(pdf).digest('hex'),
-    'e6128f11630632fdbcdb15b24c8d124f4bea5c03542714c21ce36a0fc90d2051',
+    '31555fc7e1b4a21eb243947f8d9b957a9d4a9465d2d738a29752aa8ffbf4575c',
     'The download must serve the latest reviewed PDF'
+  );
+  assert.deepEqual(
+    readFileSync(path.join(__dirname, '..', 'cv', 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02.pdf')),
+    pdf,
+    'The first October 2 public URL must also serve the updated portrait'
   );
   assert.deepEqual(
     readFileSync(path.join(__dirname, '..', 'cv', 'Nacho_Viejo_Engineering_Manager_CV_2026-09-21.pdf')),
@@ -100,7 +105,14 @@ test('uses a professional portrait online without adding it to the printed CV', 
 
   assert.ok(existsSync(portraitPath), 'The public CV portrait should exist');
   assert.match(html, /<figure class="portrait"[^>]*>/);
-  assert.match(html, /src="nacho-viejo\.png"/);
+  assert.match(html, /src="nacho-viejo-2026-10-02\.png"/);
+  const portrait = readFileSync(portraitPath);
+  assert.equal(
+    createHash('sha256').update(portrait).digest('hex'),
+    '4b9a3b6fe9a8ee4fd017a40877c777d9964889331187041bc0a6dba540c2ef57',
+    'The portrait must be the exact image approved by Nacho'
+  );
+  assert.deepEqual(readFileSync(path.join(__dirname, '..', 'cv', 'nacho-viejo.png')), portrait);
   assert.match(html, /alt="Portrait of Nacho Viejo"/);
   assert.match(html, /\.portrait\s*\{\s*display:\s*none;/);
 });
