@@ -41,7 +41,8 @@ test('keeps the public CV generic and evidence-based', () => {
   assert.match(html, /90–99%/);
   assert.match(html, /70%/);
   assert.match(html, /30%/);
-  assert.match(html, /Computer Engineering studies \(Systems\)/);
+  assert.match(html, /Computer Engineering \(Systems\)/);
+  assert.doesNotMatch(html, /Computer Engineering studies/i);
 });
 
 test('aligns employment chronology and leadership outcomes with the reviewed PDF', () => {
@@ -73,19 +74,24 @@ test('provides direct contact links and print-friendly presentation', () => {
   assert.match(html, /class="print-action"/);
 });
 
-test('offers the reviewed September 21 CV as a direct PDF download', () => {
+test('offers the current reviewed CV as a direct PDF download', () => {
   const html = loadCv();
-  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-09-21.pdf';
+  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02.pdf';
   const pdfPath = path.join(__dirname, '..', 'cv', fileName);
 
   assert.ok(existsSync(pdfPath), 'The download must resolve to the reviewed CV');
-  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-09-21\.pdf"[^>]+download/);
+  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-10-02\.pdf"[^>]+download/);
   const pdf = readFileSync(pdfPath);
   assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
   assert.equal(
     createHash('sha256').update(pdf).digest('hex'),
-    'ca697aa556d0bb6cbce8a5616fb4222664e7d85deada83f6dd9c7fec594c51b1',
-    'The download must preserve the supplied, reviewed PDF without substitution'
+    'e6128f11630632fdbcdb15b24c8d124f4bea5c03542714c21ce36a0fc90d2051',
+    'The download must serve the latest reviewed PDF'
+  );
+  assert.deepEqual(
+    readFileSync(path.join(__dirname, '..', 'cv', 'Nacho_Viejo_Engineering_Manager_CV_2026-09-21.pdf')),
+    pdf,
+    'The previous public URL must also serve the corrected CV'
   );
 });
 
