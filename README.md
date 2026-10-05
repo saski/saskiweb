@@ -6,11 +6,16 @@
 - `/cv/` — responsive, print-friendly professional CV
 
 The CV page offers a direct PDF download in addition to printing. The reviewed
-October 2, 2026 PDF includes the newly approved professional portrait and is
-stored alongside the page as `Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2.pdf`.
-The deployed copies at the previous October 2 and September 21 public URLs
-contain the same updated PDF for compatibility; cached responses may temporarily
-retain the previous portrait. The page links to the versioned download above.
+October 5, 2026 PDF is stored alongside the page as
+`Nacho_Viejo_Engineering_Manager_CV_2026-10-05.pdf`. The two-page revision makes AI
+leadership explicit across individual practice, team adoption and company
+governance, while retaining the Engineering Manager positioning and approved
+professional portrait. The page and its structured identity metadata use the
+same scope and attribution.
+
+The previous October 2 PDF and existing September 21 compatibility URL retain
+their earlier approved binary; they are historical, not the current download.
+The page links only to the October 5 version, avoiding stale cached downloads.
 Run `node --test`
 before publishing; the CV tests verify the download target and the reviewed file's
 SHA-256 hash. Replace the PDF and its test reference together when a new revision

@@ -64,6 +64,21 @@ test('aligns employment chronology and leadership outcomes with the reviewed PDF
   assert.match(html, /Fluent\. Everyday working language for eight years/);
 });
 
+test('explains AI leadership through individual practice, team adoption and company governance', () => {
+  const html = loadCv();
+
+  assert.match(html, /personal practice, team enablement, and company governance/);
+  assert.match(html, /<strong>Individual practice:<\/strong>/);
+  assert.match(html, /from bugs to more critical work/);
+  assert.match(html, /<strong>Team adoption:<\/strong>/);
+  assert.match(html, /shared engineering harness/);
+  assert.match(html, /Google(?:'s)? Agent Development Kit/);
+  assert.match(html, /<strong>Company governance:<\/strong>/);
+  assert.match(html, /CTO, VP of Engineering, and a Principal in Security/);
+  assert.match(html, /cross-team reuse/);
+  assert.doesNotMatch(html, /established.*AI.*company-wide|implemented.*company-wide AI governance/i);
+});
+
 test('provides direct contact links and print-friendly presentation', () => {
   const html = loadCv();
 
@@ -77,27 +92,33 @@ test('provides direct contact links and print-friendly presentation', () => {
 
 test('offers the current reviewed CV as a direct PDF download', () => {
   const html = loadCv();
-  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2.pdf';
+  const fileName = 'Nacho_Viejo_Engineering_Manager_CV_2026-10-05.pdf';
   const pdfPath = path.join(__dirname, '..', 'cv', fileName);
 
   assert.ok(existsSync(pdfPath), 'The download must resolve to the reviewed CV');
-  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2\.pdf"[^>]+download/);
+  assert.match(html, /class="download-action"[^>]+href="Nacho_Viejo_Engineering_Manager_CV_2026-10-05\.pdf"[^>]+download/);
   const pdf = readFileSync(pdfPath);
   assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
   assert.equal(
     createHash('sha256').update(pdf).digest('hex'),
-    '31555fc7e1b4a21eb243947f8d9b957a9d4a9465d2d738a29752aa8ffbf4575c',
+    '764d435ab806a00d7ebd9dad7cc8422117e657ffee3e3fb7d5eb56ee471d08c8',
     'The download must serve the latest reviewed PDF'
+  );
+  const previousPdf = readFileSync(path.join(__dirname, '..', 'cv', 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02_v2.pdf'));
+  assert.equal(
+    createHash('sha256').update(previousPdf).digest('hex'),
+    '31555fc7e1b4a21eb243947f8d9b957a9d4a9465d2d738a29752aa8ffbf4575c',
+    'The previous approved PDF must remain unchanged'
   );
   assert.deepEqual(
     readFileSync(path.join(__dirname, '..', 'cv', 'Nacho_Viejo_Engineering_Manager_CV_2026-10-02.pdf')),
-    pdf,
-    'The first October 2 public URL must also serve the updated portrait'
+    previousPdf,
+    'The first October 2 public URL retains its historical approved revision'
   );
   assert.deepEqual(
     readFileSync(path.join(__dirname, '..', 'cv', 'Nacho_Viejo_Engineering_Manager_CV_2026-09-21.pdf')),
-    pdf,
-    'The previous public URL must also serve the corrected CV'
+    previousPdf,
+    'The older compatibility URL retains its existing approved binary'
   );
 });
 
