@@ -62,7 +62,7 @@ is_public_file() {
       return
       ;;
     notes/*)
-      [[ "$file_path" =~ \.(html?|xml|pdf|css|js|png|jpe?g|webp|svg|gif|ico)$ ]]
+      [[ "$file_path" =~ \.(html?|xml|pdf|css|js|png|jpe?g|webp|svg|gif|ico|woff2)$ ]]
       return
       ;;
   esac

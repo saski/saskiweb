@@ -28,6 +28,7 @@ function makeFixture() {
     'cv/index.html',
     'cv/portrait.png',
     'notes/assets/cover.jpeg',
+    'notes/assets/fonts/handwriting.woff2',
     'notes/feed.xml',
     'notes/first-note.html',
   ];

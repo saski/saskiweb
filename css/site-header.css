@@ -1,0 +1,72 @@
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 16px clamp(20px, 5vw, 56px);
+  box-sizing: border-box;
+}
+.site-header--scene {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 4;
+  pointer-events: none;
+}
+.site-mark,
+.social-links a {
+  pointer-events: auto;
+  color: #454d46;
+  text-decoration: none;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 1.1px;
+  line-height: 1;
+}
+.site-mark {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #1b211e;
+  font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  font-size: 17px;
+  letter-spacing: 3px;
+}
+.social-links {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 24px);
+}
+.social-links a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 44px;
+  min-height: 44px;
+  box-sizing: border-box;
+  border-bottom: 1px solid transparent;
+  font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
+  font-weight: 400;
+}
+.site-mark:hover,
+.site-mark:focus-visible,
+.social-links a:hover,
+.social-links a:focus-visible {
+  background: transparent;
+  color: #1b211e;
+}
+.social-links a:hover,
+.social-links a:focus-visible,
+.social-links a[aria-current="page"] {
+  border-color: #5d665f;
+}
+.site-mark:focus-visible,
+.social-links a:focus-visible {
+  outline: 2px solid #96442d;
+  outline-offset: 4px;
+}
+@media (max-width: 640px) {
+  .site-header { padding: 12px 18px; align-items: flex-start; gap: 12px; }
+  .site-mark { font-size: 15px; letter-spacing: 2px; }
+  .social-links a { font-size: 11px; }
+  .social-links { display: grid; grid-template-columns: auto auto; gap: 0 16px; }
+}

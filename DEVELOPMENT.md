@@ -14,6 +14,8 @@ A new entry with `status: draft` is excluded from the index, article output, fee
 
 Generated pages are checked into Git so a deploy remains inspectable. Run the build after editing content and include its outputs in the same commit. Do not edit generated article HTML directly. The image for the bookshelf note is the photo attached to that original post, with descriptive Spanish alt text. The other six notes have no forced hero image. The shared social preview is a local typographic PNG.
 
+The home and Notes use `css/site-header.css` for the same navigation treatment, using the Notes serif mark and light sans-serif links. Both expose Notes, CV, GitHub and LinkedIn, with keyboard focus and touch targets. The Notes introduction is a single heading; its word “Notes” uses a locally served, 500-weight Caveat WOFF2 subset from Google Fonts. The font license is distributed alongside it at `notes/assets/caveat-license.html`. This is a handwritten typeface, not the author's personal handwriting. The source is https://github.com/google/fonts/tree/main/ofl/caveat.
+
 ## Migration editorial decisions
 
 - Import seven authored pieces, including the author’s substantial commentary on a Rich Holmes repost; do not reproduce the third-party post itself.

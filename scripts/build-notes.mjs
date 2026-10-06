@@ -40,7 +40,9 @@ function document({ title, description, url, lang = 'en', note, main, index = fa
   <link rel="canonical" href="${escape(url)}">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="alternate" type="application/rss+xml" title="Notes — Nacho Viejo" href="/notes/feed.xml">
-  <link rel="stylesheet" href="/css/notes.css?v=20261006">
+  <link rel="stylesheet" href="/css/notes.css?v=20261006-compact">
+  <link rel="stylesheet" href="/css/site-header.css?v=20261006">
+${index ? '  <link rel="preload" href="/notes/assets/caveat-notes-500.woff2" as="font" type="font/woff2" crossorigin>\n' : ''}
   <meta property="og:type" content="${note ? 'article' : 'website'}">
   <meta property="og:site_name" content="saski — Notes">
   <meta property="og:title" content="${escape(title)}">
@@ -56,15 +58,20 @@ ${note ? `  <meta property="article:published_time" content="${note.original_pub
 ${index ? '  <script src="/js/notes.js?v=20261006" defer></script>\n' : ''}</head>
 <body>
   <a class="skip-link" href="#main" lang="en">Skip to content</a>
+  <header class="site-header" aria-label="Site links" lang="en">
+    <a class="site-mark" href="/" aria-label="saski home">saski</a>
+    <nav class="social-links" aria-label="Social links">
+      <a href="/notes/" aria-label="Notes on people and software"${index ? ' aria-current="page"' : ''}><span>Notes</span></a>
+      <a href="/cv/" aria-label="Professional CV"><span>CV</span></a>
+      <a href="https://github.com/saski" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/saski/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <span>LinkedIn</span>
+      </a>
+    </nav>
+  </header>
   <div class="page-shell">
-    <header class="site-header" lang="en">
-      <a class="brand" href="/" aria-label="saski home">SASKI</a>
-      <nav class="site-nav" aria-label="Site navigation">
-        <a href="/notes/"${index ? ' aria-current="page"' : ''}>Notes</a>
-        <a href="/cv/">CV</a>
-        <a href="https://github.com/saski" rel="me">GitHub</a>
-      </nav>
-    </header>
     <main id="main" tabindex="-1">${main}</main>
     <footer class="site-footer" lang="en">
       <span>Nacho Viejo · Madrid</span>
@@ -87,9 +94,7 @@ function indexPage(notes) {
     url: `${origin}/notes/`, index: true,
     main: `
       <header class="intro">
-        <p class="eyebrow">Nacho Viejo · Field notes</p>
-        <h1>Notes.</h1>
-        <p class="deck">On people, software<br>and learning in public.</p>
+        <h1><span class="title-hand">Notes</span> on people, software and learning in public</h1>
       </header>
       <nav class="filters" aria-label="Filter notes by topic" hidden>
         <button type="button" data-topic="all" aria-pressed="true">All</button>
