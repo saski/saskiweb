@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Less magic, more discipline: working with context — Nacho Viejo</title>
+  <meta name="description" content="The early experiments: bringing intentional compaction into Cursor and keeping intent and context useful through longer coding sessions.">
+  <meta name="author" content="Nacho Viejo">
+  <link rel="canonical" href="https://www.saski.com/notes/working-with-context/">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="alternate" type="application/rss+xml" title="Notes — Nacho Viejo" href="/notes/feed.xml">
+  <link rel="stylesheet" href="/css/notes.css?v=20261006">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="saski — Notes">
+  <meta property="og:title" content="Less magic, more discipline: working with context — Nacho Viejo">
+  <meta property="og:description" content="The early experiments: bringing intentional compaction into Cursor and keeping intent and context useful through longer coding sessions.">
+  <meta property="og:url" content="https://www.saski.com/notes/working-with-context/">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:image" content="https://www.saski.com/notes/assets/notes-2026-10-06.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Notes. On people, software and learning in public. Nacho Viejo, saski.com.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2025-12-23T19:37:27.947Z">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Less magic, more discipline: working with context","description":"The early experiments: bringing intentional compaction into Cursor and keeping intent and context useful through longer coding sessions.","inLanguage":"en","datePublished":"2025-12-23T19:37:27.947Z","author":{"@type":"Person","name":"Nacho Viejo","url":"https://www.saski.com/cv/"},"mainEntityOfPage":"https://www.saski.com/notes/working-with-context/","isBasedOn":"https://www.linkedin.com/feed/update/urn:li:activity:7409316231255805952/"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main" lang="en">Skip to content</a>
+  <div class="page-shell">
+    <header class="site-header" lang="en">
+      <a class="brand" href="/" aria-label="saski home">SASKI</a>
+      <nav class="site-nav" aria-label="Site navigation">
+        <a href="/notes/">Notes</a>
+        <a href="/cv/">CV</a>
+        <a href="https://github.com/saski" rel="me">GitHub</a>
+      </nav>
+    </header>
+    <main id="main" tabindex="-1">
+      <article class="reader">
+        <a class="back-link" href="/notes/" lang="en">← All notes</a>
+        <header><p class="note-meta" lang="en"><time datetime="2025-12-23T19:37:27.947Z">23 Dec 2025</time><span class="note-topic">Agents &amp; systems</span><span><abbr title="English">EN</abbr> · Practice note</span></p><h1>Less magic, more discipline: working with context</h1>
+          <p class="provenance" lang="en">Originally published on LinkedIn</p>
+        </header>
+        <div class="note-body"><p>I&#39;ve been following <a href="https://www.linkedin.com/in/eferro/">Eduardo Ferro Aldama</a>&#39;s explorations about augmented coding <a href="https://www.eferro.net/2025/11/cursor-commands-added-to-augmentedcode.html">Cursor commands added to augmentedcode-configuration</a></p>
+<p>Those sent me down a deeper path: how to reduce AI hallucinations and keep coding sessions genuinely productive, not just fast. One piece that really clicked was “Tu CLAUDE.md no funciona (sin Context Engineering)”:
+<a href="https://nikeyes.github.io/tu-claude-md-no-funciona-sin-context-engineering-es/">Tu CLAUDE.md no funciona (sin Context Engineering)</a></p>
+<p>From there, I got to the Frequent Intentional Compaction (FIC) framework, and this implementation as a Claude plugin: <a href="https://github.com/nikeyes/stepwise-dev">stepwise-dev</a></p>
+<p>So, I decided to get my hands dirty and cloned Edu’s augmented coding tools repo: <a href="https://github.com/saski/augmentedcode-configuration">my augmentedcode-configuration fork</a>
+…adding a translation of the FIC Claude plugin, wiring it up as Cursor commands.</p>
+<p>Still experimenting, but chasing the idea of explicit, repeated compaction of intent and context feels like gaining control when using these tools for coding. Less magic, more discipline.</p>
+</div>
+        <footer class="references">
+          <p class="editorial-note" lang="en">An early experiment from December 2025. The configuration later evolved into Arnesto.</p>
+          <p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7409316231255805952/" lang="en">Original &amp; conversation on LinkedIn ↗</a></p>
+          <p class="related"><span lang="en">Related note</span><a href="/notes/arnesto/" lang="es">Arnesto: de configuración a arnés personal →</a></p>
+        </footer>
+      </article></main>
+    <footer class="site-footer" lang="en">
+      <span>Nacho Viejo · Madrid</span>
+      <nav aria-label="Follow my writing"><a href="/notes/feed.xml">RSS</a><a href="https://www.linkedin.com/in/saski/" rel="me">Elsewhere: LinkedIn ↗</a></nav>
+    </footer>
+  </div>
+</body>
+</html>

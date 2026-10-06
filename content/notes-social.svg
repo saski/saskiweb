@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#f4efe5"/>
+  <g fill="#1b211e">
+    <text x="80" y="90" font-family="Georgia,serif" font-size="25" letter-spacing="5">SASKI</text>
+    <text x="80" y="300" font-family="Georgia,serif" font-size="138" letter-spacing="-5">Notes.</text>
+    <text x="84" y="385" font-family="Georgia,serif" font-size="39">On people, software</text>
+    <text x="84" y="437" font-family="Georgia,serif" font-size="39">and learning in public.</text>
+  </g>
+  <path d="M80 132H1120M80 510H1120" stroke="#d7cfc0"/>
+  <text x="84" y="562" fill="#96442d" font-family="Arial,sans-serif" font-size="20" letter-spacing="2">NACHO VIEJO</text>
+  <text x="1118" y="562" text-anchor="end" fill="#5d665f" font-family="Arial,sans-serif" font-size="20">saski.com/notes</text>
+</svg>

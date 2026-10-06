@@ -141,6 +141,13 @@
       gap: 8px;
     }
 
+    .notes-link {
+      align-self: center;
+      color: var(--ink);
+      padding: 10px 8px;
+      text-decoration: none;
+    }
+
     .print-action,
     .download-action {
       border: 1px solid var(--line);
@@ -854,6 +861,7 @@
     <nav class="utility-bar" aria-label="CV utilities">
       <a class="home-link" href="/" aria-label="Back to saski.com">saski / cv</a>
       <div class="cv-actions">
+        <a class="notes-link" href="/notes/">Notes</a>
         <a class="download-action" href="Nacho_Viejo_Engineering_Manager_CV_2026-10-05.pdf" download>Download PDF</a>
         <button class="print-action" type="button" onclick="window.print()">Print</button>
       </div>

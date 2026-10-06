@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://www.saski.com/</loc>
-  </url>
-  <url>
-    <loc>https://www.saski.com/cv/</loc>
-  </url>
+  <url><loc>https://www.saski.com/</loc></url>
+  <url><loc>https://www.saski.com/cv/</loc></url>
+  <url><loc>https://www.saski.com/notes/</loc></url>
+  <url><loc>https://www.saski.com/notes/agent-systems-lab/</loc></url>
+  <url><loc>https://www.saski.com/notes/arnesto/</loc></url>
+  <url><loc>https://www.saski.com/notes/menos-software/</loc></url>
+  <url><loc>https://www.saski.com/notes/learning-with-ai/</loc></url>
+  <url><loc>https://www.saski.com/notes/execution-to-coordination/</loc></url>
+  <url><loc>https://www.saski.com/notes/teams-that-grow/</loc></url>
+  <url><loc>https://www.saski.com/notes/working-with-context/</loc></url>
 </urlset>

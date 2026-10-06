@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+  <title>Notes — Nacho Viejo</title>
+  <link>https://www.saski.com/notes/</link>
+  <description>On people, software and learning in public.</description>
+  <atom:link href="https://www.saski.com/notes/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>A playground for agents and systems thinking</title>
+    <link>https://www.saski.com/notes/agent-systems-lab/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/agent-systems-lab/</guid>
+    <pubDate>Sun, 04 Oct 2026 11:58:56 GMT</pubDate>
+    <category>Agents &amp; systems</category>
+    <description><![CDATA[<p>I wanted to play with multi-agent systems, learn how to keep them understandable and under control, so I’ve started <a href="https://github.com/saski/agent-systems-lab">a playground</a></p>
+<p>All the frequent conversations I&#39;m having around agentic systems lately took me back to Donella Meadows’ &quot;Thinking in Systems&quot;, so I&#39;ll use the playground for exploring her ideas about feedback loops, delays, bottlenecks and the effects of local decisions on the wider system.</p>
+<p>The goal is to build a practical space for testing tools, questioning design choices and learning from the system’s behaviour, having that information at hand.</p>
+<p>The initial setup combines LangGraph orchestration, containerized specialist agents, scoped permissions, an audit trail and OpenTelemetry. A live dashboard makes it easier to follow tasks, inspect their progress and see where human review is needed. Take a look at <a href="https://github.com/saski/agent-systems-lab/tree/main/experiments">the experiments</a></p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7512481380862287873/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+  <item>
+    <title>Arnesto: de configuración a arnés personal</title>
+    <link>https://www.saski.com/notes/arnesto/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/arnesto/</guid>
+    <pubDate>Mon, 17 Aug 2026 17:43:57 GMT</pubDate>
+    <category>Agents &amp; systems</category>
+    <description><![CDATA[<p>Durante bastante tiempo este proyecto se llamó Augmented Code Configuration, y el nombre tenía sentido al principio: nació en el Q3 de 2025 como un fork del repositorio de <a href="https://www.linkedin.com/in/eferro/">Eduardo Ferro Aldama</a> y reunía, sobre todo, reglas y archivos Markdown pensados para trabajar mejor con las herramientas de coding AI-aumentado que teníamos entonces.</p>
+<p>El ecosistema ha cambiado muchísimo desde aquel inicio y el proyecto ha ido transformándose con él. A las reglas pronto se sumaron los skills, para cargar conocimiento sólo cuando hacía falta; después empezamos a trabajar de manera mucho más intencionada con el contexto, apoyándonos en planning y en técnicas de intentional compaction para conservar lo importante durante tareas largas (gracias, HumanLayer y <a href="https://www.linkedin.com/in/dexterihorthy/">Dexter Horthy</a>); y OpenSpec terminó aportando una estructura estable para conectar intención, decisiones, ejecución y verificación (gracias, <a href="https://www.linkedin.com/in/alvarormoya/">Alvaro Moya</a>).</p>
+<p>Así que el scope dejó de ser exclusivamente el de una herramienta de coding asistido. Hoy hay distintas superficies de entrada, modelos y herramientas colaborando: Codex, Cursor, Claude o Gemini en el trabajo local; Hermes con Telegram como entrada remota; OpenCode y OmniRoute para determinadas rutas de ejecución (gratuitas); y ahora evaluando Orca, AI Studio, y con Grok Agent o Humanlayer esperando su turno. A la fuerza, seguirá siendo movedizo, especialmente cuando veo updates de <a href="https://www.linkedin.com/in/gorkma/">Gorka Moreno Asín</a> y los 540.</p>
+<p>Seguir hablando de una “configuración para Augmented Code” ya no describía nada este proyecto, cuando se había convertido en un arnés personal para trabajar con agentes.
+Así que necesitaba un nombre nuevo, porque esto ya no es augmented-coding.
+Entonces, a falta de nada mejor, se llamará Arnesto, con su propio repo. No hay ninguna intención de convertirlo en un framework ni en una distribución que cualquiera pueda instalar tal cual; es mi entorno real de trabajo, con mis decisiones, mis manías y mis puñetas, y cubre mis necesidades de hoy, pero lo publico como referencia para quien quiera echarle un ojo, reutilizar ideas o construir su propio arnés.</p>
+<p>Os presento a Arnesto:
+<a href="https://github.com/saski/arnesto">Arnesto on GitHub</a></p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+  <item>
+    <title>En mi estantería: Menos software, más impacto</title>
+    <link>https://www.saski.com/notes/menos-software/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/menos-software/</guid>
+    <pubDate>Sat, 25 Jul 2026 10:25:12 GMT</pubDate>
+    <category>Engineering</category>
+    <description><![CDATA[<p>Una vez releído en papel, &quot;Menos software, más impacto&quot; de <a href="https://www.linkedin.com/in/eferro/">Eduardo Ferro Aldama</a> ocupa su sitio en mi mini-olimpo del desarrollo de software.</p>
+<p><img src="https://www.saski.com/notes/assets/bookshelf-2026-07-25.jpeg" alt="Mi mano coloca Menos software, más impacto, de Eduardo Ferro Aldama, entre los libros de ingeniería de mi estantería."></p><p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7486728253659967488/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+  <item>
+    <title>Using AI without outsourcing the learning</title>
+    <link>https://www.saski.com/notes/learning-with-ai/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/learning-with-ai/</guid>
+    <pubDate>Sun, 22 Feb 2026 10:00:02 GMT</pubDate>
+    <category>Engineering</category>
+    <description><![CDATA[<p>Anthropic published <a href="https://www.anthropic.com/research/AI-assistance-coding-skills">research on AI assistance and coding skills</a> that made me think about what we learn while getting work done.</p>
+<p>In a randomized study, 52 mostly junior software engineers with Python experience worked with Trio, an unfamiliar asynchronous programming library. Some had access to an AI assistant; others worked without it.</p>
+<p>Three findings stood out:</p>
+<ul>
+<li><strong>Learning:</strong> the AI group averaged 50% on the subsequent assessment, compared with 67% in the control group. That is a gap of <strong>17 percentage points</strong>.</li>
+<li><strong>Speed:</strong> the AI group finished about two minutes faster on average, but the difference was <strong>not statistically significant</strong>.</li>
+<li><strong>Debugging:</strong> this was the area with the largest gap, which matters when the next task is to inspect and supervise generated code.</li>
+</ul>
+<p>The researchers also looked at how participants used the assistant. Asking for explanations and building understanding were associated with better learning outcomes than delegating the work wholesale. Those interaction patterns came from small groups; they are useful signals, not proof that a particular prompting style causes better learning.</p>
+<p>My takeaway is to treat AI as a comprehension partner when learning something new: ask why, inspect the result, and make sure I can explain and debug it myself. Finishing a task and understanding it are different outcomes, and I want to keep paying attention to both.</p>
+<p>This study concerns a specific learning task and an immediate assessment. It does not establish what happens to long-term expertise or to experienced developers working in familiar codebases.</p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7431276578770153472/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+  <item>
+    <title>From execution to coordination: product and engineering</title>
+    <link>https://www.saski.com/notes/execution-to-coordination/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/execution-to-coordination/</guid>
+    <pubDate>Wed, 18 Feb 2026 15:50:00 GMT</pubDate>
+    <category>People &amp; product</category>
+    <description><![CDATA[<p>Over the last few months, much of the AI tooling I have been following in software has targeted code execution: tests, bugs, docs, security. Automating the technical lower layers.
+The new wave of agentic tools shifts towards finished knowledge work: analysis, reporting, planning, and all with minimal supervision. That’s automation moving from execution into coordination.</p>
+<p>If you abstract the PM role, much of it is cognitive orchestration: understanding context, synthesizing inputs, defining problems, prioritizing, specifying intent, aligning stakeholders, validating outcomes. These are exactly the structured knowledge workflows agents are starting to absorb. So yes, parts of the Product domain are now in scope for automation, just like parts of engineering were until now.</p>
+<p>The shift I see in engineering is toward system design, orchestration and problem framing. That is where I expect more of our value to sit as implementation becomes easier.</p>
+<p>A similar shift is reaching product. What remains is the PM as a decision architect inside increasingly automated socio-technical systems. Which is also why product and engineering are converging: engineers move toward product definition as implementation friction drops, while PMs move toward system design as coordination becomes programmable.</p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7428816229512937472/">Rich Holmes’ example of a product workflow using Claude Cowork</a> prompted this reflection.</p>
+<p>Here is another flow from the same source: <a href="https://substack.com/@richholmes/note/c-214815370">Rich Holmes’ example with the Ideate Agent in Stitch</a></p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7429915098783272960/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+  <item>
+    <title>Equipos donde las personas crecen y quieren quedarse</title>
+    <link>https://www.saski.com/notes/teams-that-grow/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/teams-that-grow/</guid>
+    <pubDate>Wed, 28 Jan 2026 18:17:58 GMT</pubDate>
+    <category>People &amp; product</category>
+    <description><![CDATA[<p>¡Hola, vengo a dar las gracias!</p>
+<p>Me emociona recibir el <strong>Make It Happen Spirit Award</strong> de Eventbrite tras una etapa de casi ocho años en Eventbrite en los que he tenido la suerte de crecer, equivocarme, aprender y asumir (¡muy!) distintos tipos de responsabilidad, pasando de Staff Engineer a Engineering Manager.</p>
+<p>Esto no se habría logrado sin el talento, la empatía, la visión, la generosidad y la confianza de la gente con la que he trabajado durante todo este tiempo (¡hola, <a href="https://www.linkedin.com/in/jiglesiasf/">Juan Iglesias</a>!). Equipos que se implican, que se cuidan, que discuten con rigor y que empujan juntos cuando las cosas se ponen difíciles. Este premio es, sobre todo, suyo.</p>
+<p>Me emociona especialmente que se reconozca no solo el impacto técnico y los resultados, sino también una forma de hacer: conectar decisiones de ingeniería con valor real para clientes, construir sistemas sólidos y, al mismo tiempo, crear espacios donde las personas crecen y quieren quedarse.</p>
+<p>Gracias a todas las personas que me han acompañado en este camino. Y a todos los que os habéis alegrado de forma genuina ✨</p>
+<p>Seguimos.</p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7422342191232188417/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+  <item>
+    <title>Less magic, more discipline: working with context</title>
+    <link>https://www.saski.com/notes/working-with-context/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/working-with-context/</guid>
+    <pubDate>Tue, 23 Dec 2025 19:37:27 GMT</pubDate>
+    <category>Agents &amp; systems</category>
+    <description><![CDATA[<p>I&#39;ve been following <a href="https://www.linkedin.com/in/eferro/">Eduardo Ferro Aldama</a>&#39;s explorations about augmented coding <a href="https://www.eferro.net/2025/11/cursor-commands-added-to-augmentedcode.html">Cursor commands added to augmentedcode-configuration</a></p>
+<p>Those sent me down a deeper path: how to reduce AI hallucinations and keep coding sessions genuinely productive, not just fast. One piece that really clicked was “Tu CLAUDE.md no funciona (sin Context Engineering)”:
+<a href="https://nikeyes.github.io/tu-claude-md-no-funciona-sin-context-engineering-es/">Tu CLAUDE.md no funciona (sin Context Engineering)</a></p>
+<p>From there, I got to the Frequent Intentional Compaction (FIC) framework, and this implementation as a Claude plugin: <a href="https://github.com/nikeyes/stepwise-dev">stepwise-dev</a></p>
+<p>So, I decided to get my hands dirty and cloned Edu’s augmented coding tools repo: <a href="https://github.com/saski/augmentedcode-configuration">my augmentedcode-configuration fork</a>
+…adding a translation of the FIC Claude plugin, wiring it up as Cursor commands.</p>
+<p>Still experimenting, but chasing the idea of explicit, repeated compaction of intent and context feels like gaining control when using these tools for coding. Less magic, more discipline.</p>
+<p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7409316231255805952/">Original &amp; conversation on LinkedIn</a></p>]]></description>
+  </item>
+</channel>
+</rss>
