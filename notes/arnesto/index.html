@@ -3,19 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Arnesto: de configuración a arnés personal — Nacho Viejo</title>
-  <meta name="description" content="Un entorno real de trabajo que fue creciendo: reglas, skills, contexto y distintas herramientas. También mis decisiones, mis manías y mis puñetas.">
+  <title>Arnesto: cómo organizo mi entorno de agentes — Nacho Viejo</title>
+  <meta name="description" content="Reglas pequeñas, skills bajo demanda, decisiones fuera del chat y límites entre herramientas. Ejemplos de mi arnés personal, con enlaces al código.">
   <meta name="author" content="Nacho Viejo">
   <link rel="canonical" href="https://www.saski.com/notes/arnesto/">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="alternate" type="application/rss+xml" title="Notes — Nacho Viejo" href="/notes/feed.xml">
-  <link rel="stylesheet" href="/css/notes.css?v=20261006-hand-spacing">
+  <link rel="stylesheet" href="/css/notes.css?v=20261006-reference-notes">
   <link rel="stylesheet" href="/css/site-header.css?v=20261006">
 
   <meta property="og:type" content="article">
   <meta property="og:site_name" content="saski — Notes">
-  <meta property="og:title" content="Arnesto: de configuración a arnés personal — Nacho Viejo">
-  <meta property="og:description" content="Un entorno real de trabajo que fue creciendo: reglas, skills, contexto y distintas herramientas. También mis decisiones, mis manías y mis puñetas.">
+  <meta property="og:title" content="Arnesto: cómo organizo mi entorno de agentes — Nacho Viejo">
+  <meta property="og:description" content="Reglas pequeñas, skills bajo demanda, decisiones fuera del chat y límites entre herramientas. Ejemplos de mi arnés personal, con enlaces al código.">
   <meta property="og:url" content="https://www.saski.com/notes/arnesto/">
   <meta property="og:locale" content="es_ES">
   <meta property="og:image" content="https://www.saski.com/notes/assets/notes-2026-10-06.png">
@@ -25,7 +25,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta property="article:published_time" content="2026-08-17T17:43:57.476Z">
   <meta property="article:modified_time" content="2026-10-06">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Arnesto: de configuración a arnés personal","description":"Un entorno real de trabajo que fue creciendo: reglas, skills, contexto y distintas herramientas. También mis decisiones, mis manías y mis puñetas.","inLanguage":"es","datePublished":"2026-08-17T17:43:57.476Z","dateModified":"2026-10-06","author":{"@type":"Person","name":"Nacho Viejo","url":"https://www.saski.com/cv/"},"mainEntityOfPage":"https://www.saski.com/notes/arnesto/","isBasedOn":"https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Arnesto: cómo organizo mi entorno de agentes","description":"Reglas pequeñas, skills bajo demanda, decisiones fuera del chat y límites entre herramientas. Ejemplos de mi arnés personal, con enlaces al código.","inLanguage":"es","datePublished":"2026-08-17T17:43:57.476Z","dateModified":"2026-10-06","author":{"@type":"Person","name":"Nacho Viejo","url":"https://www.saski.com/cv/"},"mainEntityOfPage":"https://www.saski.com/notes/arnesto/","isBasedOn":"https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/"}</script>
 </head>
 <body>
   <a class="skip-link" href="#main" lang="en">Skip to content</a>
@@ -46,22 +46,51 @@
     <main id="main" tabindex="-1">
       <article class="reader">
         <a class="back-link" href="/notes/" lang="en">← All notes</a>
-        <header><p class="note-meta" lang="en"><time datetime="2026-08-17T17:43:57.476Z">17 Aug 2026</time><span class="note-topic">Agents &amp; systems</span><span><abbr title="Spanish">ES</abbr> · Reflection</span></p><h1>Arnesto: de configuración a arnés personal</h1>
+        <header><p class="note-meta" lang="en"><time datetime="2026-08-17T17:43:57.476Z">17 Aug 2026</time><span class="note-topic">Agents &amp; systems</span><span><abbr title="Spanish">ES</abbr> · Field guide</span></p><h1>Arnesto: cómo organizo mi entorno de agentes</h1>
           <p class="provenance" lang="en">By <a href="/cv/" rel="author">Nacho Viejo</a> · Originally published on LinkedIn<br>Web edition updated <time datetime="2026-10-06">6 Oct 2026</time></p>
         </header>
-        <div class="note-body"><p>Durante bastante tiempo este proyecto se llamó Augmented Code Configuration, y el nombre tenía sentido al principio: nació en el Q3 de 2025 como un fork del repositorio de <a href="https://www.linkedin.com/in/eferro/">Eduardo Ferro Aldama</a> y reunía, sobre todo, reglas y archivos Markdown pensados para trabajar mejor con las herramientas de coding AI-aumentado que teníamos entonces.</p>
-<p>El ecosistema ha cambiado muchísimo desde aquel inicio y el proyecto ha ido transformándose con él. A las reglas pronto se sumaron los skills, para cargar conocimiento sólo cuando hacía falta; después empezamos a trabajar de manera mucho más intencionada con el contexto, apoyándonos en planning y en técnicas de intentional compaction para conservar lo importante durante tareas largas (gracias, HumanLayer y <a href="https://www.linkedin.com/in/dexterihorthy/">Dexter Horthy</a>); y OpenSpec terminó aportando una estructura estable para conectar intención, decisiones, ejecución y verificación (gracias, <a href="https://www.linkedin.com/in/alvarormoya/">Alvaro Moya</a>).</p>
-<p>Así que el scope dejó de ser exclusivamente el de una herramienta de coding asistido. Hoy hay distintas superficies de entrada, modelos y herramientas colaborando: Codex, Cursor, Claude o Gemini en el trabajo local; Hermes con Telegram como entrada remota; OpenCode y OmniRoute para determinadas rutas de ejecución (gratuitas); y ahora evaluando Orca, AI Studio, y con Grok Agent o Humanlayer esperando su turno. A la fuerza, seguirá siendo movedizo, especialmente cuando veo updates de <a href="https://www.linkedin.com/in/gorkma/">Gorka Moreno Asín</a> y los 540.</p>
-<p>Seguir hablando de una “configuración para Augmented Code” ya no describía nada este proyecto, cuando se había convertido en un arnés personal para trabajar con agentes.
-Así que necesitaba un nombre nuevo, porque esto ya no es augmented-coding.
-Entonces, a falta de nada mejor, se llamará Arnesto, con su propio repo. No hay ninguna intención de convertirlo en un framework ni en una distribución que cualquiera pueda instalar tal cual; es mi entorno real de trabajo, con mis decisiones, mis manías y mis puñetas, y cubre mis necesidades de hoy, pero lo publico como referencia para quien quiera echarle un ojo, reutilizar ideas o construir su propio arnés.</p>
-<p>Os presento a Arnesto:
-<a href="https://github.com/saski/arnesto">Arnesto on GitHub</a></p>
+        <div class="note-body"><p>Arnesto es mi entorno real de trabajo con agentes: reglas, skills, contexto, herramientas y unas cuantas decisiones sobre qué puede hacer cada una. Lo publico como referencia para quien quiera mirar dentro o construir su propio arnés. Incluye mis necesidades, mis manías y mis puñetas; no espero que alguien lo instale entero y le encaje tal cual.</p>
+<p>Empezó en el Q3 de 2025 como un fork de la configuración de <a href="https://github.com/eferro/augmentedcode-configuration">Eduardo Ferro Aldama</a>. Durante bastante tiempo se llamó Augmented Code Configuration. El nombre dejó de servir cuando aquello creció más allá de las reglas de una herramienta de coding. <em>Arnesto</em> salió de juntar <em>arnés</em> con Ernesto.</p>
+<p>La parte útil de esa evolución son las decisiones que puedo enseñar con archivos concretos. Esta es una fotografía de la versión pública del 6 de octubre de 2026.</p>
+<h2>Pocas reglas siempre presentes</h2>
+<p>Las instrucciones universales viven en <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/.agents/rules/base.md"><code>.agents/rules/base.md</code></a>. Ahí están los hábitos que quiero en cualquier tarea: entender el objetivo antes de tocar nada, hacer el cambio más pequeño que resuelva el problema, verificarlo y explicar lo que queda incierto.</p>
+<p>El detalle de Python, React o Makefile se carga cuando la tarea lo necesita. Las convenciones de un repositorio pertenecen a ese repositorio. Esta separación evita que una instrucción para un proyecto acabe condicionando todos los demás.</p>
+<p>Por ejemplo, «no digas que una comprobación ha pasado si no la has ejecutado» merece estar siempre presente. Las instrucciones de un pipeline de BigQuery sólo aportan algo cuando estoy trabajando con BigQuery.</p>
+<h2>Los skills se buscan; no se vuelcan todos al contexto</h2>
+<p>Un skill contiene un procedimiento reutilizable. Puede ayudar a revisar un Dockerfile, preparar una entrevista o trabajar con un documento. El <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/.agents/docs/skill-domain-routing.md">catálogo por dominio</a> permite encontrar los que encajan sin leer toda la biblioteca.</p>
+<p>La regla práctica es usar primero el catálogo que ofrece el cliente activo y abrir el <code>SKILL.md</code> elegido. Si el cliente no tiene catálogo, se consulta la sección relevante del índice por dominio. El inventario completo sirve para mantener la biblioteca; cargarlo como prólogo de cada tarea no ayuda.</p>
+<p>También distingo conocer un procedimiento de poder ejecutarlo. Compartir un skill entre herramientas no comparte una sesión de navegador, una credencial ni los permisos de otra herramienta.</p>
+<h2>La intención duradera vive fuera del chat</h2>
+<p>Planning e <em>intentional compaction</em> me ayudaron a conservar lo importante durante tareas largas; aquí debo mucho a HumanLayer y <a href="https://www.linkedin.com/in/dexterihorthy/">Dexter Horthy</a>. OpenSpec añadió una estructura para conectar requisitos, decisiones, ejecución y verificación, gracias también a <a href="https://www.linkedin.com/in/alvarormoya/">Alvaro Moya</a>.</p>
+<p>En Arnesto, <a href="https://github.com/saski/arnesto/tree/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/openspec"><code>docs/openspec/</code></a> contiene esas especificaciones; <code>thoughts/</code> guarda investigación y planes. Cuando una tarea cambia de sesión, debería ser posible recuperar por qué se tomó una decisión sin reconstruir toda la conversación.</p>
+<p>No todo pertenece a Arnesto. Las recetas y la evidencia de un experimento pertenecen al proyecto que lo realiza. Los logs completos y el estado temporal quedan fuera del historial publicado. Arnesto conserva los mecanismos reutilizables. Esta <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/free-worker-coordination/README.md">guía de artefactos de coordinación</a> explica la frontera.</p>
+<h2>Compartir convenciones no implica compartir el estado de cada herramienta</h2>
+<p>Trabajo con distintas superficies: Codex, Cursor, Claude o Gemini en local; Hermes con Telegram; OpenCode y OmniRoute en algunas rutas de ejecución. También evalúo otras herramientas. El objetivo es poder cambiar piezas sin perder las convenciones que ya funcionan.</p>
+<p><a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/setup-symlinks.sh"><code>setup-symlinks.sh</code></a> conecta reglas y skills con los clientes compatibles. Algunas configuraciones se inicializan desde <code>templates/</code> y después se mantienen en su runtime. No son todas enlaces vivos al repositorio.</p>
+<p>Las credenciales, sesiones, bases de datos locales y permisos siguen siendo responsabilidad de cada herramienta. En particular, Codex y Orca conservan directorios separados: contienen bastante más que una preferencia de modelo. La <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/codex-orca-runtime-boundary.md">guía de límites entre runtimes</a> documenta esa decisión.</p>
+<h2>Delegar exige acotar la tarea y revisar lo que vuelve</h2>
+<p>Un ejemplo concreto es el <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/.agents/skills/free-agent-execution/SKILL.md">adaptador de workers</a>. Su contrato declara el directorio de trabajo, los archivos permitidos, la sensibilidad, el modelo y la validación. Un fragmento de su estructura es:</p>
+<pre><code class="language-json">{
+  &quot;task_class&quot;: &quot;bounded_code&quot;,
+  &quot;sensitivity&quot;: &quot;non_sensitive&quot;,
+  &quot;allowed_files&quot;: [&quot;README.md&quot;],
+  &quot;validation&quot;: {
+    &quot;command&quot;: [&quot;make&quot;, &quot;test&quot;]
+  },
+  &quot;require_changes&quot;: true
+}
+</code></pre>
+<p>Es un fragmento explicativo, no un contrato completo para lanzar un worker. Los límites también importan: <code>allowed_files</code> comprueba cambios después de la ejecución; no es un sandbox de escritura. El adaptador tampoco aporta aislamiento de red o de sistema de archivos. Una lista de permisos en un JSON no basta para afirmar que un proceso está aislado.</p>
+<p>Quien coordina sigue siendo responsable de preparar el alcance, revisar el diff y ejecutar la validación. Si una comprobación no corre, el resultado debe decirlo. Y si una tarea se envía a un proveedor externo, el material debe estar autorizado para ese destino.</p>
+<h2>Qué reutilizaría primero</h2>
+<p>Empezaría por una regla que evite un fallo recurrente, un skill que resuelva una tarea habitual y un lugar donde conservar requisitos y decisiones. Después comprobaría esas piezas con trabajo real. Copiar todos mis modelos, rutas y clientes de golpe haría difícil saber qué está aportando valor.</p>
+<p>La <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/development-guide.md">guía de desarrollo</a> y el <code>Makefile</code> permiten inspeccionar cómo se valida el repositorio. Esas comprobaciones detectan incoherencias concretas de la configuración; no demuestran que cualquier agente vaya a comportarse bien en cualquier tarea.</p>
+<p>Eso es lo que quiero conservar de Arnesto mientras el ecosistema sigue moviéndose: decisiones que puedo explicar, límites visibles y evidencia suficiente para revisar lo que ha ocurrido. Para explorar qué pasa cuando muchas tareas llegan a la revisión humana, estoy usando <a href="/notes/agent-systems-lab/">Agent Systems Lab</a>.</p>
 </div>
         <footer class="references">
-
+          <p class="editorial-note" lang="es">Edición ampliada para la web: se conserva el origen de Arnesto y se añaden decisiones y ejemplos de la versión pública del repositorio.</p>
           <p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/" lang="en">Original &amp; conversation on LinkedIn ↗</a></p>
-          <p class="related"><span lang="en">Related note</span><a href="/notes/working-with-context/" lang="en">Less magic, more discipline: working with context →</a></p>
+          <p class="related"><span lang="en">Related note</span><a href="/notes/agent-systems-lab/" lang="en">Agent Systems Lab: when review becomes the bottleneck →</a></p>
         </footer>
       </article></main>
     <footer class="site-footer" lang="en">

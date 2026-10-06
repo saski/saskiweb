@@ -24,6 +24,7 @@ The home and Notes use `css/site-header.css` for the same navigation treatment, 
 - Revise the AI learning note to state the study population, task and immediate assessment; 50% versus 67% is 17 percentage points. Separate the author’s takeaway from the findings.
 - Identify Eventbrite’s Make It Happen Spirit Award from the original image. This January note is a gratitude post, not an employment departure announcement.
 - Keep December’s context experiments in their historical voice and link to the later Arnesto note.
+- Arnesto and Agent Systems Lab are expanded web references. Preserve their original LinkedIn dates and stable routes; identify the expansion in the editorial note. Pin implementation links to the public revisions inspected. Review-capacity results are deterministic logical ticks, not observations of human or model performance; include all unfinished tasks and distinguish horizon counts from the full workload.
 - The untouched source packet and verification evidence are retained outside the checkout in the local proposal folder.
 
 ## Publishing boundaries

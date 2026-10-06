@@ -6,31 +6,181 @@
   <description>On people, software and learning in public.</description>
   <atom:link href="https://www.saski.com/notes/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
-    <title>A playground for agents and systems thinking</title>
+    <title>Agent Systems Lab: when review becomes the bottleneck</title>
     <link>https://www.saski.com/notes/agent-systems-lab/</link>
     <guid isPermaLink="true">https://www.saski.com/notes/agent-systems-lab/</guid>
     <pubDate>Sun, 04 Oct 2026 11:58:56 GMT</pubDate>
     <category>Agents &amp; systems</category>
-    <description><![CDATA[<p>I wanted to play with multi-agent systems, learn how to keep them understandable and under control, so I’ve started <a href="https://github.com/saski/agent-systems-lab">a playground</a></p>
-<p>All the frequent conversations I&#39;m having around agentic systems lately took me back to Donella Meadows’ &quot;Thinking in Systems&quot;, so I&#39;ll use the playground for exploring her ideas about feedback loops, delays, bottlenecks and the effects of local decisions on the wider system.</p>
-<p>The goal is to build a practical space for testing tools, questioning design choices and learning from the system’s behaviour, having that information at hand.</p>
-<p>The initial setup combines LangGraph orchestration, containerized specialist agents, scoped permissions, an audit trail and OpenTelemetry. A live dashboard makes it easier to follow tasks, inspect their progress and see where human review is needed. Take a look at <a href="https://github.com/saski/agent-systems-lab/tree/main/experiments">the experiments</a></p>
+    <description><![CDATA[<p>Giving agents more execution capacity can make the queue for human review longer without producing much more accepted work. I wanted a small experiment where I could see that happen, count everything still waiting, and change one policy at a time.</p>
+<p>In <a href="https://github.com/saski/agent-systems-lab">Agent Systems Lab</a>, four execution slots complete <strong>eight decisions by tick 60</strong>, compared with <strong>six decisions with one slot</strong>. A limit on admitted work makes the review queue much smaller, but the waiting moves upstream. Those are results of a deterministic teaching model, not measurements of a team&#39;s productivity.</p>
+<p>The conversations I have been having about agentic systems took me back to Donella Meadows&#39; <em>Thinking in Systems</em>: feedback loops, delays, bottlenecks, and what happens when a local improvement meets the rest of the system. This experiment is my way of making one of those questions concrete.</p>
+<h2>The question and the boundary</h2>
+<p>What changes when execution gets faster and review capacity stays fixed?</p>
+<p>The model has two queues. Tasks wait for admission before execution; after execution, they can wait for review. Admitted work in progress includes tasks executing, waiting for review, or being reviewed. A decision releases a task&#39;s WIP allocation.</p>
+<p>Admission waiting sits outside the WIP limit but <strong>inside the measurement boundary</strong>. Otherwise, limiting admission could appear to remove work simply by moving it out of view.</p>
+<p>The reviewer here is one synthetic resource, separate from the playground&#39;s Reviewer agent. This numerical experiment does not invoke the Researcher, Builder or Reviewer agents, a model provider, or an actual human. A tick is a unit of logical time; it has no measured conversion to seconds.</p>
+<h2>Hold the workload fixed</h2>
+<p>The <a href="https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/experiments/review-capacity/scenario.json">checked-in scenario</a> schedules <strong>24 tasks</strong>, arriving every <strong>two ticks</strong>, from tick 0 to tick 46. Each task takes <strong>eight execution ticks</strong> and <strong>six review ticks</strong>. There is one reviewer, and every review accepts.</p>
+<p>I compare three policies:</p>
+<ul>
+<li><strong>A:</strong> one execution slot, no WIP limit.</li>
+<li><strong>B:</strong> four execution slots, no WIP limit.</li>
+<li><strong>C:</strong> four execution slots, with at most three admitted tasks.</li>
+</ul>
+<p>A to B changes execution capacity. B to C changes only the admission limit. All three use the same arrivals and service times.</p>
+<h2>Four execution slots do not produce four times the output</h2>
+<p>At tick 60, including transitions at that tick, the model reports:</p>
+<div class="table-wrap" role="region" aria-label="Task locations at tick 60" tabindex="0"><table>
+<thead>
+<tr>
+<th>Tasks at tick 60</th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Decisions completed</td>
+<td align="right">6</td>
+<td align="right">8</td>
+<td align="right">8</td>
+</tr>
+<tr>
+<td>Total unfinished</td>
+<td align="right">18</td>
+<td align="right">16</td>
+<td align="right">16</td>
+</tr>
+<tr>
+<td>Waiting for admission</td>
+<td align="right">16</td>
+<td align="right">0</td>
+<td align="right">13</td>
+</tr>
+<tr>
+<td>Executing</td>
+<td align="right">1</td>
+<td align="right">0</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Waiting for review</td>
+<td align="right">0</td>
+<td align="right">15</td>
+<td align="right">1</td>
+</tr>
+<tr>
+<td>Being reviewed</td>
+<td align="right">1</td>
+<td align="right">1</td>
+<td align="right">1</td>
+</tr>
+</tbody></table>
+</div><p>Moving from A to B gives a 4× increase in execution slots and an <strong>8/6, or 1.33×, increase in decisions</strong> over this window. Execution helps, but the fixed reviewer cannot keep up with everything arriving from it: B has 15 tasks waiting for review.</p>
+<p>This ratio includes startup and the chosen observation window. It is not a scaling law for agents. The useful observation is the mismatch between how quickly work becomes ready and how quickly it can leave review.</p>
+<h2>A smaller review queue can hide the same amount of waiting</h2>
+<p>C completes the same eight decisions as B. Its review queue has just one task, but 13 tasks now wait for admission. Both policies still have <strong>16 unfinished tasks</strong>.</p>
+<p>The WIP limit has changed where work waits. It has not removed demand or added review capacity. To see whether this is just an effect of stopping at tick 60, I also follow all 24 tasks until the final decision:</p>
+<div class="table-wrap" role="region" aria-label="Results for all 24 tasks through full drain" tabindex="0"><table>
+<thead>
+<tr>
+<th>Full workload, logical ticks</th>
+<th align="right">A</th>
+<th align="right">B</th>
+<th align="right">C</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Final decision</td>
+<td align="right">198</td>
+<td align="right">152</td>
+<td align="right">152</td>
+</tr>
+<tr>
+<td>End-to-end time, p50 / p95</td>
+<td align="right">80 / 146</td>
+<td align="right">58 / 102</td>
+<td align="right">58 / 102</td>
+</tr>
+<tr>
+<td>Admission wait, p50 / p95</td>
+<td align="right">66 / 132</td>
+<td align="right">0 / 0</td>
+<td align="right">40 / 84</td>
+</tr>
+<tr>
+<td>Review-queue wait, p50 / p95</td>
+<td align="right">0 / 0</td>
+<td align="right">44 / 88</td>
+<td align="right">4 / 4</td>
+</tr>
+</tbody></table>
+</div><p>Here B and C have identical per-task decision times. C keeps the reviewer supplied while admitting less work. The reduction in review waiting is balanced by waiting before admission.</p>
+<p>These percentiles cover the same <strong>24 tasks per policy</strong>, using nearest rank. The tick-60 comparison covers only six completed tasks for A and eight for B and C; comparing latency percentiles for those smaller completed cohorts would answer a different question.</p>
+<h2>Reproduce it</h2>
+<p>For this article I reran the scenario and compared the report with the published reference. The scenario and deterministic report hashes matched. The implementation and source links below refer to public revision <code>8bf1669a68a9072326d35abfb18ee979a3766531</code>.</p>
+<p>With Git, <a href="https://docs.astral.sh/uv/">uv</a> and Python 3.11 or newer available:</p>
+<pre><code class="language-sh">git clone https://github.com/saski/agent-systems-lab.git
+cd agent-systems-lab
+git checkout 8bf1669a68a9072326d35abfb18ee979a3766531
+make setup
+uv run --locked systems-lab experiment review-capacity \
+  --scenario experiments/review-capacity/scenario.json
+</code></pre>
+<p>The command prints a manifest pointing to a fresh directory under <code>.lab/experiments/review-capacity/</code>. Inspect <code>scenario.json</code>, <code>report.json</code> and <code>manifest.json</code>. The expected deterministic report SHA-256 is:</p>
+<pre><code class="language-text">a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a
+</code></pre>
+<p>This command invokes no providers or agent workers. Docker is not needed for the numerical experiment. The <a href="https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/experiments/review-capacity/README.md">experiment guide</a> has the charts, metric definitions, and a saved-trace replay you can open locally. GitHub displays that HTML guide as source; it does not run the replay there.</p>
+<h2>What I would take into a real workflow</h2>
+<p>I would measure arrivals, admission waiting, execution, review waiting and accepted output together. A dashboard showing only faster execution or a shrinking review queue can miss the cost elsewhere in the system.</p>
+<p>A WIP limit is a policy to test. In this model it bounds admitted work without slowing B&#39;s delivery timing. Whether that is useful in practice depends on costs the model does not represent: stale context, interruptions, deadlines and work that needs another pass.</p>
+<p>The limitations are deliberate. Arrivals are finite and scheduled, tasks have uniform service times, every review accepts, and there is no randomness, rework, fatigue, failure or quality measure. This experiment cannot establish real reviewer capacity, an optimal WIP limit, agent safety, or productivity gains. It supports a narrower conclusion: <strong>when execution gets faster and review stays fixed, count where all the unfinished work goes</strong>.</p>
+<p>The numerical model and CLI are implemented. The standalone learning guide is documentation; the integrated Experiments dashboard remains pending in the public revision used here. You can inspect the <a href="https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/src/systems_lab/review_capacity.py">simulation</a> and <a href="https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/src/systems_lab/review_capacity_metrics.py">metric calculations</a>, or read how I organise the surrounding tools in <a href="/notes/arnesto/">Arnesto</a>.</p>
 <p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7512481380862287873/">Original &amp; conversation on LinkedIn</a></p>]]></description>
   </item>
   <item>
-    <title>Arnesto: de configuración a arnés personal</title>
+    <title>Arnesto: cómo organizo mi entorno de agentes</title>
     <link>https://www.saski.com/notes/arnesto/</link>
     <guid isPermaLink="true">https://www.saski.com/notes/arnesto/</guid>
     <pubDate>Mon, 17 Aug 2026 17:43:57 GMT</pubDate>
     <category>Agents &amp; systems</category>
-    <description><![CDATA[<p>Durante bastante tiempo este proyecto se llamó Augmented Code Configuration, y el nombre tenía sentido al principio: nació en el Q3 de 2025 como un fork del repositorio de <a href="https://www.linkedin.com/in/eferro/">Eduardo Ferro Aldama</a> y reunía, sobre todo, reglas y archivos Markdown pensados para trabajar mejor con las herramientas de coding AI-aumentado que teníamos entonces.</p>
-<p>El ecosistema ha cambiado muchísimo desde aquel inicio y el proyecto ha ido transformándose con él. A las reglas pronto se sumaron los skills, para cargar conocimiento sólo cuando hacía falta; después empezamos a trabajar de manera mucho más intencionada con el contexto, apoyándonos en planning y en técnicas de intentional compaction para conservar lo importante durante tareas largas (gracias, HumanLayer y <a href="https://www.linkedin.com/in/dexterihorthy/">Dexter Horthy</a>); y OpenSpec terminó aportando una estructura estable para conectar intención, decisiones, ejecución y verificación (gracias, <a href="https://www.linkedin.com/in/alvarormoya/">Alvaro Moya</a>).</p>
-<p>Así que el scope dejó de ser exclusivamente el de una herramienta de coding asistido. Hoy hay distintas superficies de entrada, modelos y herramientas colaborando: Codex, Cursor, Claude o Gemini en el trabajo local; Hermes con Telegram como entrada remota; OpenCode y OmniRoute para determinadas rutas de ejecución (gratuitas); y ahora evaluando Orca, AI Studio, y con Grok Agent o Humanlayer esperando su turno. A la fuerza, seguirá siendo movedizo, especialmente cuando veo updates de <a href="https://www.linkedin.com/in/gorkma/">Gorka Moreno Asín</a> y los 540.</p>
-<p>Seguir hablando de una “configuración para Augmented Code” ya no describía nada este proyecto, cuando se había convertido en un arnés personal para trabajar con agentes.
-Así que necesitaba un nombre nuevo, porque esto ya no es augmented-coding.
-Entonces, a falta de nada mejor, se llamará Arnesto, con su propio repo. No hay ninguna intención de convertirlo en un framework ni en una distribución que cualquiera pueda instalar tal cual; es mi entorno real de trabajo, con mis decisiones, mis manías y mis puñetas, y cubre mis necesidades de hoy, pero lo publico como referencia para quien quiera echarle un ojo, reutilizar ideas o construir su propio arnés.</p>
-<p>Os presento a Arnesto:
-<a href="https://github.com/saski/arnesto">Arnesto on GitHub</a></p>
+    <description><![CDATA[<p>Arnesto es mi entorno real de trabajo con agentes: reglas, skills, contexto, herramientas y unas cuantas decisiones sobre qué puede hacer cada una. Lo publico como referencia para quien quiera mirar dentro o construir su propio arnés. Incluye mis necesidades, mis manías y mis puñetas; no espero que alguien lo instale entero y le encaje tal cual.</p>
+<p>Empezó en el Q3 de 2025 como un fork de la configuración de <a href="https://github.com/eferro/augmentedcode-configuration">Eduardo Ferro Aldama</a>. Durante bastante tiempo se llamó Augmented Code Configuration. El nombre dejó de servir cuando aquello creció más allá de las reglas de una herramienta de coding. <em>Arnesto</em> salió de juntar <em>arnés</em> con Ernesto.</p>
+<p>La parte útil de esa evolución son las decisiones que puedo enseñar con archivos concretos. Esta es una fotografía de la versión pública del 6 de octubre de 2026.</p>
+<h2>Pocas reglas siempre presentes</h2>
+<p>Las instrucciones universales viven en <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/.agents/rules/base.md"><code>.agents/rules/base.md</code></a>. Ahí están los hábitos que quiero en cualquier tarea: entender el objetivo antes de tocar nada, hacer el cambio más pequeño que resuelva el problema, verificarlo y explicar lo que queda incierto.</p>
+<p>El detalle de Python, React o Makefile se carga cuando la tarea lo necesita. Las convenciones de un repositorio pertenecen a ese repositorio. Esta separación evita que una instrucción para un proyecto acabe condicionando todos los demás.</p>
+<p>Por ejemplo, «no digas que una comprobación ha pasado si no la has ejecutado» merece estar siempre presente. Las instrucciones de un pipeline de BigQuery sólo aportan algo cuando estoy trabajando con BigQuery.</p>
+<h2>Los skills se buscan; no se vuelcan todos al contexto</h2>
+<p>Un skill contiene un procedimiento reutilizable. Puede ayudar a revisar un Dockerfile, preparar una entrevista o trabajar con un documento. El <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/.agents/docs/skill-domain-routing.md">catálogo por dominio</a> permite encontrar los que encajan sin leer toda la biblioteca.</p>
+<p>La regla práctica es usar primero el catálogo que ofrece el cliente activo y abrir el <code>SKILL.md</code> elegido. Si el cliente no tiene catálogo, se consulta la sección relevante del índice por dominio. El inventario completo sirve para mantener la biblioteca; cargarlo como prólogo de cada tarea no ayuda.</p>
+<p>También distingo conocer un procedimiento de poder ejecutarlo. Compartir un skill entre herramientas no comparte una sesión de navegador, una credencial ni los permisos de otra herramienta.</p>
+<h2>La intención duradera vive fuera del chat</h2>
+<p>Planning e <em>intentional compaction</em> me ayudaron a conservar lo importante durante tareas largas; aquí debo mucho a HumanLayer y <a href="https://www.linkedin.com/in/dexterihorthy/">Dexter Horthy</a>. OpenSpec añadió una estructura para conectar requisitos, decisiones, ejecución y verificación, gracias también a <a href="https://www.linkedin.com/in/alvarormoya/">Alvaro Moya</a>.</p>
+<p>En Arnesto, <a href="https://github.com/saski/arnesto/tree/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/openspec"><code>docs/openspec/</code></a> contiene esas especificaciones; <code>thoughts/</code> guarda investigación y planes. Cuando una tarea cambia de sesión, debería ser posible recuperar por qué se tomó una decisión sin reconstruir toda la conversación.</p>
+<p>No todo pertenece a Arnesto. Las recetas y la evidencia de un experimento pertenecen al proyecto que lo realiza. Los logs completos y el estado temporal quedan fuera del historial publicado. Arnesto conserva los mecanismos reutilizables. Esta <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/free-worker-coordination/README.md">guía de artefactos de coordinación</a> explica la frontera.</p>
+<h2>Compartir convenciones no implica compartir el estado de cada herramienta</h2>
+<p>Trabajo con distintas superficies: Codex, Cursor, Claude o Gemini en local; Hermes con Telegram; OpenCode y OmniRoute en algunas rutas de ejecución. También evalúo otras herramientas. El objetivo es poder cambiar piezas sin perder las convenciones que ya funcionan.</p>
+<p><a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/setup-symlinks.sh"><code>setup-symlinks.sh</code></a> conecta reglas y skills con los clientes compatibles. Algunas configuraciones se inicializan desde <code>templates/</code> y después se mantienen en su runtime. No son todas enlaces vivos al repositorio.</p>
+<p>Las credenciales, sesiones, bases de datos locales y permisos siguen siendo responsabilidad de cada herramienta. En particular, Codex y Orca conservan directorios separados: contienen bastante más que una preferencia de modelo. La <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/codex-orca-runtime-boundary.md">guía de límites entre runtimes</a> documenta esa decisión.</p>
+<h2>Delegar exige acotar la tarea y revisar lo que vuelve</h2>
+<p>Un ejemplo concreto es el <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/.agents/skills/free-agent-execution/SKILL.md">adaptador de workers</a>. Su contrato declara el directorio de trabajo, los archivos permitidos, la sensibilidad, el modelo y la validación. Un fragmento de su estructura es:</p>
+<pre><code class="language-json">{
+  &quot;task_class&quot;: &quot;bounded_code&quot;,
+  &quot;sensitivity&quot;: &quot;non_sensitive&quot;,
+  &quot;allowed_files&quot;: [&quot;README.md&quot;],
+  &quot;validation&quot;: {
+    &quot;command&quot;: [&quot;make&quot;, &quot;test&quot;]
+  },
+  &quot;require_changes&quot;: true
+}
+</code></pre>
+<p>Es un fragmento explicativo, no un contrato completo para lanzar un worker. Los límites también importan: <code>allowed_files</code> comprueba cambios después de la ejecución; no es un sandbox de escritura. El adaptador tampoco aporta aislamiento de red o de sistema de archivos. Una lista de permisos en un JSON no basta para afirmar que un proceso está aislado.</p>
+<p>Quien coordina sigue siendo responsable de preparar el alcance, revisar el diff y ejecutar la validación. Si una comprobación no corre, el resultado debe decirlo. Y si una tarea se envía a un proveedor externo, el material debe estar autorizado para ese destino.</p>
+<h2>Qué reutilizaría primero</h2>
+<p>Empezaría por una regla que evite un fallo recurrente, un skill que resuelva una tarea habitual y un lugar donde conservar requisitos y decisiones. Después comprobaría esas piezas con trabajo real. Copiar todos mis modelos, rutas y clientes de golpe haría difícil saber qué está aportando valor.</p>
+<p>La <a href="https://github.com/saski/arnesto/blob/97c4a705f807365e2cd77d4f89a3eba052fbd38e/docs/development-guide.md">guía de desarrollo</a> y el <code>Makefile</code> permiten inspeccionar cómo se valida el repositorio. Esas comprobaciones detectan incoherencias concretas de la configuración; no demuestran que cualquier agente vaya a comportarse bien en cualquier tarea.</p>
+<p>Eso es lo que quiero conservar de Arnesto mientras el ecosistema sigue moviéndose: decisiones que puedo explicar, límites visibles y evidencia suficiente para revisar lo que ha ocurrido. Para explorar qué pasa cuando muchas tareas llegan a la revisión humana, estoy usando <a href="/notes/agent-systems-lab/">Agent Systems Lab</a>.</p>
 <p><a href="https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/">Original &amp; conversation on LinkedIn</a></p>]]></description>
   </item>
   <item>
