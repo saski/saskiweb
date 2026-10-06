@@ -11,6 +11,7 @@
     "status": "published",
     "original_published_at": "2026-10-04T11:58:56.351Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7512481380862287873/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06"
   },
@@ -26,6 +27,7 @@
     "status": "published",
     "original_published_at": "2026-08-17T17:43:57.476Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06"
   },
@@ -41,6 +43,7 @@
     "status": "published",
     "original_published_at": "2026-07-25T10:25:12.331Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7486728253659967488/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
     "image": {
@@ -63,6 +66,7 @@
     "status": "published",
     "original_published_at": "2026-02-22T10:00:02.799Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7431276578770153472/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
     "updated_at": "2026-10-06",
@@ -80,6 +84,7 @@
     "status": "published",
     "original_published_at": "2026-02-18T15:50:00.681Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7429915098783272960/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
     "updated_at": "2026-10-06",
@@ -97,6 +102,7 @@
     "status": "published",
     "original_published_at": "2026-01-28T18:17:58.821Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7422342191232188417/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
     "updated_at": "2026-10-06",
@@ -114,6 +120,7 @@
     "status": "published",
     "original_published_at": "2025-12-23T19:37:27.947Z",
     "imported_at": "2026-10-06",
+    "web_updated_at": "2026-10-06",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7409316231255805952/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
     "editorial_note": "An early experiment from December 2025. The configuration later evolved into Arnesto."

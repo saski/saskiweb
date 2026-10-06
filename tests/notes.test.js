@@ -57,6 +57,41 @@ test('publishes the reviewed editions with study scope and concrete recognition 
   assert.ok(existsSync(path.join(root, 'notes/assets/notes-2026-10-06.png')));
 });
 
+test('web editions expose their author and stable update dates independently of LinkedIn dates', async t => {
+  const { buildNotes } = await import('../scripts/build-notes.mjs');
+  const fixture = mkdtempSync(path.join(os.tmpdir(), 'saski-notes-dates-'));
+  t.after(() => rmSync(fixture, { recursive: true, force: true }));
+  const contentDir = path.join(fixture, 'content');
+  const outputDir = path.join(fixture, 'public');
+  mkdirSync(path.join(contentDir, 'notes'), { recursive: true });
+  const [original] = JSON.parse(read('content/notes.json'));
+  const note = { ...original, web_updated_at: '2026-10-08' };
+  const pages = { '/': '2026-10-06', '/cv/': '2026-10-06', '/notes/': '2026-10-08' };
+  writeFileSync(path.join(contentDir, 'pages.json'), JSON.stringify(pages));
+  writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([note]));
+  writeFileSync(path.join(contentDir, 'notes', `${note.slug}.md`), 'Published writing.');
+
+  buildNotes({ contentDir, outputDir });
+  const sitemap = readFileSync(path.join(outputDir, 'sitemap.xml'), 'utf8');
+  assert.ok(sitemap.includes(`<loc>https://www.saski.com/notes/${note.slug}/</loc><lastmod>2026-10-08</lastmod>`));
+  for (const [url, modified] of Object.entries(pages)) {
+    assert.ok(sitemap.includes(`<loc>https://www.saski.com${url}</loc><lastmod>${modified}</lastmod>`));
+  }
+  const html = readFileSync(path.join(outputDir, 'notes', note.slug, 'index.html'), 'utf8');
+  const articleHeader = html.match(/<header>([\s\S]*?)<\/header>/)[1];
+  assert.match(articleHeader, /<a href="\/cv\/" rel="author">Nacho Viejo<\/a>/);
+  assert.ok(articleHeader.includes(`<time datetime="${note.original_published_at}">`));
+  assert.match(articleHeader, /Web edition updated <time datetime="2026-10-08">/);
+  const structured = JSON.parse(html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)[1]);
+  assert.equal(structured.datePublished, note.original_published_at);
+  assert.equal(structured.dateModified, note.web_updated_at);
+  assert.equal(structured.author.url, 'https://www.saski.com/cv/');
+  assert.ok(readFileSync(path.join(outputDir, 'notes/feed.xml'), 'utf8').includes(new Date(note.original_published_at).toUTCString()));
+
+  buildNotes({ contentDir, outputDir });
+  assert.equal(readFileSync(path.join(outputDir, 'sitemap.xml'), 'utf8'), sitemap);
+});
+
 test('new drafts never enter public output and duplicate source imports fail', async t => {
   const { buildNotes } = await import('../scripts/build-notes.mjs');
   const fixture = mkdtempSync(path.join(os.tmpdir(), 'saski-notes-'));
@@ -66,6 +101,7 @@ test('new drafts never enter public output and duplicate source imports fail', a
   mkdirSync(path.join(contentDir, 'notes'), { recursive: true });
   const [published] = JSON.parse(read('content/notes.json'));
   const draft = { ...published, id: 'draft-source', slug: 'private-draft', status: 'draft', title: 'PRIVATE DRAFT' };
+  writeFileSync(path.join(contentDir, 'pages.json'), read('content/pages.json'));
   writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([published, draft]));
   writeFileSync(path.join(contentDir, 'notes', `${published.slug}.md`), 'Published writing.');
   writeFileSync(path.join(contentDir, 'notes', `${draft.slug}.md`), 'PRIVATE DRAFT');

@@ -32,6 +32,6 @@ approved color source.
 
 ## Notes
 
-Notes brings selected original LinkedIn writing home to saski.com. Entries keep their original publication date and language, with a permanent URL, related reading and a link to the original conversation. The index can be filtered by topic; every note is readable without JavaScript or a LinkedIn account.
+Notes brings selected original LinkedIn writing home to saski.com. Entries keep their original publication date and language, with a permanent URL, related reading and a link to the original conversation. Each note identifies its author with a link to the CV and shows when the web edition was last updated. The index can be filtered by topic; every note is readable without JavaScript or a LinkedIn account.
 
 For authoring, local preview, checks and publishing, see [DEVELOPMENT.md](DEVELOPMENT.md).

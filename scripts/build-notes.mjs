@@ -14,18 +14,20 @@ const date = value => new Intl.DateTimeFormat('en-GB', {
 }).format(new Date(value));
 const route = note => `/notes/${note.slug}/`;
 const topicKey = topic => topic.toLowerCase().replace(' & ', '-').replaceAll(' ', '-');
+const validDate = value => typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)
+  && !Number.isNaN(Date.parse(value)) && new Date(value).toISOString().slice(0, 10) === value;
 
 function document({ title, description, url, lang = 'en', note, main, index = false }) {
   const structured = note ? {
     '@context': 'https://schema.org', '@type': 'BlogPosting',
     headline: note.title, description: note.summary, inLanguage: lang,
     datePublished: note.original_published_at,
-    ...(note.updated_at ? { dateModified: note.updated_at } : {}),
+    dateModified: note.web_updated_at,
     author: { '@type': 'Person', name: 'Nacho Viejo', url: `${origin}/cv/` },
     mainEntityOfPage: url, isBasedOn: note.source_url
   } : {
     '@context': 'https://schema.org', '@type': 'Blog', name: title,
-    description, url, author: { '@type': 'Person', name: 'Nacho Viejo' }
+    description, url, author: { '@type': 'Person', name: 'Nacho Viejo', url: `${origin}/cv/` }
   };
   return `<!DOCTYPE html>
 <html lang="${lang}">
@@ -50,7 +52,7 @@ function document({ title, description, url, lang = 'en', note, main, index = fa
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Notes. On people, software and learning in public. Nacho Viejo, saski.com.">
   <meta name="twitter:card" content="summary_large_image">
-${note ? `  <meta property="article:published_time" content="${note.original_published_at}">\n` : ''}  <script type="application/ld+json">${JSON.stringify(structured).replaceAll('<', '\\u003c')}</script>
+${note ? `  <meta property="article:published_time" content="${note.original_published_at}">\n  <meta property="article:modified_time" content="${note.web_updated_at}">\n` : ''}  <script type="application/ld+json">${JSON.stringify(structured).replaceAll('<', '\\u003c')}</script>
 ${index ? '  <script src="/js/notes.js?v=20261006" defer></script>\n' : ''}</head>
 <body>
   <a class="skip-link" href="#main" lang="en">Skip to content</a>
@@ -111,7 +113,7 @@ function articlePage(note, notes) {
       <article class="reader">
         <a class="back-link" href="/notes/" lang="en">← All notes</a>
         <header>${metadata(note)}<h1>${escape(note.title)}</h1>
-          <p class="provenance" lang="en">Originally published on LinkedIn${note.updated_at ? ` · Updated <time datetime="${note.updated_at}">${date(note.updated_at)}</time>` : ''}</p>
+          <p class="provenance" lang="en">By <a href="/cv/" rel="author">Nacho Viejo</a> · Originally published on LinkedIn<br>Web edition updated <time datetime="${note.web_updated_at}">${date(note.web_updated_at)}</time></p>
         </header>
         <div class="note-body">${note.body}${note.image ? `
           <figure><img src="${escape(note.image.src)}" width="${note.image.width}" height="${note.image.height}" alt="${escape(note.image.alt)}" decoding="async"><figcaption>${escape(note.image.caption)}</figcaption></figure>` : ''}</div>
@@ -147,6 +149,11 @@ function feed(notes) {
 
 export function buildNotes({ contentDir = path.join(root, 'content'), outputDir = root } = {}) {
   const catalog = JSON.parse(readFileSync(path.join(contentDir, 'notes.json'), 'utf8'));
+  const pages = JSON.parse(readFileSync(path.join(contentDir, 'pages.json'), 'utf8'));
+  const pageUrls = ['/', '/cv/', '/notes/'];
+  for (const url of pageUrls) {
+    if (!validDate(pages[url])) throw new Error(`Invalid page modification date: ${url}`);
+  }
   const ids = new Set();
   const slugs = new Set();
   for (const note of catalog) {
@@ -165,6 +172,11 @@ export function buildNotes({ contentDir = path.join(root, 'content'), outputDir 
       || !/^https:\/\/www\.linkedin\.com\/feed\/update\/urn:li:activity:\d+\/$/.test(note.source_url)) {
       throw new Error(`Invalid publication metadata: ${note.slug}`);
     }
+    if (!validDate(note.imported_at) || !validDate(note.web_updated_at)
+      || note.web_updated_at < note.imported_at
+      || (note.updated_at && (!validDate(note.updated_at) || note.web_updated_at < note.updated_at))) {
+      throw new Error(`Invalid web modification date: ${note.slug}`);
+    }
   }
   const notes = catalog.filter(note => note.status === 'published')
     .sort((a, b) => b.original_published_at.localeCompare(a.original_published_at))
@@ -177,7 +189,9 @@ export function buildNotes({ contentDir = path.join(root, 'content'), outputDir 
   save('notes/index.html', indexPage(notes));
   for (const note of notes) save(`notes/${note.slug}/index.html`, articlePage(note, notes));
   save('notes/feed.xml', feed(notes));
-  save('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${['/', '/cv/', '/notes/', ...notes.map(route)].map(url => `  <url><loc>${origin}${url}</loc></url>`).join('\n')}\n</urlset>\n`);
+  const urls = [...pageUrls.map(url => ({ url, lastmod: pages[url] })),
+    ...notes.map(note => ({ url: route(note), lastmod: note.web_updated_at }))];
+  save('sitemap.xml', `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(({ url, lastmod }) => `  <url><loc>${origin}${url}</loc><lastmod>${lastmod}</lastmod></url>`).join('\n')}\n</urlset>\n`);
   return notes.length;
 }
 
