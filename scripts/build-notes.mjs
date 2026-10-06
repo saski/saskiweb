@@ -40,7 +40,7 @@ function document({ title, description, url, lang = 'en', note, main, index = fa
   <link rel="canonical" href="${escape(url)}">
   <link rel="icon" href="/favicon.ico" type="image/x-icon">
   <link rel="alternate" type="application/rss+xml" title="Notes — Nacho Viejo" href="/notes/feed.xml">
-  <link rel="stylesheet" href="/css/notes.css?v=20261006-compact">
+  <link rel="stylesheet" href="/css/notes.css?v=20261006-hand-spacing">
   <link rel="stylesheet" href="/css/site-header.css?v=20261006">
 ${index ? '  <link rel="preload" href="/notes/assets/caveat-notes-500.woff2" as="font" type="font/woff2" crossorigin>\n' : ''}
   <meta property="og:type" content="${note ? 'article' : 'website'}">

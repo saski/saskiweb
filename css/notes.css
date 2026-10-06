@@ -29,7 +29,7 @@ main:focus { outline: none; }
 .intro { padding: 24px 0 28px; }
 h1 { font: 400 68px/1.08 var(--serif); letter-spacing: -2px; margin: 0 0 16px; }
 .intro h1 { font-size: clamp(28px, 3.1vw, 36px); line-height: 1.35; letter-spacing: -.02em; text-wrap: balance; margin: 0; }
-.title-hand { font: 500 1.65em/.9 "Caveat Notes", cursive; color: var(--accent); letter-spacing: 0; }
+.title-hand { font: 500 1.65em/.9 "Caveat Notes", cursive; color: var(--accent); letter-spacing: -3px; }
 .filters { display: flex; flex-wrap: wrap; gap: 4px 24px; border-block: 1px solid var(--line); padding: 6px 0; }
 .filters button { font: inherit; font-size: 13px; color: var(--muted); border: 0; background: transparent; cursor: pointer; min-height: 44px; padding: 6px 0; }
 .filters button[aria-pressed="true"] { color: var(--accent); text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 6px; }
