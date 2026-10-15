@@ -24,7 +24,7 @@ function document({ title, description, url, lang = 'en', note, main, index = fa
     datePublished: note.original_published_at,
     dateModified: note.web_updated_at,
     author: { '@type': 'Person', name: 'Nacho Viejo', url: `${origin}/cv/` },
-    mainEntityOfPage: url, isBasedOn: note.source_url
+    mainEntityOfPage: url, isBasedOn: note.origin === 'website' ? undefined : note.source_url
   } : {
     '@context': 'https://schema.org', '@type': 'Blog', name: title,
     description, url, author: { '@type': 'Person', name: 'Nacho Viejo', url: `${origin}/cv/` }
@@ -112,19 +112,20 @@ function indexPage(notes) {
 
 function articlePage(note, notes) {
   const related = notes.find(item => item.slug === note.related);
+  const isWebsiteOrigin = note.origin === 'website';
   return document({ title: `${note.title} — Nacho Viejo`, description: note.summary,
     url: `${origin}${route(note)}`, lang: note.lang, note,
     main: `
       <article class="reader">
         <a class="back-link" href="/notes/" lang="en">← All notes</a>
         <header>${metadata(note)}<h1>${escape(note.title)}</h1>
-          <p class="provenance" lang="en">By <a href="/cv/" rel="author">Nacho Viejo</a> · Originally published on LinkedIn<br>Web edition updated <time datetime="${note.web_updated_at}">${date(note.web_updated_at)}</time></p>
+          <p class="provenance" lang="en">By <a href="/cv/" rel="author">Nacho Viejo</a> · Originally published on ${isWebsiteOrigin ? 'saski.com' : 'LinkedIn'}<br>Web edition updated <time datetime="${note.web_updated_at}">${date(note.web_updated_at)}</time></p>
         </header>
         <div class="note-body">${note.body}${note.image ? `
           <figure><img src="${escape(note.image.src)}" width="${note.image.width}" height="${note.image.height}" alt="${escape(note.image.alt)}" decoding="async"><figcaption>${escape(note.image.caption)}</figcaption></figure>` : ''}</div>
         <footer class="references">
           ${note.editorial_note ? `<p class="editorial-note" lang="${note.lang === 'es' ? 'es' : 'en'}">${escape(note.editorial_note)}</p>` : ''}
-          <p><a href="${escape(note.source_url)}" lang="en">Original &amp; conversation on LinkedIn ↗</a></p>
+          ${!isWebsiteOrigin ? `<p><a href="${escape(note.source_url)}" lang="en">Original &amp; conversation on LinkedIn ↗</a></p>` : ''}
           ${related ? `<p class="related"><span lang="en">Related note</span><a href="${route(related)}" lang="${related.lang}">${escape(related.title)} →</a></p>` : ''}
         </footer>
       </article>` });
@@ -145,7 +146,7 @@ function feed(notes) {
     <guid isPermaLink="true">${origin}${route(note)}</guid>
     <pubDate>${new Date(note.original_published_at).toUTCString()}</pubDate>
     <category>${escape(note.topic)}</category>
-    <description>${cdata(note.body + (note.image ? `<p><img src="${origin}${note.image.src}" alt="${escape(note.image.alt)}"></p>` : '') + `<p><a href="${note.source_url}">Original &amp; conversation on LinkedIn</a></p>`)}</description>
+    <description>${cdata(note.body + (note.image ? `<p><img src="${origin}${note.image.src}" alt="${escape(note.image.alt)}"></p>` : '') + (note.origin === 'website' ? '' : `<p><a href="${note.source_url}">Original &amp; conversation on LinkedIn</a></p>`))}</description>
   </item>`).join('\n  ')}
 </channel>
 </rss>
@@ -171,10 +172,19 @@ export function buildNotes({ contentDir = path.join(root, 'content'), outputDir 
       throw new Error(`Previously published note needs an explicit withdrawal: ${note.slug}`);
     }
     if (note.status !== 'published') continue;
+    if (note.origin !== undefined && !['linkedin', 'website'].includes(note.origin)) {
+      throw new Error(`Invalid origin: ${note.slug}`);
+    }
+    const isWebsiteOrigin = note.origin === 'website';
+    if (isWebsiteOrigin && note.source_url !== undefined) {
+      throw new Error(`Website origin must not have source_url: ${note.slug}`);
+    }
+    if (!isWebsiteOrigin && !/^https:\/\/www\.linkedin\.com\/feed\/update\/urn:li:activity:\d+\/$/.test(note.source_url)) {
+      throw new Error(`LinkedIn origin requires valid source_url: ${note.slug}`);
+    }
     if (!['en', 'es'].includes(note.lang) || !topics.includes(note.topic)
       || !/^\d{4}-\d{2}-\d{2}T/.test(note.original_published_at)
-      || Number.isNaN(Date.parse(note.original_published_at))
-      || !/^https:\/\/www\.linkedin\.com\/feed\/update\/urn:li:activity:\d+\/$/.test(note.source_url)) {
+      || Number.isNaN(Date.parse(note.original_published_at))) {
       throw new Error(`Invalid publication metadata: ${note.slug}`);
     }
     if (!validDate(note.imported_at) || !validDate(note.web_updated_at)

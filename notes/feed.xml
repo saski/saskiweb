@@ -6,6 +6,35 @@
   <description>On people, software and learning in public.</description>
   <atom:link href="https://www.saski.com/notes/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>A clearer view of agent activity</title>
+    <link>https://www.saski.com/notes/agent-activity-dashboard/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/agent-activity-dashboard/</guid>
+    <pubDate>Thu, 15 Oct 2026 10:26:59 GMT</pubDate>
+    <category>Agents &amp; systems</category>
+    <description><![CDATA[<p>I’ve updated <a href="https://github.com/saski/agent-systems-lab">Agent Systems Lab</a> to make agent activity clearer and easier to follow.</p>
+<p>Think of an agent as a worker with a task and a limited set of tools. The dashboard helps you see:</p>
+<ul>
+<li>What each agent has done and which tools its role can use.</li>
+<li>Where tasks are waiting, and for how long.</li>
+<li>How to intervene through the operator’s terminal.</li>
+<li>Whether recorded history still matches a saved checkpoint.</li>
+</ul>
+<h2>Two different kinds of waiting</h2>
+<p>The dashboard makes two different queues visible: <strong>work waiting for human review</strong> and <strong>records waiting to be sent</strong>. Each needs a different kind of attention. A task waiting for a decision is not the same problem as an observation waiting to reach its receiver.</p>
+<figure>
+  <a href="https://www.saski.com/notes/assets/agent-dashboard-work-2026-10-15.svg"><img src="https://www.saski.com/notes/assets/agent-dashboard-work-2026-10-15.svg" width="1585" height="665" alt="Annotated dashboard separating task states and waiting times from records awaiting delivery" decoding="async"></a>
+  <figcaption>Task counts, waiting time and observation delivery are separate signals. Open the image for the full-size view.</figcaption>
+</figure><h2>A reference point for history</h2>
+<p>A saved history checkpoint contains an event count and a digital fingerprint. Comparing it checks whether the recorded history still matches that reference point, even after later events have been added.</p>
+<p>That does not encrypt the records or stop a database administrator rewriting them. Keep a trusted checkpoint separately if you want to detect changes against that copy.</p>
+<figure>
+  <a href="https://www.saski.com/notes/assets/agent-dashboard-checkpoint-2026-10-15.svg"><img src="https://www.saski.com/notes/assets/agent-dashboard-checkpoint-2026-10-15.svg" width="1240" height="550" alt="A saved checkpoint through event 34 matching a history that now contains 35 events, with an explanation of its limits" decoding="async"></a>
+  <figcaption>Later events are allowed; the saved reference point must still match. Open the image for the full-size view.</figcaption>
+</figure><p>The <a href="https://github.com/saski/agent-systems-lab/blob/main/docs/dashboard.md">illustrated dashboard guide</a> walks through each view with annotated screenshots and examples, for developers who use AI assistants but are new to agent systems.</p>
+<p>This remains an experimental playground. The examples use scripted model responses and test records to explain the workflow and controls, not to establish real-model quality or worker health.</p>
+]]></description>
+  </item>
+  <item>
     <title>Agent Systems Lab: when review becomes the bottleneck</title>
     <link>https://www.saski.com/notes/agent-systems-lab/</link>
     <guid isPermaLink="true">https://www.saski.com/notes/agent-systems-lab/</guid>

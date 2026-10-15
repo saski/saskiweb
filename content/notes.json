@@ -128,5 +128,21 @@
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7409316231255805952/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
     "editorial_note": "An early experiment from December 2025. The configuration later evolved into Arnesto."
+  },
+  {
+    "id": "website-agent-activity-dashboard",
+    "slug": "agent-activity-dashboard",
+    "title": "A clearer view of agent activity",
+    "lang": "en",
+    "topic": "Agents & systems",
+    "kind": "Project update",
+    "summary": "A dashboard and illustrated guide for following agent activity, waiting work, permissions and recorded history.",
+    "related": "agent-systems-lab",
+    "status": "published",
+    "origin": "website",
+    "original_published_at": "2026-10-15T10:26:59Z",
+    "imported_at": "2026-10-15",
+    "web_updated_at": "2026-10-15",
+    "date_source": "Original publication on saski.com, 15 October 2026"
   }
 ]

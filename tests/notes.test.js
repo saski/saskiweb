@@ -8,17 +8,18 @@ const os = require('node:os');
 const root = path.join(__dirname, '..');
 const read = file => readFileSync(path.join(root, file), 'utf8');
 
-test('readers can discover and read all seven notes without JavaScript or LinkedIn', () => {
+test('readers can discover and read all notes without JavaScript or LinkedIn', () => {
+  const catalog = JSON.parse(read('content/notes.json'));
+  const published = catalog.filter(note => note.status === 'published');
   const index = read('notes/index.html');
   const links = [...index.matchAll(/<h2><a href="(\/notes\/[^"/]+\/)"/g)].map(match => match[1]);
-  assert.equal(links.length, 7);
-  assert.equal(new Set(links).size, 7);
+  assert.equal(links.length, published.length);
+  assert.equal(new Set(links).size, published.length);
   for (const url of links) {
     const html = read(`${url.slice(1)}index.html`);
     assert.match(html, /<article\b/);
     assert.match(html, /class="note-body"/);
     assert.match(html, new RegExp(`<link rel="canonical" href="https://www\\.saski\\.com${url}">`));
-    assert.match(html, /https:\/\/www\.linkedin\.com\/feed\/update\/urn:li:activity:\d+\//);
     assert.doesNotMatch(html, /<iframe|platform\.linkedin|lnkd\.in\//);
   }
   assert.match(read('index.htm'), /href="\/notes\/"/);
@@ -27,14 +28,20 @@ test('readers can discover and read all seven notes without JavaScript or Linked
 
 test('preserves original dates, languages and source attribution across pages and RSS', () => {
   const catalog = JSON.parse(read('content/notes.json'));
+  const published = catalog.filter(note => note.status === 'published');
   const feed = read('notes/feed.xml');
   const sitemap = read('sitemap.xml');
-  assert.equal((feed.match(/<item>/g) || []).length, 7);
-  for (const note of catalog.filter(note => note.status === 'published')) {
+  assert.equal((feed.match(/<item>/g) || []).length, published.length);
+  for (const note of published) {
     const html = read(`notes/${note.slug}/index.html`);
     assert.match(html, new RegExp(`<html lang="${note.lang}">`));
     assert.ok(html.includes(`<time datetime="${note.original_published_at}">`));
-    assert.ok(html.includes(note.source_url));
+    if (note.origin === 'website') {
+      assert.match(html, /Originally published on saski\.com/);
+      assert.doesNotMatch(html, /Original &amp; conversation on LinkedIn/);
+    } else {
+      assert.ok(html.includes(note.source_url));
+    }
     assert.ok(feed.includes(new Date(note.original_published_at).toUTCString()));
     assert.ok(feed.includes(`https://www.saski.com/notes/${note.slug}/`));
     assert.ok(sitemap.includes(`https://www.saski.com/notes/${note.slug}/`));
@@ -114,4 +121,96 @@ test('new drafts never enter public output and duplicate source imports fail', a
   assert.throws(() => buildNotes({ contentDir, outputDir }), /duplicate note/);
   writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([{ ...published, status: 'draft' }]));
   assert.throws(() => buildNotes({ contentDir, outputDir }), /explicit withdrawal/);
+});
+
+test('website originals publish without invented LinkedIn provenance', async t => {
+  const { buildNotes } = await import('../scripts/build-notes.mjs');
+  const fixture = mkdtempSync(path.join(os.tmpdir(), 'saski-notes-website-'));
+  t.after(() => rmSync(fixture, { recursive: true, force: true }));
+  const contentDir = path.join(fixture, 'content');
+  const outputDir = path.join(fixture, 'public');
+  mkdirSync(path.join(contentDir, 'notes'), { recursive: true });
+
+  const [legacy] = JSON.parse(read('content/notes.json'));
+  const websiteNote = {
+    id: 'web-first',
+    slug: 'web-first',
+    title: 'Website original',
+    summary: 'A website original',
+    kind: 'Project update',
+    topic: 'Agents & systems',
+    status: 'published',
+    lang: 'en',
+    origin: 'website',
+    original_published_at: '2026-10-15T10:00:00Z',
+    imported_at: '2026-10-15',
+    web_updated_at: '2026-10-15'
+  };
+
+  const pages = { '/': '2026-10-15', '/cv/': '2026-10-15', '/notes/': '2026-10-15' };
+  writeFileSync(path.join(contentDir, 'pages.json'), JSON.stringify(pages));
+  writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([legacy, websiteNote]));
+  writeFileSync(path.join(contentDir, 'notes', `${legacy.slug}.md`), 'Legacy content.');
+  writeFileSync(path.join(contentDir, 'notes', `${websiteNote.slug}.md`), 'Website original content.');
+
+  assert.equal(buildNotes({ contentDir, outputDir }), 2);
+
+  const websiteHtml = readFileSync(path.join(outputDir, 'notes', websiteNote.slug, 'index.html'), 'utf8');
+  assert.doesNotMatch(websiteHtml, /Originally published on LinkedIn/);
+  assert.doesNotMatch(websiteHtml, /Original &amp; conversation on LinkedIn/);
+  assert.doesNotMatch(websiteHtml, /undefined/);
+  assert.match(websiteHtml, /Originally published on saski\.com/);
+
+  const websiteStructured = JSON.parse(websiteHtml.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)[1]);
+  assert.equal(websiteStructured.mainEntityOfPage, `https://www.saski.com/notes/${websiteNote.slug}/`);
+  assert.equal(websiteStructured.isBasedOn, undefined);
+
+  const feed = readFileSync(path.join(outputDir, 'notes/feed.xml'), 'utf8');
+  const items = feed.match(/<item>[\s\S]*?<\/item>/g);
+  const websiteItem = items.find(item => item.includes(`https://www.saski.com/notes/${websiteNote.slug}/`));
+  assert.doesNotMatch(websiteItem, /Originally published on LinkedIn/);
+  assert.doesNotMatch(websiteItem, /linkedin\.com/);
+
+  const legacyHtml = readFileSync(path.join(outputDir, 'notes', legacy.slug, 'index.html'), 'utf8');
+  assert.ok(legacyHtml.includes(legacy.source_url));
+
+  const legacyItem = items.find(item => item.includes(`https://www.saski.com/notes/${legacy.slug}/`));
+  assert.ok(legacyItem.includes(legacy.source_url));
+});
+
+test('rejects unknown origin and website notes with LinkedIn source_url', async t => {
+  const { buildNotes } = await import('../scripts/build-notes.mjs');
+  const fixture = mkdtempSync(path.join(os.tmpdir(), 'saski-notes-validation-'));
+  t.after(() => rmSync(fixture, { recursive: true, force: true }));
+  const contentDir = path.join(fixture, 'content');
+  const outputDir = path.join(fixture, 'public');
+  mkdirSync(path.join(contentDir, 'notes'), { recursive: true });
+
+  const validNote = {
+    id: 'valid-note',
+    slug: 'valid-note',
+    title: 'Valid note',
+    summary: 'A valid note',
+    kind: 'Project update',
+    topic: 'Agents & systems',
+    status: 'published',
+    lang: 'en',
+    origin: 'website',
+    original_published_at: '2026-10-15T10:00:00Z',
+    imported_at: '2026-10-15',
+    web_updated_at: '2026-10-15'
+  };
+
+  const pages = { '/': '2026-10-15', '/cv/': '2026-10-15', '/notes/': '2026-10-15' };
+  writeFileSync(path.join(contentDir, 'pages.json'), JSON.stringify(pages));
+
+  const unknownOrigin = { ...validNote, id: 'unknown', slug: 'unknown', origin: 'unknown' };
+  writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([unknownOrigin]));
+  writeFileSync(path.join(contentDir, 'notes', `${unknownOrigin.slug}.md`), 'Content.');
+  assert.throws(() => buildNotes({ contentDir, outputDir }), /origin/);
+
+  const websiteWithLinkedIn = { ...validNote, id: 'web-linkedin', slug: 'web-linkedin', source_url: 'https://www.linkedin.com/posts/example' };
+  writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([websiteWithLinkedIn]));
+  writeFileSync(path.join(contentDir, 'notes', `${websiteWithLinkedIn.slug}.md`), 'Content.');
+  assert.throws(() => buildNotes({ contentDir, outputDir }), /source_url/);
 });
