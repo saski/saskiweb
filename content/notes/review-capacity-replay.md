@@ -5,7 +5,9 @@
   </a>
 </p>
 
-I’ve been working on [Agent Systems Lab](https://github.com/saski/agent-systems-lab), following some of the questions that came out of reading *Thinking in Systems*. It’s a small playground for experimenting with agent workflows. This time, I wanted to look at what happens when execution gets faster while review capacity stays the same.
+I’ve been working on [Agent Systems Lab](https://github.com/saski/agent-systems-lab), following some of the questions that came out of reading Donella Meadows’ *Thinking in Systems*. It’s a small playground for experimenting with agent workflows. This time, I wanted to look at what happens when execution gets faster while review capacity stays the same.
+
+For me, Alfredo Artiles’ work brings together plenty of good reasons to read Meadows’ book. His [Systems Thinking for Developers Workshop](https://alfredoartiles.com/systems-thinking-for-developers-workshop-ab5ca53aeda2) connects systems thinking with software development, and points back to [“Martillos y clavos”, his talk at Pamplona Software Crafters in 2023](https://www.youtube.com/watch?v=50jq26pbrbA). The [Dev Systems Wiki](https://alfredoartiles.notion.site/f7c763b40cb24c4c801fc5dbe70b156f?v=e1e3dcfe74bb4e568ebc4ad7c29c721c) contains more examples. I’d recommend these resources especially now that so many of us are building systems of agents: the feedback loops, delays and effects of changing one part of a system are things we need to understand in our own work.
 
 The [previous experiment](https://www.saski.com/notes/agent-systems-lab/) gave me the numbers. From there, I wanted to follow a task through the system and see where it spent its time waiting. So I added a replay to the local dashboard.
 
