@@ -144,5 +144,21 @@
     "imported_at": "2026-10-15",
     "web_updated_at": "2026-10-15",
     "date_source": "Original publication on saski.com, 15 October 2026"
+  },
+  {
+    "id": "website-review-capacity-replay",
+    "slug": "review-capacity-replay",
+    "title": "Where the waiting goes",
+    "lang": "en",
+    "topic": "Agents & systems",
+    "kind": "Experiment",
+    "summary": "Following 24 tasks through three versions of the same simulation, with timelines of execution, review and the waiting in between.",
+    "related": "agent-systems-lab",
+    "status": "published",
+    "origin": "website",
+    "original_published_at": "2026-10-20T15:53:13Z",
+    "imported_at": "2026-10-20",
+    "web_updated_at": "2026-10-20",
+    "date_source": "Original publication on saski.com, 20 October 2026"
   }
 ]

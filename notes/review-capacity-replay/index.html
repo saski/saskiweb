@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Where the waiting goes — Nacho Viejo</title>
+  <meta name="description" content="Following 24 tasks through three versions of the same simulation, with timelines of execution, review and the waiting in between.">
+  <meta name="author" content="Nacho Viejo">
+  <link rel="canonical" href="https://www.saski.com/notes/review-capacity-replay/">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="alternate" type="application/rss+xml" title="Notes — Nacho Viejo" href="/notes/feed.xml">
+  <link rel="stylesheet" href="/css/notes.css?v=20261006-reference-notes">
+  <link rel="stylesheet" href="/css/site-header.css?v=20261006">
+
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="saski — Notes">
+  <meta property="og:title" content="Where the waiting goes — Nacho Viejo">
+  <meta property="og:description" content="Following 24 tasks through three versions of the same simulation, with timelines of execution, review and the waiting in between.">
+  <meta property="og:url" content="https://www.saski.com/notes/review-capacity-replay/">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:image" content="https://www.saski.com/notes/assets/notes-2026-10-06.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Notes. On people, software and learning in public. Nacho Viejo, saski.com.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="article:published_time" content="2026-10-20T15:53:13Z">
+  <meta property="article:modified_time" content="2026-10-20">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","headline":"Where the waiting goes","description":"Following 24 tasks through three versions of the same simulation, with timelines of execution, review and the waiting in between.","inLanguage":"en","datePublished":"2026-10-20T15:53:13Z","dateModified":"2026-10-20","author":{"@type":"Person","name":"Nacho Viejo","url":"https://www.saski.com/cv/"},"mainEntityOfPage":"https://www.saski.com/notes/review-capacity-replay/"}</script>
+</head>
+<body>
+  <a class="skip-link" href="#main" lang="en">Skip to content</a>
+  <header class="site-header" aria-label="Site links" lang="en">
+    <a class="site-mark" href="/" aria-label="saski home">saski</a>
+    <nav class="social-links" aria-label="Social links">
+      <a href="/notes/" aria-label="Notes on people and software"><span>Notes</span></a>
+      <a href="/cv/" aria-label="Professional CV"><span>CV</span></a>
+      <a href="https://github.com/saski" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+        <span>GitHub</span>
+      </a>
+      <a href="https://www.linkedin.com/in/saski/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <span>LinkedIn</span>
+      </a>
+    </nav>
+  </header>
+  <div class="page-shell">
+    <main id="main" tabindex="-1">
+      <article class="reader">
+        <a class="back-link" href="/notes/" lang="en">← All notes</a>
+        <header><p class="note-meta" lang="en"><time datetime="2026-10-20T15:53:13Z">20 Oct 2026</time><span class="note-topic">Agents &amp; systems</span><span><abbr title="English">EN</abbr> · Experiment</span></p><h1>Where the waiting goes</h1>
+          <p class="provenance" lang="en">By <a href="/cv/" rel="author">Nacho Viejo</a> · Originally published on saski.com<br>Web edition updated <time datetime="2026-10-20">20 Oct 2026</time></p>
+        </header>
+        <div class="note-body"><p>I’ve been working on <a href="https://github.com/saski/agent-systems-lab">Agent Systems Lab</a>, following some of the questions that came out of reading <em>Thinking in Systems</em>. It’s a small playground for experimenting with agent workflows. This time, I wanted to look at what happens when execution gets faster while review capacity stays the same.</p>
+<p>The <a href="https://www.saski.com/notes/agent-systems-lab/">previous experiment</a> gave me the numbers. From there, I wanted to follow a task through the system and see where it spent its time waiting. So I added a replay to the local dashboard.</p>
+<p>For the simulation, I used 24 tasks and one simulated reviewer. A new task arrives every two ticks. Each takes eight ticks of execution and six ticks of review; these are units of model time, with no measured conversion to seconds.</p>
+<p>I tracked each task until the reviewer made a decision on the proposed change. That includes waiting before execution and waiting after the automated work has finished.</p>
+<p>I compared three versions:</p>
+<ul>
+<li>A has one execution slot, so one task can execute at a time.</li>
+<li>B has four execution slots, allowing up to four tasks to execute at once.</li>
+<li>C has the same four slots, but at most three tasks can be between starting execution and receiving a decision.</li>
+</ul>
+<p>That last rule is the work-in-progress (WIP) limit. Executing tasks, tasks waiting for review and the task being reviewed all use one of those places. A place becomes free when a decision is made. Anything waiting to start stays visible and still counts as unfinished work.</p>
+<p>At tick 60, that limit brings the review queue down from 15 tasks in B to one in C. Both have completed eight decisions and still have 16 unfinished tasks. In C, 13 of them are waiting to start; one is executing, one is waiting for review, and one is being reviewed.</p>
+<figure>
+  <a href="https://www.saski.com/notes/assets/review-capacity-over-time-2026-10-20.svg"><img src="https://www.saski.com/notes/assets/review-capacity-over-time-2026-10-20.svg" width="2160" height="1980" alt="Three time plots compare completed decisions, tasks waiting to start and tasks waiting for review. B and C have identical decision times, while C keeps more waiting before execution." decoding="async"></a>
+  <figcaption>B and C finish all 24 tasks at tick 152; A finishes at tick 198. The dotted line marks tick 60. Open the image for the full-size view.</figcaption>
+</figure><p>Task #11 from the saved trace makes that change easier to follow. It arrives at tick 22 in all three versions. In B, it starts straight away and then waits 44 ticks for review. In C, it waits 40 ticks before execution and four for review. Both receive a decision at tick 80.</p>
+<figure>
+  <a href="https://www.saski.com/notes/assets/review-capacity-task-11-2026-10-20.svg"><img src="https://www.saski.com/notes/assets/review-capacity-task-11-2026-10-20.svg" width="2160" height="1278" alt="Task 11 timeline: A waits 66 ticks before execution and zero for review; B waits zero before execution and 44 for review; C waits 40 before execution and four for review. Each executes for eight ticks and is reviewed for six." loading="lazy" decoding="async"></a>
+  <figcaption>Task #11 receives its decision at tick 102 in A and tick 80 in both B and C. Numbers inside the bars are durations. Open the image for the full-size view.</figcaption>
+</figure><p>That timing holds for every task in this particular scenario: B and C finish each task at the same tick, with the cap changing how much work has started and where it waits.</p>
+<p>The new Experiments view brings the comparison, charts and individual task positions together. Select policy B at tick 60 and you can see the work waiting for review. Switch to C at the same tick and most of that waiting is before execution. You can go backwards through the replay to follow how each task got there, connecting the totals with the individual tasks behind them.</p>
+<p>Play/Pause and the speed controls move through the saved trace. They affect how quickly you watch it; execution and review capacity stay the same. The <a href="https://github.com/saski/agent-systems-lab/blob/0e1a186f5f08c84ba0e9c86b10bc6e04d58827a5/docs/dashboard.md">dashboard guide</a> covers local setup and how to read the different views. The <a href="https://github.com/saski/agent-systems-lab/blob/0e1a186f5f08c84ba0e9c86b10bc6e04d58827a5/experiments/review-capacity/scenario.json">scenario file</a> contains the inputs used here.</p>
+<p>The reviewer in this example accepts every task. There are no mistakes, requests for changes, interruptions or fatigue. A smaller review queue here says nothing about review quality or the productivity of a real team.</p>
+<p>The next experiment will test the admission rule with actual fixture workflows: whether a task waiting for a human decision keeps its place, including after a restart. That behavior still needs implementing and testing.</p>
+</div>
+        <footer class="references">
+
+
+          <p class="related"><span lang="en">Related note</span><a href="/notes/agent-systems-lab/" lang="en">Agent Systems Lab: when review becomes the bottleneck →</a></p>
+        </footer>
+      </article></main>
+    <footer class="site-footer" lang="en">
+      <span>Nacho Viejo · Madrid</span>
+      <nav aria-label="Follow my writing"><a href="/notes/feed.xml">RSS</a><a href="https://www.linkedin.com/in/saski/" rel="me">Elsewhere: LinkedIn ↗</a></nav>
+    </footer>
+  </div>
+</body>
+</html>
