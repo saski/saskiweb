@@ -72,7 +72,13 @@ test('web editions expose their author and stable update dates independently of 
   const outputDir = path.join(fixture, 'public');
   mkdirSync(path.join(contentDir, 'notes'), { recursive: true });
   const [original] = JSON.parse(read('content/notes.json'));
-  const note = { ...original, web_updated_at: '2026-10-08' };
+  const note = {
+    ...original,
+    original_published_at: '2026-10-04T11:58:56.351Z',
+    imported_at: '2026-10-06',
+    updated_at: '2026-10-06',
+    web_updated_at: '2026-10-08'
+  };
   const pages = { '/': '2026-10-06', '/cv/': '2026-10-06', '/notes/': '2026-10-08' };
   writeFileSync(path.join(contentDir, 'pages.json'), JSON.stringify(pages));
   writeFileSync(path.join(contentDir, 'notes.json'), JSON.stringify([note]));

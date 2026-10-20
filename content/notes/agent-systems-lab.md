@@ -1,34 +1,35 @@
-Giving agents more execution capacity can make the queue for human review longer without producing much more accepted work. I wanted a small experiment where I could see that happen, count everything still waiting, and change one policy at a time.
+<p class="note-soundtrack">
+  <a href="https://open.spotify.com/track/2qP8szx9DBDGeiopBwIDIf?utm_source=openai&amp;utm_medium=chatgpt&amp;go=1&amp;nap_web=1&amp;request_id=7c9371f5-c087-4c28-bead-392fadf54b74">
+    <img src="https://i.scdn.co/image/ab67616d00004851911190f9736b56741eda4982" width="32" height="32" alt="Songs For Drella album cover" decoding="async">
+    <span><span class="soundtrack-label">Soundtrack · Spotify</span><span class="soundtrack-track">Faces and Names · Lou Reed &amp; John Cale</span><span class="soundtrack-album">Songs For Drella</span></span>
+  </a>
+</p>
 
-In [Agent Systems Lab](https://github.com/saski/agent-systems-lab), four execution slots complete **eight decisions by tick 60**, compared with **six decisions with one slot**. A limit on admitted work makes the review queue much smaller, but the waiting moves upstream. Those are results of a deterministic teaching model, not measurements of a team's productivity.
+The conversations I’ve been having about agentic systems took me back to Donella Meadows’ *Thinking in Systems*. I wanted to explore one of those questions about feedback loops, delays and bottlenecks: what happens when we can execute more work, but our capacity to review it stays the same?
 
-The conversations I have been having about agentic systems took me back to Donella Meadows' *Thinking in Systems*: feedback loops, delays, bottlenecks, and what happens when a local improvement meets the rest of the system. This experiment is my way of making one of those questions concrete.
+To try it, I used a small, deterministic model in [Agent Systems Lab](https://github.com/saski/agent-systems-lab). It lets me change one rule at a time and keep track of every task that is still waiting.
 
-## The question and the boundary
+## What I put in the model
 
-What changes when execution gets faster and review capacity stays fixed?
+The model follows tasks through execution and review. A task can wait before it starts executing, then wait again once it is ready for review. I count both queues, along with the tasks executing, being reviewed and already decided.
 
-The model has two queues. Tasks wait for admission before execution; after execution, they can wait for review. Admitted work in progress includes tasks executing, waiting for review, or being reviewed. A decision releases a task's WIP allocation.
+The reviewer is a simulated resource. It is separate from the playground’s Reviewer agent: this experiment does not run the Researcher, Builder or Reviewer agents, call a model provider, or involve a human reviewer. Time advances in logical ticks, with no measured conversion to seconds.
 
-Admission waiting sits outside the WIP limit but **inside the measurement boundary**. Otherwise, limiting admission could appear to remove work simply by moving it out of view.
+The [checked-in scenario](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/experiments/review-capacity/scenario.json) has 24 tasks arriving every two ticks, from tick 0 to tick 46. Each takes eight ticks to execute and six to review. There is one reviewer, and every review accepts.
 
-The reviewer here is one synthetic resource, separate from the playground's Reviewer agent. This numerical experiment does not invoke the Researcher, Builder or Reviewer agents, a model provider, or an actual human. A tick is a unit of logical time; it has no measured conversion to seconds.
+I kept that workload fixed and compared three versions:
 
-## Hold the workload fixed
+- A has one execution slot and no work-in-progress limit.
+- B has four execution slots and no work-in-progress limit.
+- C has the same four slots, but at most three tasks can be between starting execution and receiving a decision.
 
-The [checked-in scenario](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/experiments/review-capacity/scenario.json) schedules **24 tasks**, arriving every **two ticks**, from tick 0 to tick 46. Each task takes **eight execution ticks** and **six review ticks**. There is one reviewer, and every review accepts.
+That work-in-progress (WIP) limit includes tasks executing, waiting for review and being reviewed. Each decision frees a place for another task to start. Tasks waiting to start are outside the limit, but I still count them as unfinished. Otherwise, I could make the system look better just by leaving some of its waiting out of the report.
 
-I compare three policies:
+Moving from A to B changes execution capacity. Moving from B to C changes only the admission limit, which controls when a task can start. The arrivals and the time each task needs for execution and review stay the same.
 
-- **A:** one execution slot, no WIP limit.
-- **B:** four execution slots, no WIP limit.
-- **C:** four execution slots, with at most three admitted tasks.
+## Where the tasks are waiting
 
-A to B changes execution capacity. B to C changes only the admission limit. All three use the same arrivals and service times.
-
-## Four execution slots do not produce four times the output
-
-At tick 60, including transitions at that tick, the model reports:
+I first looked at tick 60, after processing all the transitions at that tick:
 
 <div class="table-wrap" role="region" aria-label="Task locations at tick 60" tabindex="0">
 
@@ -43,15 +44,13 @@ At tick 60, including transitions at that tick, the model reports:
 
 </div>
 
-Moving from A to B gives a 4× increase in execution slots and an **8/6, or 1.33×, increase in decisions** over this window. Execution helps, but the fixed reviewer cannot keep up with everything arriving from it: B has 15 tasks waiting for review.
+With four execution slots, B has completed eight decisions. With one slot, A has completed six. That is four times the execution capacity and 8/6, or about 1.33 times, as many decisions during this window. B has also built up a queue of 15 tasks waiting for review.
 
-This ratio includes startup and the chosen observation window. It is not a scaling law for agents. The useful observation is the mismatch between how quickly work becomes ready and how quickly it can leave review.
+The reviewer has stayed the same while more work has become ready for it. The exact ratio depends on startup and on where I stop to look, so I wouldn’t use 1.33 as a rule for how agent systems scale.
 
-## A smaller review queue can hide the same amount of waiting
+C has completed the same eight decisions as B, with only one task waiting for review. But 13 tasks are now waiting to start. Both versions still have 16 unfinished tasks.
 
-C completes the same eight decisions as B. Its review queue has just one task, but 13 tasks now wait for admission. Both policies still have **16 unfinished tasks**.
-
-The WIP limit has changed where work waits. It has not removed demand or added review capacity. To see whether this is just an effect of stopping at tick 60, I also follow all 24 tasks until the final decision:
+The cap changes where the waiting happens; demand and review capacity stay the same. I also followed all 24 tasks through to their final decision to check whether the result was just an effect of stopping at tick 60:
 
 <div class="table-wrap" role="region" aria-label="Results for all 24 tasks through full drain" tabindex="0">
 
@@ -64,15 +63,15 @@ The WIP limit has changed where work waits. It has not removed demand or added r
 
 </div>
 
-Here B and C have identical per-task decision times. C keeps the reviewer supplied while admitting less work. The reduction in review waiting is balanced by waiting before admission.
+Each task receives its decision at the same tick in B as it does in C. C starts less work at once and still keeps the reviewer supplied. The time saved in the review queue is spent waiting before execution instead.
 
-These percentiles cover the same **24 tasks per policy**, using nearest rank. The tick-60 comparison covers only six completed tasks for A and eight for B and C; comparing latency percentiles for those smaller completed cohorts would answer a different question.
+The p50 and p95 values use the nearest-rank method and cover all 24 tasks in each version. At tick 60, only six tasks have finished in A and eight in B and C. Comparing the times of only those completed tasks would mean comparing different groups, so I’ve kept the full-workload timings together.
 
-## Reproduce it
+## Running the experiment
 
-For this article I reran the scenario and compared the report with the published reference. The scenario and deterministic report hashes matched. The implementation and source links below refer to public revision `8bf1669a68a9072326d35abfb18ee979a3766531`.
+When I prepared this article, I reran the scenario and compared it with the published reference. Both the scenario hash and the deterministic report hash matched. The source links and commands here refer to public revision `8bf1669a68a9072326d35abfb18ee979a3766531`.
 
-With Git, [uv](https://docs.astral.sh/uv/) and Python 3.11 or newer available:
+You’ll need Git, [uv](https://docs.astral.sh/uv/) and Python 3.11 or newer:
 
 ```sh
 git clone https://github.com/saski/agent-systems-lab.git
@@ -83,20 +82,22 @@ uv run --locked systems-lab experiment review-capacity \
   --scenario experiments/review-capacity/scenario.json
 ```
 
-The command prints a manifest pointing to a fresh directory under `.lab/experiments/review-capacity/`. Inspect `scenario.json`, `report.json` and `manifest.json`. The expected deterministic report SHA-256 is:
+The command prints a manifest pointing to a new directory under `.lab/experiments/review-capacity/`. In it, you can inspect `scenario.json`, `report.json` and `manifest.json`. The expected deterministic report SHA-256 is:
 
 ```text
 a3a9c0396620438fa7c039f5aa9aace98a85cff968ba5004c52e5e25f473e58a
 ```
 
-This command invokes no providers or agent workers. Docker is not needed for the numerical experiment. The [experiment guide](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/experiments/review-capacity/README.md) has the charts, metric definitions, and a saved-trace replay you can open locally. GitHub displays that HTML guide as source; it does not run the replay there.
+You can run this numerical experiment without Docker. The command invokes no model providers or agent workers. The [experiment guide](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/experiments/review-capacity/README.md) includes charts, metric definitions and a replay of the saved trace that you can open locally. On GitHub, that HTML guide appears as source; the replay does not run there.
 
-## What I would take into a real workflow
+## What I’d measure in a real workflow
 
-I would measure arrivals, admission waiting, execution, review waiting and accepted output together. A dashboard showing only faster execution or a shrinking review queue can miss the cost elsewhere in the system.
+I’d measure arrivals, waiting before execution, execution itself, waiting for review and accepted output together. If I only looked at execution speed or the length of the review queue, I would miss some of the time tasks spend in the system.
 
-A WIP limit is a policy to test. In this model it bounds admitted work without slowing B's delivery timing. Whether that is useful in practice depends on costs the model does not represent: stale context, interruptions, deadlines and work that needs another pass.
+The WIP limit is something I would test in that workflow. Here it bounds admitted work without slowing down delivery compared with B. Whether that helps in practice depends on things this model leaves out, such as stale context, interruptions, deadlines and work that needs another pass.
 
-The limitations are deliberate. Arrivals are finite and scheduled, tasks have uniform service times, every review accepts, and there is no randomness, rework, fatigue, failure or quality measure. This experiment cannot establish real reviewer capacity, an optimal WIP limit, agent safety, or productivity gains. It supports a narrower conclusion: **when execution gets faster and review stays fixed, count where all the unfinished work goes**.
+The workload here is finite and scheduled, every task takes the same amount of execution and review time, and every review accepts. There is no randomness, rework, fatigue, failure or measure of quality. I can use it to follow what happens to unfinished work when execution capacity grows and review stays fixed. It cannot tell me a real reviewer’s capacity, the best WIP limit, whether agents are safe, or whether a team would become more productive.
 
-The numerical model and CLI are implemented. The standalone learning guide is documentation; the integrated Experiments dashboard remains pending in the public revision used here. You can inspect the [simulation](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/src/systems_lab/review_capacity.py) and [metric calculations](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/src/systems_lab/review_capacity_metrics.py), or read how I organise the surrounding tools in [Arnesto](/notes/arnesto/).
+The revision used here includes the numerical model and CLI, with a standalone learning guide as documentation. It predates the integrated Experiments dashboard. I’ve since added that view; [Where the waiting goes](https://www.saski.com/notes/review-capacity-replay/) follows the same experiment through its replay and shows the timelines.
+
+You can inspect the [simulation](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/src/systems_lab/review_capacity.py) and [metric calculations](https://github.com/saski/agent-systems-lab/blob/8bf1669a68a9072326d35abfb18ee979a3766531/src/systems_lab/review_capacity_metrics.py), or read how I organise the surrounding tools in [Arnesto](/notes/arnesto/).
