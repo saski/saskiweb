@@ -24,16 +24,16 @@
     "lang": "es",
     "topic": "Agents & systems",
     "kind": "Field guide",
-    "summary": "Reglas pequeñas, skills bajo demanda, decisiones fuera del chat y límites entre herramientas. Ejemplos de mi arnés personal, con enlaces al código.",
+    "summary": "Cómo organizo las reglas, los skills y el contexto que uso con agentes, con ejemplos del repositorio.",
     "related": "agent-systems-lab",
     "status": "published",
     "original_published_at": "2026-08-17T17:43:57.476Z",
     "imported_at": "2026-10-06",
-    "web_updated_at": "2026-10-06",
+    "web_updated_at": "2026-10-20",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7495173590376443904/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
-    "updated_at": "2026-10-06",
-    "editorial_note": "Edición ampliada para la web: se conserva el origen de Arnesto y se añaden decisiones y ejemplos de la versión pública del repositorio."
+    "updated_at": "2026-10-20",
+    "editorial_note": "Edición ampliada para la web. Texto revisado el 20 de octubre de 2026; los ejemplos y enlaces corresponden a la versión pública del 6 de octubre."
   },
   {
     "id": "7486728253659967488",
