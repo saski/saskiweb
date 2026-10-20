@@ -106,11 +106,18 @@
     "status": "published",
     "original_published_at": "2026-01-28T18:17:58.821Z",
     "imported_at": "2026-10-06",
-    "web_updated_at": "2026-10-06",
+    "web_updated_at": "2026-10-20",
     "source_url": "https://www.linkedin.com/feed/update/urn:li:activity:7422342191232188417/",
     "date_source": "LinkedIn public SocialMediaPosting JSON-LD, checked 2026-10-06",
-    "updated_at": "2026-10-06",
-    "editorial_note": "Edición para la web: se identifica el reconocimiento que aparecía en la imagen original y se corrigen erratas."
+    "updated_at": "2026-10-20",
+    "editorial_note": "Edición para la web: se identifica el reconocimiento y se corrigen erratas. Imagen original del premio añadida el 20 de octubre de 2026.",
+    "image": {
+      "src": "/notes/assets/make-it-happen-spirit-award-2026-01.jpg",
+      "alt": "Make It Happen Spirit Award de Eventbrite con mi retrato y mi nombre, Juan Ignacio «Nacho» Viejo Fernández.",
+      "caption": "Make It Happen Spirit Award · Eventbrite, enero de 2026.",
+      "width": 960,
+      "height": 540
+    }
   },
   {
     "id": "7409316231255805952",
