@@ -67,6 +67,12 @@ abbr[title] { text-decoration: none; }
 .note-body figure { margin: 28px 0; }
 .note-body img { display: block; max-width: 100%; height: auto; }
 .note-body figcaption { font: 12px/1.6 var(--sans); color: var(--muted); margin-top: 9px; }
+.note-soundtrack a { display: inline-flex; align-items: center; gap: 10px; max-width: 100%; min-height: 44px; color: var(--muted); font: 12px/1.5 var(--sans); text-decoration: none; }
+.note-soundtrack img { width: 32px; height: 32px; flex: 0 0 32px; }
+.soundtrack-label, .soundtrack-track, .soundtrack-album { display: block; }
+.soundtrack-label { font-size: 11px; }
+.soundtrack-track { color: var(--accent); text-decoration: underline; text-underline-offset: .2em; }
+.note-soundtrack a:hover .soundtrack-track { text-decoration-thickness: 2px; }
 .references { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; }
 .references p { margin: 0 0 18px; }
 .editorial-note { color: var(--muted); }

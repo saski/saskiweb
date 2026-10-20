@@ -1,3 +1,10 @@
+<p class="note-soundtrack">
+  <a href="https://open.spotify.com/track/7AR6yRthGwDf1A7VbyyH3v?utm_source=openai&amp;utm_medium=chatgpt&amp;go=1&amp;nap_web=1&amp;request_id=ba4d6e62-4218-41d3-a97a-d024bbd7f26e">
+    <img src="https://i.scdn.co/image/ab67616d00004851469a5848dc274b1d51e504a8" width="32" height="32" alt="The Perfect Prescription album cover" decoding="async">
+    <span><span class="soundtrack-label">Soundtrack · Spotify</span><span class="soundtrack-track">Take Me to the Other Side · Spacemen 3</span><span class="soundtrack-album">The Perfect Prescription</span></span>
+  </a>
+</p>
+
 I’ve been working on [Agent Systems Lab](https://github.com/saski/agent-systems-lab), following some of the questions that came out of reading *Thinking in Systems*. It’s a small playground for experimenting with agent workflows. This time, I wanted to look at what happens when execution gets faster while review capacity stays the same.
 
 The [previous experiment](https://www.saski.com/notes/agent-systems-lab/) gave me the numbers. From there, I wanted to follow a task through the system and see where it spent its time waiting. So I added a replay to the local dashboard.
