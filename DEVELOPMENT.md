@@ -33,6 +33,43 @@ The deploy script selects public root files and permitted assets in `css/`, `js/
 
 No LinkedIn/X cross-publishing or scheduled automation is configured.
 
+## Readership measurement
+
+The shared client in `js/site-analytics.js` loads GA4 (`G-MSW6WJWN1M`) only after the visitor accepts analytics, and only on `saski.com` or `www.saski.com`. It is included in the home, CV and Notes template. The consent UI also works locally without contacting Google. The privacy page is `privacy.html`; the archived home no longer loads Universal Analytics. Cloudflare already injects its Web Analytics beacon, so do not add a second copy.
+
+Visitors can accept or decline with equal controls and reopen Analytics settings. The choice lasts 180 days; GA cookies are configured for 90 days. Withdrawal disables collection, clears the site's GA cookies and reloads the page. Advertising consent and Google Signals stay disabled. This uses Google's [basic consent approach](https://developers.google.com/tag-platform/security/guides/consent?consentmode=basic): no Google tag or measurement request before acceptance.
+
+| Event | What it establishes | What it does not establish |
+| --- | --- | --- |
+| `page_view` | An accepted, instrumented page load | A unique person or a completed read |
+| `note_open` | A click to another Notes article | A completed destination load |
+| `note_read` | At least 30 visible seconds and 75% scroll through the note body, once per load | Comprehension or reading every paragraph |
+| `demo_click` | A click on an explicitly marked, approved demo link | Successful playback or completion |
+| `repo_click` | A click to the Agent Systems Lab or Arnesto repository | A star, installation or adoption |
+| `contact_click` | An email or personal LinkedIn link click | A sent message, qualified lead or conversation |
+| `cv_download` | A click on a local CV PDF | A completed download or hiring interest |
+
+`content_id` is a public note slug or `home`, `cv`, `notes`. `target` and `method` are fixed categories. No event includes the clicked URL, email address or link text. The canonical page URL drops all query strings and fragments. Referrers retain only approved public origins. Unknown campaign values and all campaign terms/IDs are discarded. Do not add names, emails, customer IDs or arbitrary text to these fields. Google still receives its normal connection/browser data and uses pseudonymous cookies after acceptance.
+
+For GA4 reports, the event-scoped dimensions are Content ID (`content_id`), Action target (`target`) and Action method (`method`), registered on 22 October 2026. They are not user identifiers. Use session campaign/source/medium and manual ad content to compare distribution pieces. Standard reports can take 24–48 hours to expose newly registered dimensions. Do not call contact clicks leads or mark them as sales conversions. Record actual conversations separately.
+
+### G01 campaign links
+
+The first campaign is deliberately a small allowlist. When adding a new campaign, update the client, behavior tests and this table together. Do not put UTMs on internal links; GA keeps the external campaign through the session. Internal actions use events.
+
+| Piece | `utm_source` | `utm_medium` | `utm_campaign` | `utm_content` |
+| --- | --- | --- | --- | --- |
+| LinkedIn demo | `linkedin` | `social` | `g01_review_capacity` | `linkedin_demo_v1` |
+| LinkedIn follow-up | `linkedin` | `social` | `g01_review_capacity` | `linkedin_followup_v1` |
+| X summary | `x` | `social` | `g01_review_capacity` | `x_summary_v1` |
+| Newsletter | `newsletter` | `email` | `g01_review_capacity` | `notes_demo_v1` |
+
+Example: `https://www.saski.com/notes/review-capacity-replay/?utm_source=linkedin&utm_medium=social&utm_campaign=g01_review_capacity&utm_content=linkedin_demo_v1`.
+
+Keep dated analytics exports, screenshots and working analysis in ignored `.lab/`, outside Git and deployment. For each comparison record the timezone, date window, bot filter, campaign and publication date. Cloudflare visits, GA sessions and social impressions use different definitions; do not divide one system's counts by another's to claim a conversion rate. Cloudflare uses adaptive sampling, and GA covers consenting visitors who can load its tag. Local testing sends nothing; production QA must be noted in the analysis.
+
+Run `npm run build` and `npm test`. Browser QA covers initial choice, decline, accept, withdrawal, desktop/mobile layout and no horizontal overflow. After deploying, verify the Google request is absent before consent and inspect its sanitized payload after acceptance; then check GA Realtime. A passing unit test or HTTP 200 does not establish that GA received the event.
+
 ## Site5 deployment
 
 This project now deploys with `deploy.sh` instead of manual FTP uploads.

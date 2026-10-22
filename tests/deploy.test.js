@@ -16,6 +16,7 @@ function makeFixture() {
     '.htaccess',
     'index.htm',
     'index.htm.old.htm',
+    'privacy.html',
     'list.php',
     'favicon.ico',
     'robots.txt',

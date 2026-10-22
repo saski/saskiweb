@@ -10,7 +10,7 @@ FORCE_FTPS=0
 TARGET_FILE=""
 FULL_DEPLOY=0
 SELECTED_FILES=()
-PUBLIC_ROOT_FILES=(.htaccess index.htm index.htm.old.htm list.php favicon.ico robots.txt sitemap.xml styles.css)
+PUBLIC_ROOT_FILES=(.htaccess index.htm index.htm.old.htm privacy.html list.php favicon.ico robots.txt sitemap.xml styles.css)
 
 usage() {
   cat <<'USAGE'
@@ -51,7 +51,7 @@ require_env() {
 is_public_file() {
   local file_path="$1"
   case "$file_path" in
-    .htaccess|index.htm|index.htm.old.htm|list.php|favicon.ico|robots.txt|sitemap.xml|styles.css)
+    .htaccess|index.htm|index.htm.old.htm|privacy.html|list.php|favicon.ico|robots.txt|sitemap.xml|styles.css)
       return 0
       ;;
     css/*.css|js/*.js)

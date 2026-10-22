@@ -6,6 +6,11 @@
 - `/cv/` — responsive, print-friendly professional CV
 - `/notes/` — an editorial index of writing on people, software and learning in public
 - `/notes/feed.xml` — full-text RSS feed
+- `/privacy.html` — readership measurement and analytics choices
+
+Google Analytics is optional. The site asks before loading it, and the Analytics
+settings button lets visitors change their choice later. Cloudflare provides
+the site's existing aggregate traffic and performance reports.
 
 The CV page offers a direct PDF download in addition to printing. The reviewed
 October 5, 2026 PDF is stored alongside the page as
