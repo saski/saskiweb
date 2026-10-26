@@ -1,0 +1,35 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "all-caps-body",
+        "value": "*",
+        "files": [
+          "cv/index.html"
+        ],
+        "createdAt": "2026-10-26T11:41:41.616Z",
+        "reason": "Agent review: rendered uppercase text is limited to the existing short masthead and job-title labels; no prose passages are transformed."
+      },
+      {
+        "rule": "tight-leading",
+        "value": "*",
+        "files": [
+          "cv/index.html"
+        ],
+        "createdAt": "2026-10-26T11:41:41.755Z",
+        "reason": "Agent review: browser confirms body 17px/28.56px (1.68) and intro 25.6px/38.912px (1.52); detector reports spurious 0.16x ratios. Tighter existing display headings are intentional, not body prose."
+      },
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "cv/index.html"
+        ],
+        "createdAt": "2026-10-26T11:41:41.886Z",
+        "reason": "Agent review: browser confirms education rows have 20px bottom padding with their 1px separators; the final row has neither padding nor a border. Detector conflates the last-child override with bordered rows."
+      }
+    ]
+  }
+}
