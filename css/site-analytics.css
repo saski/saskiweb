@@ -72,7 +72,7 @@
   border: 0;
   border-radius: 0;
   background: transparent;
-  color: #454d46;
+  color: #6b7268;
   box-shadow: none;
   font: 400 12px/1.5 "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
   text-decoration: underline;
@@ -94,7 +94,7 @@
 
 .site-analytics button.site-analytics__settings:hover {
   background: transparent;
-  color: #1b211e;
+  color: #454d46;
 }
 
 .site-analytics button.site-analytics__settings:focus-visible {
