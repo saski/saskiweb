@@ -20,7 +20,9 @@
 }
 
 .site-analytics--collapsed {
-  width: auto;
+  position: static;
+  width: fit-content;
+  margin: 0 clamp(20px, 5vw, 56px) 16px auto;
   padding: 0;
   border: 0;
   background: transparent;
@@ -29,8 +31,6 @@
 
 .site-analytics--collapsed .site-analytics__settings {
   margin: 0;
-  background: #fff;
-  box-shadow: 0 4px 16px rgb(0 0 0 / 18%);
 }
 
 .site-analytics__message {
@@ -40,6 +40,11 @@
 
 #theBody .site-analytics {
   bottom: 80px;
+}
+
+#theBody .site-analytics--collapsed {
+  position: fixed;
+  margin: 0;
 }
 
 .site-analytics__choices {
@@ -66,8 +71,18 @@
   flex: 1 1 140px;
 }
 
-.site-analytics__settings {
+.site-analytics button.site-analytics__settings {
   margin: 0 8px 0 0;
+  padding: 8px 4px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: #454d46;
+  box-shadow: none;
+  font: 400 12px/1.5 "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .25em;
 }
 
 .site-analytics a {
@@ -80,6 +95,16 @@
 
 .site-analytics button:hover {
   background: #edf2f6;
+}
+
+.site-analytics button.site-analytics__settings:hover {
+  background: transparent;
+  color: #1b211e;
+}
+
+.site-analytics button.site-analytics__settings:focus-visible {
+  outline: 2px solid #96442d;
+  outline-offset: 4px;
 }
 
 .site-analytics button:focus-visible,
@@ -97,7 +122,7 @@
   }
 
   .site-analytics--collapsed {
-    width: auto;
+    width: fit-content;
     padding: 0;
   }
 

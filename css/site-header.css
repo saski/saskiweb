@@ -34,18 +34,20 @@
 .social-links {
   display: flex;
   align-items: center;
-  gap: clamp(14px, 2vw, 24px);
+  gap: clamp(4px, 1vw, 16px);
 }
 .social-links a {
   display: inline-flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   min-width: 44px;
   min-height: 44px;
+  padding-inline: 12px;
   box-sizing: border-box;
-  border-bottom: 1px solid transparent;
   font-family: "Avenir Next", Avenir, "Trebuchet MS", sans-serif;
   font-weight: 400;
+  text-decoration-thickness: 1px;
+  text-underline-offset: .5em;
 }
 .site-mark:hover,
 .site-mark:focus-visible,
@@ -57,7 +59,8 @@
 .social-links a:hover,
 .social-links a:focus-visible,
 .social-links a[aria-current="page"] {
-  border-color: #5d665f;
+  text-decoration-line: underline;
+  text-decoration-color: #5d665f;
 }
 .site-mark:focus-visible,
 .social-links a:focus-visible {
@@ -68,5 +71,5 @@
   .site-header { padding: 12px 18px; align-items: flex-start; gap: 12px; }
   .site-mark { font-size: 15px; letter-spacing: 2px; }
   .social-links a { font-size: 11px; }
-  .social-links { display: grid; grid-template-columns: auto auto; gap: 0 16px; }
+  .social-links { display: grid; grid-template-columns: max-content max-content; gap: 0 4px; justify-items: start; }
 }
