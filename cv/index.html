@@ -8,6 +8,7 @@
   <meta name="author" content="Nacho Viejo">
   <meta name="theme-color" content="#f4efe5">
   <link rel="canonical" href="https://www.saski.com/cv/">
+  <link rel="stylesheet" href="/css/site-header.css?v=20261026">
   <link rel="stylesheet" href="/css/site-analytics.css?v=20261026">
   <script src="/js/site-analytics.js?v=20261022" defer></script>
   <meta property="og:type" content="profile">
@@ -26,7 +27,7 @@
     {
       "@context": "https://schema.org",
       "@type": "ProfilePage",
-      "dateModified": "2026-10-05",
+      "dateModified": "2026-10-26",
       "mainEntity": {
         "@type": "Person",
         "name": "Nacho Viejo",
@@ -113,16 +114,16 @@
     .page-shell {
       width: min(1180px, calc(100% - 40px));
       margin: 0 auto;
-      padding: 26px 0 72px;
+      padding: 0 0 72px;
     }
 
     .utility-bar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-end;
       gap: 24px;
       min-height: 44px;
-      margin-bottom: 44px;
+      margin-bottom: 16px;
       font-family: var(--sans);
       font-size: 0.76rem;
       font-weight: 650;
@@ -130,24 +131,11 @@
       text-transform: uppercase;
     }
 
-    .home-link {
-      color: var(--ink);
-      text-decoration: none;
-      white-space: nowrap;
-    }
-
     .cv-actions {
       display: flex;
       flex-wrap: wrap;
       justify-content: flex-end;
       gap: 8px;
-    }
-
-    .notes-link {
-      align-self: center;
-      color: var(--ink);
-      padding: 10px 8px;
-      text-decoration: none;
     }
 
     .print-action,
@@ -697,6 +685,8 @@
         padding: 0;
       }
 
+      .site-header,
+      .site-analytics,
       .utility-bar,
       footer,
       .portrait {
@@ -859,11 +849,18 @@
   </style>
 </head>
 <body>
+  <header class="site-header" aria-label="Site links" lang="en">
+    <a class="site-mark" href="/" aria-label="saski home">saski</a>
+    <nav class="social-links" aria-label="Social links">
+      <a href="/notes/" aria-label="Notes on people and software"><span>Notes</span></a>
+      <a href="/cv/" aria-label="Professional CV" aria-current="page"><span>CV</span></a>
+      <a href="https://github.com/saski" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><span>GitHub</span></a>
+      <a href="https://www.linkedin.com/in/saski/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><span>LinkedIn</span></a>
+    </nav>
+  </header>
   <div class="page-shell">
     <nav class="utility-bar" aria-label="CV utilities">
-      <a class="home-link" href="/" aria-label="Back to saski.com">saski / cv</a>
       <div class="cv-actions">
-        <a class="notes-link" href="/notes/">Notes</a>
         <a class="download-action" href="Nacho_Viejo_Engineering_Manager_CV_2026-10-05.pdf" download>Download PDF</a>
         <button class="print-action" type="button" onclick="window.print()">Print</button>
       </div>
