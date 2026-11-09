@@ -64,6 +64,20 @@ test('publishes the reviewed editions with study scope and concrete recognition 
   assert.ok(existsSync(path.join(root, 'notes/assets/notes-2026-10-06.png')));
 });
 
+test('readers can open the measured Review Capacity replay just below the first chart', () => {
+  const article = read('notes/review-capacity-replay/index.html');
+  const afterFirstChart = article.split('</figure>')[1];
+  const paragraph = afterFirstChart.match(/^\s*<p>([\s\S]*?)<\/p>/)?.[1];
+  const link = paragraph?.match(/<a\b[^>]*\bdata-analytics="demo"[^>]*>/)?.[0];
+  assert.ok(link, 'The paragraph below the first chart must contain the demo link');
+  const href = link.match(/\bhref="([^"]+)"/)[1];
+  const demo = new URL(href, 'https://www.saski.com');
+  assert.equal(demo.origin + demo.pathname, 'https://www.saski.com/notes/assets/review-capacity-demo-g01.html');
+  assert.equal(demo.search, '');
+  assert.equal(demo.hash, '#replay-section');
+  assert.ok(read(demo.pathname.slice(1)).includes('id="replay-section"'));
+});
+
 test('web editions expose their author and stable update dates independently of LinkedIn dates', async t => {
   const { buildNotes } = await import('../scripts/build-notes.mjs');
   const fixture = mkdtempSync(path.join(os.tmpdir(), 'saski-notes-dates-'));

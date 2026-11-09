@@ -30,6 +30,8 @@ At tick 60, that limit brings the review queue down from 15 tasks in B to one in
   <figcaption>B and C finish all 24 tasks at tick 152; A finishes at tick 198. The dotted line marks tick 60. Open the image for the full-size view.</figcaption>
 </figure>
 
+<a href="https://www.saski.com/notes/assets/review-capacity-demo-g01.html#replay-section" data-analytics="demo">Open the Review Capacity replay</a> and switch between B and C at tick 60. Where would those 13 tasks waiting to start show up on your team’s board?
+
 Task #11 from the saved trace makes that change easier to follow. It arrives at tick 22 in all three versions. In B, it starts straight away and then waits 44 ticks for review. In C, it waits 40 ticks before execution and four for review. Both receive a decision at tick 80.
 
 <figure>
@@ -45,4 +47,4 @@ Play/Pause and the speed controls move through the saved trace. They affect how 
 
 The reviewer in this example accepts every task. There are no mistakes, requests for changes, interruptions or fatigue. A smaller review queue here says nothing about review quality or the productivity of a real team.
 
-The next experiment will test the admission rule with actual fixture workflows: whether a task waiting for a human decision keeps its place, including after a restart. That behavior still needs implementing and testing.
+I followed up with two scripted tasks sharing a single slot. The first finished its automated work and held the slot while it waited for approval. Restarting the coordinator left the second task in the queue. Once the first was approved, advancing the queue started the second. [Try the two-task experiment](https://github.com/saski/agent-systems-lab/blob/839a58d1155ad42a07f193af92500fa619b7bf16/experiments/fixture-workflow-admission/README.md).
