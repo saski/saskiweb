@@ -202,3 +202,51 @@ test('single-file mode rejects a public-looking path through a symlinked parent'
   assert.match(result.stderr, /public/i);
   assert.equal(result.capturedArgs, '');
 });
+
+test('actor full and target deploys include only the independent page and public media', (t) => {
+  const fixture = makeFixture();
+  t.after(() => fs.rmSync(fixture.root, { recursive: true, force: true }));
+  const publicFiles = [
+    'actor/actor.css',
+    'actor/actor.js',
+    'actor/index.html',
+    'actor/media/archivo-black-ofl.txt',
+    'actor/media/captions.vtt',
+    'actor/media/font.woff2',
+    'actor/media/portrait.webp',
+    'actor/media/reel.mp4',
+  ];
+  const privateFiles = [
+    'actor/private/portrait.webp',
+    'actor/sources/reel.mp4',
+    'actor/draft.html',
+    'actor/media/private/portrait.webp',
+    'actor/media/portrait.psd',
+    'actor/media/.hidden.webp',
+    'actor/media/notes.md',
+    'actor/media/private.txt',
+  ];
+  for (const file of [...publicFiles, ...privateFiles]) {
+    fs.mkdirSync(path.dirname(path.join(fixture.root, file)), { recursive: true });
+    fs.writeFileSync(path.join(fixture.root, file), `fixture: ${file}\n`);
+  }
+  fs.symlinkSync('portrait.webp', path.join(fixture.root, 'actor/media/linked.webp'));
+  fs.symlinkSync('media', path.join(fixture.root, 'actor/alias'));
+
+  for (const transport of ['rsync', 'lftp']) {
+    const full = deploy(fixture, ['--full-site'], transport);
+    assert.equal(full.status, 0, full.stderr);
+    const files = transport === 'rsync' ? full.capturedFiles : lftpPutFiles(full.capturedArgs);
+    assert.deepEqual(files, [...fixture.publicFiles, ...publicFiles]);
+
+    for (const target of publicFiles) {
+      const result = deploy(fixture, ['--target-file', target], transport);
+      assert.equal(result.status, 0, `${target}: ${result.stderr}`);
+      assert.deepEqual(transport === 'rsync' ? result.capturedFiles : lftpPutFiles(result.capturedArgs), [target]);
+    }
+  }
+  for (const target of [...privateFiles, 'actor/media/linked.webp', 'actor/alias/portrait.webp']) {
+    const result = deploy(fixture, ['--target-file', target], 'rsync');
+    assert.notEqual(result.status, 0, `${target} must stay private`);
+  }
+});

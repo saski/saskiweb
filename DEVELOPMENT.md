@@ -31,6 +31,8 @@ The home, Notes and CV use `css/site-header.css` for the same navigation treatme
 
 The deploy script selects public root files and permitted assets in `css/`, `js/`, `cv/` and `notes/`. It excludes content sources, drafts, source packets, tests, scripts, dependencies, internal documentation, credentials and Git configuration. All modes share the selection rules. `--full-site` uploads all selected files without deleting remote files; the default uploads changed public files plus CSS/JS.
 
+Edit the casting dossier in `actor/index.html`. Its deployable files are the HTML, `actor/actor.css`, optional `actor/actor.js`, and public WebP, MP4, VTT and WOFF2 files directly under `actor/media/`, alongside `archivo-black-ofl.txt`. The page uses in-page navigation. The main navigation, directory listing and sitemap omit it.
+
 No LinkedIn/X cross-publishing or scheduled automation is configured.
 
 ## Readership measurement

@@ -65,6 +65,13 @@ is_public_file() {
       [[ "$file_path" =~ \.(html?|xml|pdf|css|js|png|jpe?g|webp|svg|gif|ico|woff2)$ ]]
       return
       ;;
+    actor/index.html|actor/actor.css|actor/actor.js|actor/media/archivo-black-ofl.txt)
+      return 0
+      ;;
+    actor/media/*)
+      [[ "$file_path" =~ ^actor/media/[^./][^/]*\.(webp|mp4|vtt|woff2)$ ]]
+      return
+      ;;
   esac
   [[ "$file_path" =~ ^[0-9]{3}\.shtml$ ]]
 }
@@ -117,7 +124,7 @@ collect_all_public_files() {
     [[ -f "$file_path" ]] && append_public_file "$file_path"
   done
 
-  for directory in css js cv notes; do
+  for directory in css js cv notes actor; do
     [[ -d "$directory" ]] || continue
     while IFS= read -r file_path; do
       [[ -n "$file_path" ]] && candidates+=("$file_path")

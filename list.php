@@ -71,6 +71,7 @@ function getFiles($path) {
        if ($dh = opendir($path)) {
            while (($file = readdir($dh)) !== false) {
                if (($file == ".") || ($file == "..")) continue;
+               if (($file == "actor") && (realpath($path) == realpath(dirname(__FILE__)))) continue;
                $fullpath = $path . "/" . $file;
                //$fkey = strtolower($file);
                $fkey = $file;
