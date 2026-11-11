@@ -126,6 +126,7 @@
   function pageContentId(pageUrl) {
     if (!pageUrl) return '';
     const path = new URL(pageUrl).pathname;
+    if (path === '/notes/assets/review-capacity-demo-g01.html') return 'review-capacity-demo-g01';
     if (path === '/') return 'home';
     if (path === '/cv/' || path === '/cv') return 'cv';
     if (path === '/notes/' || path === '/notes') return 'notes';

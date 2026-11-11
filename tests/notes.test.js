@@ -2,6 +2,7 @@ const assert = require('node:assert/strict');
 const { readFileSync, existsSync } = require('node:fs');
 const path = require('node:path');
 const test = require('node:test');
+const vm = require('node:vm');
 const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = require('node:fs');
 const os = require('node:os');
 
@@ -94,6 +95,37 @@ test('the public demo includes the verified G02 comparison alongside the origina
   assert.ok(html.includes('id="rework-section"'));
   assert.ok(html.includes('id="replay-section"'));
   assert.doesNotMatch(html, /__REWORK_/);
+});
+
+test('the demo analytics bootstrap stays offline outside the production HTTPS hosts', () => {
+  const html = read('notes/assets/review-capacity-demo-g01.html');
+  const bootstrap = html.match(/<script id="demo-analytics-bootstrap">([\s\S]*?)<\/script>/);
+  assert.ok(bootstrap, 'The canonical demo must contain its guarded analytics bootstrap');
+  assert.match(html, /<link rel="canonical" href="https:\/\/www\.saski\.com\/notes\/assets\/review-capacity-demo-g01\.html">/);
+  const bootstrapStart = bootstrap.index;
+  const scriptStarts = [...html.matchAll(/<script\b[^>]*>/g)].map(match => match.index);
+  assert.ok(bootstrapStart > html.indexOf('<body>'), 'Bootstrap must run after the page body starts');
+  assert.equal(bootstrapStart, scriptStarts.at(-1), 'Bootstrap must run after the replay scripts');
+
+  function appendedFor(address) {
+    const appended = [];
+    const document = {
+      head: { appendChild(element) { appended.push(element); } },
+      createElement(tagName) { return { tagName }; },
+    };
+    vm.runInNewContext(bootstrap[1], { document, location: new URL(address) });
+    return appended;
+  }
+
+  assert.deepEqual(appendedFor('file:///tmp/review-capacity-demo-g01.html'), []);
+  assert.deepEqual(appendedFor('http://localhost:8877/review-capacity-demo-g01.html'), []);
+  assert.deepEqual(appendedFor('https://preview.saski.com/notes/assets/review-capacity-demo-g01.html'), []);
+  const productionAssets = appendedFor('https://www.saski.com/notes/assets/review-capacity-demo-g01.html');
+  assert.equal(productionAssets.length, 2);
+  assert.deepEqual(productionAssets.map(({ tagName, rel, href, src, defer }) => ({ tagName, rel, href, src, defer })), [
+    { tagName: 'link', rel: 'stylesheet', href: '/css/site-analytics.css?v=20261111', src: undefined, defer: undefined },
+    { tagName: 'script', rel: undefined, href: undefined, src: '/js/site-analytics.js?v=20261111', defer: true },
+  ]);
 });
 
 test('web editions expose their author and stable update dates independently of LinkedIn dates', async t => {

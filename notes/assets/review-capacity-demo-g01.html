@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Review capacity · Systems Lab learning guide</title>
+<link rel="canonical" href="https://www.saski.com/notes/assets/review-capacity-demo-g01.html">
 <style>
 :root{color-scheme:light;--ink:#172c3a;--muted:#526170;--line:#dce3e7;--blue:#3179b7;--green:#21866b;--orange:#de703a}*{box-sizing:border-box}body{margin:0;background:#f6f8f8;color:var(--ink);font:16px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1160px;margin:auto;padding:32px 28px 64px}header{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-bottom:20px;border-bottom:1px solid var(--line)}.brand{font-weight:750;letter-spacing:-.4px}.badge{display:inline-block;background:#fff0e6;border:1px solid #ecc4a9;border-radius:30px;padding:6px 12px;color:#8f431b;font-size:11px;letter-spacing:1px;font-weight:750}.eyebrow{font-size:12px;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase}.hero{padding:44px 0 18px}h1{font-size:clamp(36px,5.6vw,62px);line-height:1.08;letter-spacing:-2px;margin:14px 0 22px}h2{font-size:29px;line-height:1.2;letter-spacing:-.7px;margin:8px 0 18px}h3{font-size:16px;margin:0 0 10px}.lead{max-width:770px;color:var(--muted);font-size:20px}p{margin:0 0 15px}.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:24px 0 42px}.fact,.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:24px}.fact strong{display:block;font-size:31px;letter-spacing:-1px}.fact small,.small{font-size:14px;color:var(--muted)}section{margin:38px 0}.intro{max-width:830px}figure{margin:22px 0}figure img{display:block;width:100%;height:auto}figcaption{font-size:14px;color:var(--muted);padding-top:13px}.callout{background:#eaf5ef;border-left:4px solid var(--green);padding:18px 22px;border-radius:0 10px 10px 0;margin:22px 0}.warning{background:#fff0e6;border-color:var(--orange)}.scroll{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:14px}th,td{text-align:left;border-bottom:1px solid var(--line);padding:12px 10px;white-space:nowrap}th{font-size:12px;color:var(--muted)}caption{text-align:left;font-size:14px;padding:0 10px 12px;color:var(--muted)}.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}button,select{font:inherit;border:1px solid #bdcbd3;border-radius:8px;padding:8px 13px;background:white;color:var(--ink);cursor:pointer}button:hover{background:#eef4f7}button:disabled{opacity:.5;cursor:default}button[aria-pressed=true]{color:white;background:var(--blue);border-color:var(--blue)}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid #83b8d8;outline-offset:3px}.tick-line{display:flex;align-items:center;gap:16px;margin:20px 0}input[type=range]{accent-color:var(--blue);flex:1;min-width:0}output{font-weight:750;font-variant-numeric:tabular-nums}.flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:22px 0}.stage{border:1px solid #abc9e4;border-radius:10px;padding:14px;background:#edf5fd;min-height:170px}.stage.queue{background:#fff3e7;border-color:#e6bf98}.stage.done{background:#eaf5ef;border-color:#a6d1ba}.stage h3{font-size:14px;line-height:1.35;min-height:38px}.count{font-size:25px;line-height:1.2;font-weight:750}.stage small{display:block;font-size:11px;line-height:1.45;color:var(--muted);min-height:32px;margin:8px 0 12px}.tokens{display:flex;gap:4px;flex-wrap:wrap}.task,.slot{display:grid;place-items:center;font-size:11px;font-variant-numeric:tabular-nums;border-radius:4px;min-width:28px;min-height:24px;padding:3px;background:white;border:1px solid #d5dee5}.slot{border-color:#80abd0}.slot.idle{border-style:dashed;color:#7a8d9a}.replay-meta{display:flex;flex-wrap:wrap;gap:16px;border-top:1px solid var(--line);padding-top:14px;font-size:13px;color:var(--muted)}.replay-meta strong{color:var(--ink)}.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px}details{padding:16px 0}summary{cursor:pointer;font-weight:650}code,.hash{font-family:monospace;font-size:12px;overflow-wrap:anywhere}pre{overflow-x:auto;background:#172c3a;color:#e5f0f5;padding:18px;border-radius:10px;font-size:12px}footer{margin-top:40px;border-top:1px solid var(--line);padding-top:20px;font-size:13px;color:var(--muted)}.hidden{display:none}.error{padding:16px;background:#fff0e6;border:1px solid #cc733f;border-radius:10px}
 @media(max-width:800px){.flow{grid-template-columns:repeat(2,1fr)}.stage.done{grid-column:1/-1}.two-col{grid-template-columns:1fr}.fact{padding:16px}.fact strong{font-size:26px}}
@@ -425,5 +426,18 @@
   $("scenario-hash").textContent = data.scenario_sha256;
   $("report-hash").textContent = data.report_sha256;
   motion(); render();
+})();
+</script>
+<script id="demo-analytics-bootstrap">
+(() => {
+  if (location.protocol !== 'https:' || !['saski.com', 'www.saski.com'].includes(location.hostname)) return;
+  const stylesheet = document.createElement('link');
+  stylesheet.rel = 'stylesheet';
+  stylesheet.href = '/css/site-analytics.css?v=20261111';
+  document.head.appendChild(stylesheet);
+  const script = document.createElement('script');
+  script.src = '/js/site-analytics.js?v=20261111';
+  script.defer = true;
+  document.head.appendChild(script);
 })();
 </script></body></html>

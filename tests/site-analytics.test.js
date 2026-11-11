@@ -181,6 +181,40 @@ test('accept loads GA4 once with sanitized configuration and one manual page vie
   assert.ok(h.hasHref(h.document.body.children[0], '/privacy.html'));
 });
 
+test('accepted demo visits send a fixed page view with hash and query stripped', () => {
+  const h = harness({
+    href: 'https://www.saski.com/notes/assets/review-capacity-demo-g01.html?utm_source=linkedin&utm_medium=social&utm_campaign=g01_review_capacity&utm_content=linkedin_followup_v1#rework-section',
+    pathname: '/notes/assets/review-capacity-demo-g01.html',
+  });
+  h.click('Accept analytics');
+  h.loadGoogleScript();
+
+  const pageView = h.events.find(([command, name]) => command === 'event' && name === 'page_view');
+  assert.ok(pageView);
+  assert.deepEqual({ ...pageView[2] }, {
+    content_id: 'review-capacity-demo-g01',
+    page_location: 'https://www.saski.com/notes/assets/review-capacity-demo-g01.html',
+    page_referrer: 'https://www.linkedin.com',
+    campaign_source: 'linkedin',
+    campaign_medium: 'social',
+    campaign_name: 'g01_review_capacity',
+    campaign_content: 'linkedin_followup_v1',
+    campaign_term: '',
+    campaign_id: '',
+  });
+  assert.equal(JSON.stringify(pageView).includes('#rework-section'), false);
+});
+
+test('demo page views stay absent before consent and after decline', () => {
+  const fresh = harness({ pathname: '/notes/assets/review-capacity-demo-g01.html' });
+  assert.deepEqual(fresh.events, []);
+  assert.equal(fresh.document.head.children.length, 0);
+
+  fresh.click('Decline analytics');
+  assert.deepEqual(fresh.events, []);
+  assert.equal(fresh.document.head.children.length, 0);
+});
+
 test('denies malformed attribution and unrelated referrers and only sends approved click categories', () => {
   const h = harness({
     href: 'https://saski.com/notes/agent-activity-dashboard/?utm_source=evil&utm_medium=anything&utm_campaign=private&utm_content=secret&utm_term=alice&utm_id=raw',
