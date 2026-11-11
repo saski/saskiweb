@@ -57,6 +57,9 @@ is_public_file() {
     css/*.css|js/*.js)
       return 0
       ;;
+    assets/brand/saski-industries.svg|assets/brand/saski-industries.png|assets/brand/dracula.svg|assets/brand/dracula.png)
+      return 0
+      ;;
     cv/*)
       [[ "$file_path" =~ \.(html?|pdf|css|js|png|jpe?g|webp|svg|gif|ico)$ ]]
       return
@@ -124,7 +127,7 @@ collect_all_public_files() {
     [[ -f "$file_path" ]] && append_public_file "$file_path"
   done
 
-  for directory in css js cv notes actor; do
+  for directory in css js cv notes assets/brand actor; do
     [[ -d "$directory" ]] || continue
     while IFS= read -r file_path; do
       [[ -n "$file_path" ]] && candidates+=("$file_path")

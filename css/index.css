@@ -60,8 +60,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 
 .identity { display: flex; align-items: center; gap: 14px; }
 .brand-stamp { display: block; width: 116px; padding: 10px; }
-.brand-stamp svg { display: block; width: 100%; height: auto; }
-.brand-stamp svg path { fill: #000; }
+.brand-stamp img { display: block; width: 100%; height: auto; }
 .identity-code { margin: 0; font-size: 9px; font-weight: 700; line-height: 1.15; }
 .home-links { display: flex; align-items: flex-start; gap: 20px; }
 .home-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px; font-weight: 700; text-transform: uppercase; text-decoration: none; }
@@ -79,7 +78,8 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
   gap: 32px 48px;
 }
 
-.copy-module { position: relative; align-self: start; justify-self: start; width: max-content; max-width: 100%; --module-size: 18px; }
+.copy-module { position: relative; align-self: start; justify-self: start; width: max-content; max-width: 100%; text-decoration: none; --module-size: 18px; }
+.copy-module:hover .module-lines span, .copy-module:focus-visible .module-lines span { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 2px; }
 .registration-cross { position: absolute; top: 0; left: -28px; width: 14px; height: 14px; }
 .module-lines {
   margin: 0;
@@ -126,7 +126,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .control-icon { width: 16px; height: 16px; display: block; fill: currentColor; }
 .control-icon-stop, #scoreToggle.is-playing .control-icon-play { display: none; }
 #scoreToggle.is-playing .control-icon-stop { display: block; }
-.control-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.control-label, .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .home-footer { position: absolute; z-index: 3; right: var(--gutter); bottom: 16px; left: var(--gutter); display: flex; align-items: center; justify-content: space-between; gap: 20px; font-size: 9px; font-weight: 700; }
 .home-footer a { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px; }
 #versionTag { display: none; }

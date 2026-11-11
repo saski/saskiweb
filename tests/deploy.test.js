@@ -32,6 +32,10 @@ function makeFixture() {
     'notes/assets/fonts/handwriting.woff2',
     'notes/feed.xml',
     'notes/first-note.html',
+    'assets/brand/dracula.png',
+    'assets/brand/dracula.svg',
+    'assets/brand/saski-industries.png',
+    'assets/brand/saski-industries.svg',
   ];
   const internalFiles = [
     '.env.deploy',
@@ -47,6 +51,9 @@ function makeFixture() {
     'package.json',
     'package-lock.json',
     'README.md',
+    'assets/brand/README.md',
+    'assets/brand/source-photo.jpg',
+    'assets/brand/draft.svg',
   ];
 
   for (const file of [...publicFiles, ...internalFiles]) {

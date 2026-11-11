@@ -2,7 +2,7 @@
 
 ## Public pages
 
-- `/` — generative audiovisual home page with the Saski Industries mark and industrial typography
+- `/` — generative audiovisual home page with the Saski Industries mark and industrial text blocks linking to Notes
 - `/cv/` — responsive, print-friendly professional CV
 - `/notes/` — an editorial index of writing on people, software and learning in public
 - `/notes/feed.xml` — full-text RSS feed
@@ -34,6 +34,10 @@ The website displays `cv/nacho-viejo-2026-10-02-bw.png`, a wider monochrome
 derivative with more headroom and soft photographic contrast. The circular frame
 remains 210 px on desktop and 112 px on mobile. The downloadable CV uses the
 approved color source.
+
+## Brand assets
+
+The black, transparent Saski Industries logo combines the R2.1 lettering with Drácula D2. Download the [full logo as SVG](assets/brand/saski-industries.svg) or [PNG](assets/brand/saski-industries.png), and the separate [mascot as SVG](assets/brand/dracula.svg) or [PNG](assets/brand/dracula.png).
 
 ## Notes
 
