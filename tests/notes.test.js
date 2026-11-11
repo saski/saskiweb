@@ -78,6 +78,24 @@ test('readers can open the measured Review Capacity replay just below the first 
   assert.ok(read(demo.pathname.slice(1)).includes('id="replay-section"'));
 });
 
+test('the public demo includes the verified G02 comparison alongside the original replay', () => {
+  const html = read('notes/assets/review-capacity-demo-g01.html');
+  const match = html.match(/<script type="application\/json" id="rework-evidence">([\s\S]*?)<\/script>/);
+  assert.ok(match, 'The demo must embed its saved G02 evidence');
+  const evidence = JSON.parse(match[1]);
+  assert.equal(evidence.model_version, 'review-rework-v1');
+  assert.equal(evidence.report_sha256, '3f1f1dff0790d109c7f814377cb0acf3088829d2c0ecff78317b7e7eb9577097');
+  assert.deepEqual(evidence.policies.map(policy => policy.drain.tick), [188, 192]);
+  assert.deepEqual(evidence.policies.map(policy => policy.tasks.length), [24, 24]);
+  const deltas = evidence.comparison.tasks.map(task => task.turnaround_delta);
+  assert.equal(deltas.filter(delta => delta < 0).length, 5);
+  assert.equal(deltas.filter(delta => delta > 0).length, 15);
+  assert.equal(deltas.filter(delta => delta === 0).length, 4);
+  assert.ok(html.includes('id="rework-section"'));
+  assert.ok(html.includes('id="replay-section"'));
+  assert.doesNotMatch(html, /__REWORK_/);
+});
+
 test('web editions expose their author and stable update dates independently of LinkedIn dates', async t => {
   const { buildNotes } = await import('../scripts/build-notes.mjs');
   const fixture = mkdtempSync(path.join(os.tmpdir(), 'saski-notes-dates-'));
