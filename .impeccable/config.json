@@ -29,6 +29,16 @@
         ],
         "createdAt": "2026-10-26T11:41:41.886Z",
         "reason": "Agent review: browser confirms education rows have 20px bottom padding with their 1px separators; the final row has neither padding nor a border. Detector conflates the last-child override with bordered rows."
+      },
+      {
+        "rule": "overused-font",
+        "value": "helvetica",
+        "files": [
+          "css/index.css",
+          "index.htm"
+        ],
+        "createdAt": "2026-11-11T13:13:23.522Z",
+        "reason": "Agent review: Helvetica intentionally supports industrial-package annotations and navigation in the user-requested tDR direction; the display heading uses self-hosted Archivo Black and the logo is custom SVG."
       }
     ]
   }

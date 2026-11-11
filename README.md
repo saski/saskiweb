@@ -2,7 +2,7 @@
 
 ## Public pages
 
-- `/` — generative audiovisual home page
+- `/` — generative audiovisual home page with the Saski Industries mark and industrial typography
 - `/cv/` — responsive, print-friendly professional CV
 - `/notes/` — an editorial index of writing on people, software and learning in public
 - `/notes/feed.xml` — full-text RSS feed

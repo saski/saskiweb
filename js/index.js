@@ -3,18 +3,24 @@ const ctx = canvas.getContext('2d');
 const scoreToggle = document.getElementById('scoreToggle');
 const sceneReload = document.getElementById('sceneReload');
 const versionTag = document.getElementById('versionTag');
-const SITE_VERSION = '2026-05-18-auto-reload';
-const SCENE_SCALE = 0.72;
-const SCENE_OFFSET_X = 0.08;
-const SCENE_OFFSET_Y = -0.02;
+const sceneFrame = document.querySelector('.animation-frame');
+const SITE_VERSION = '2026-11-11-industries';
 
 window.__SASKI_VERSION__ = SITE_VERSION;
 if (versionTag) versionTag.textContent = `build ${SITE_VERSION}`;
 
 let W, H;
+let scenePlacement;
 function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
+  const bounds = canvas.getBoundingClientRect();
+  const frame = sceneFrame.getBoundingClientRect();
+  W = canvas.width = Math.round(bounds.width);
+  H = canvas.height = Math.round(bounds.height);
+  scenePlacement = {
+    x: frame.left + frame.width / 2 - bounds.left,
+    y: frame.top + frame.height / 2 - bounds.top,
+    scale: frame.width / (Math.min(W, H) * 0.84),
+  };
 }
 resize();
 window.addEventListener('resize', () => { resize(); init(); });
@@ -956,9 +962,9 @@ function drawFrame() {
 
   // Capa 2: geometría negra de músicos (ordenados por y para pseudo-perspectiva)
   ctx.save();
-  ctx.translate(W * (0.5 + SCENE_OFFSET_X), H * (0.5 + SCENE_OFFSET_Y));
-  ctx.scale(SCENE_SCALE, SCENE_SCALE);
-  ctx.translate(W * -0.5, H * -0.5);
+  ctx.translate(scenePlacement.x, scenePlacement.y);
+  ctx.scale(scenePlacement.scale, scenePlacement.scale);
+  ctx.translate(W * -0.5, H * -0.56);
 
   const sorted = [...musicians].sort((a,b) => a.y - b.y);
   for (const m of sorted) m.draw(t);
