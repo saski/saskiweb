@@ -163,7 +163,7 @@ unset SITE5_FTPS_INSECURE
 Pushes to `master` or `main` now auto-deploy via `.github/workflows/deploy.yml`.
 The workflow installs pinned dependencies, generates Notes, runs all tests, and then uploads the selected public files with `./deploy.sh --full-site`. This is an additive upload: files are not deleted from the host.
 
-The deploy-tool installation skips the runner's unreliable Azure Ubuntu mirror and uses the official Ubuntu HTTPS fallbacks. APT requests have bounded retries and timeouts; the installation step is limited to five minutes. Package signatures and TLS certificate checks remain enabled.
+The deploy-tool installation prefers the kernel.org HTTPS Ubuntu mirror over the runner's unreliable Azure mirror, with the official Ubuntu archives retained as fallbacks. APT requests have bounded retries and timeouts; the installation step is limited to five minutes. Package signatures and TLS certificate checks remain enabled.
 
 Configure these repository secrets in GitHub (`Settings > Secrets and variables > Actions`):
 
