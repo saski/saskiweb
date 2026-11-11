@@ -169,5 +169,21 @@
     "updated_at": "2026-11-09",
     "editorial_note": "The November update adds the interactive replay and the result of the two-task follow-up.",
     "date_source": "Original publication on saski.com, 20 October 2026"
+  },
+  {
+    "id": "website-review-rework",
+    "slug": "review-rework",
+    "title": "Qué pasa si revisamos primero las correcciones",
+    "lang": "es",
+    "topic": "Agents & systems",
+    "kind": "Experiment",
+    "summary": "Una simulación para observar qué cambia cuando damos prioridad al trabajo que vuelve corregido.",
+    "related": "agent-activity-dashboard",
+    "status": "published",
+    "origin": "website",
+    "original_published_at": "2026-11-11T11:15:01Z",
+    "imported_at": "2026-11-11",
+    "web_updated_at": "2026-11-11",
+    "date_source": "Original publication on saski.com, 11 November 2026"
   }
 ]

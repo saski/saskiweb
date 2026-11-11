@@ -6,6 +6,24 @@
   <description>On people, software and learning in public.</description>
   <atom:link href="https://www.saski.com/notes/feed.xml" rel="self" type="application/rss+xml"/>
   <item>
+    <title>Qué pasa si revisamos primero las correcciones</title>
+    <link>https://www.saski.com/notes/review-rework/</link>
+    <guid isPermaLink="true">https://www.saski.com/notes/review-rework/</guid>
+    <pubDate>Wed, 11 Nov 2026 11:15:01 GMT</pubDate>
+    <category>Agents &amp; systems</category>
+    <description><![CDATA[<p>En este experimento quería observar qué pasa cuando damos prioridad a las tareas que vuelven a revisión después de corregirse. Cuáles conseguimos terminar antes y cómo afecta esa decisión al trabajo que todavía está esperando revisión.</p>
+<p>Para probarlo, hemos añadido al modelo la posibilidad de pedir cambios. Hasta ahora, todas las tareas se aprobaban a la primera. Ahora algunas necesitan corregirse y volver a revisión.</p>
+<p>Y comparamos dos formas de organizar esa cola:</p>
+<ul>
+<li>Revisar por orden de llegada a revisión, priorizando lo que lleva más tiempo esperando</li>
+<li>Dar prioridad a lo que vuelve corregido</li>
+</ul>
+<p>En ambas versiones hay las mismas 24 tareas, 6 necesitan correcciones y tenemos la misma capacidad para hacer el trabajo. Sólo cambia el orden de revisión.</p>
+<p>Al priorizar las correcciones el tiempo medio por tarea baja (los adelantos de cinco tareas suman más que los retrasos de las demás). Pero terminar las 24 depende de cuándo acaba la última, y esa se retrasa.</p>
+<p>He añadido la comparación a la <a href="https://www.saski.com/notes/assets/review-capacity-demo-g01.html#rework-section" data-analytics="demo">demo</a>. Puedes seguir la misma tarea en las dos versiones y ver dónde cambia su recorrido.</p>
+]]></description>
+  </item>
+  <item>
     <title>Where the waiting goes</title>
     <link>https://www.saski.com/notes/review-capacity-replay/</link>
     <guid isPermaLink="true">https://www.saski.com/notes/review-capacity-replay/</guid>
