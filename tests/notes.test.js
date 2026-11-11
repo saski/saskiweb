@@ -121,10 +121,9 @@ test('the demo analytics bootstrap stays offline outside the production HTTPS ho
   assert.deepEqual(appendedFor('http://localhost:8877/review-capacity-demo-g01.html'), []);
   assert.deepEqual(appendedFor('https://preview.saski.com/notes/assets/review-capacity-demo-g01.html'), []);
   const productionAssets = appendedFor('https://www.saski.com/notes/assets/review-capacity-demo-g01.html');
-  assert.equal(productionAssets.length, 2);
+  assert.equal(productionAssets.length, 1);
   assert.deepEqual(productionAssets.map(({ tagName, rel, href, src, defer }) => ({ tagName, rel, href, src, defer })), [
-    { tagName: 'link', rel: 'stylesheet', href: '/css/site-analytics.css?v=20261111', src: undefined, defer: undefined },
-    { tagName: 'script', rel: undefined, href: undefined, src: '/js/site-analytics.js?v=20261111', defer: true },
+    { tagName: 'script', rel: undefined, href: undefined, src: '/js/site-analytics.js?v=20261111-no-settings', defer: true },
   ]);
 });
 
@@ -156,7 +155,7 @@ test('web editions expose their author and stable update dates independently of 
   }
   const html = readFileSync(path.join(outputDir, 'notes', note.slug, 'index.html'), 'utf8');
   const articleHeader = html.match(/<header>([\s\S]*?)<\/header>/)[1];
-  assert.match(articleHeader, /<a href="\/cv\/" rel="author">Nacho Viejo<\/a>/);
+  assert.match(articleHeader, /By Nacho Viejo/);
   assert.ok(articleHeader.includes(`<time datetime="${note.original_published_at}">`));
   assert.match(articleHeader, /Web edition updated <time datetime="2026-10-08">/);
   const structured = JSON.parse(html.match(/<script type="application\/ld\+json">([^<]+)<\/script>/)[1]);

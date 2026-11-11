@@ -21,11 +21,9 @@
   w.__saskiAnalyticsInitialized = true;
 
   const hostname = String(w.location.hostname || '').toLowerCase();
-  const canSend = productionHosts.has(hostname);
+  const canSend = w.location.protocol === 'https:' && productionHosts.has(hostname);
   const storedChoice = readChoice();
-  let choice = storedChoice?.choice || 'undecided';
-  let choiceExpiresAt = storedChoice?.expiresAt || 0;
-  let panelExpanded = choice === 'undecided';
+  let analyticsEnabled = storedChoice?.choice !== 'declined';
   let gaReady = false;
   let gaRequested = false;
   let readMilliseconds = 0;
@@ -53,27 +51,8 @@
       }
       return stored;
     } catch {
+      try { w.localStorage.removeItem(storageKey); } catch { /* Storage can be unavailable. */ }
       return null;
-    }
-  }
-
-  function saveChoice(next) {
-    choice = next;
-    const savedAt = Date.now();
-    choiceExpiresAt = savedAt + choiceLifetime;
-    try {
-      w.localStorage.setItem(storageKey, JSON.stringify({
-        version: choiceVersion,
-        choice: next,
-        savedAt,
-        expiresAt: choiceExpiresAt,
-      }));
-    } catch {
-      // Keep this page usable when browser storage is unavailable.
-    }
-    if (next === 'accepted') {
-      lastTimeUpdate = Date.now();
-      wasVisible = d.visibilityState === 'visible';
     }
   }
 
@@ -135,7 +114,7 @@
   }
 
   function queueGoogleTag() {
-    if (gaRequested || !canSend || choice !== 'accepted') return;
+    if (gaRequested || !canSend || !analyticsEnabled) return;
     const pageLocation = canonicalPage();
     const contentId = pageContentId(pageLocation);
     if (!pageLocation || !contentId) return;
@@ -171,11 +150,7 @@
     script.async = true;
     script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
     script.addEventListener('load', () => {
-      if (choice !== 'accepted' || !canSend) return;
-      if (choiceExpiresAt <= Date.now()) {
-        expireChoice();
-        return;
-      }
+      if (!analyticsEnabled || !canSend) return;
       gaReady = true;
       gtag('event', 'page_view', { content_id: contentId, ...pageParams });
     });
@@ -183,11 +158,7 @@
   }
 
   function eventAllowed(name) {
-    if (choice === 'accepted' && choiceExpiresAt <= Date.now()) {
-      expireChoice();
-      return false;
-    }
-    return canSend && choice === 'accepted' && gaReady && eventNames.has(name)
+    return canSend && analyticsEnabled && gaReady && eventNames.has(name)
       && typeof w.gtag === 'function';
   }
 
@@ -265,11 +236,7 @@
 
   function updateVisibleTime() {
     const now = Date.now();
-    if (choice === 'accepted' && choiceExpiresAt <= now) {
-      expireChoice();
-      return;
-    }
-    if (wasVisible && choice === 'accepted') readMilliseconds += Math.max(0, now - lastTimeUpdate);
+    if (wasVisible && analyticsEnabled) readMilliseconds += Math.max(0, now - lastTimeUpdate);
     lastTimeUpdate = now;
     wasVisible = d.visibilityState === 'visible';
     checkNoteRead();
@@ -286,10 +253,9 @@
     }
   }
 
-  function withdraw() {
+  function disableMeasurement() {
     const hadActiveTag = gaRequested;
-    saveChoice('declined');
-    panelExpanded = false;
+    analyticsEnabled = false;
     gaReady = false;
     w[`ga-disable-${measurementId}`] = true;
     if (typeof w.gtag === 'function' && hadActiveTag) {
@@ -307,125 +273,22 @@
         w.location.reload();
       }
     }
-    renderChoice();
   }
 
-  function expireChoice() {
-    const hadActiveTag = gaRequested;
-    choice = 'undecided';
-    choiceExpiresAt = 0;
-    panelExpanded = true;
-    gaReady = false;
-    w[`ga-disable-${measurementId}`] = true;
-    try { w.localStorage.removeItem(storageKey); } catch { /* Keep the current page denied. */ }
-    if (typeof w.gtag === 'function' && hadActiveTag) {
-      w.gtag('consent', 'update', {
-        analytics_storage: 'denied',
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied',
-      });
-    }
-    clearGoogleCookies();
-    renderChoice();
-    if (hadActiveTag && !reloadStarted && typeof w.location.reload === 'function') {
-      reloadStarted = true;
-      w.location.reload();
-    }
-  }
-
-  function makeButton(label, handler, className) {
-    const button = d.createElement('button');
-    button.type = 'button';
-    button.textContent = label;
-    button.className = className;
-    button.addEventListener('click', handler);
-    return button;
-  }
-
-  const region = d.createElement('section');
-  region.className = 'site-analytics';
-  region.setAttribute('role', 'region');
-  region.setAttribute('aria-label', 'Analytics settings');
-  const content = d.createElement('div');
-  content.className = 'site-analytics__content';
-  const message = d.createElement('p');
-  message.className = 'site-analytics__message';
-  const controls = d.createElement('div');
-  controls.className = 'site-analytics__choices';
-  const settings = makeButton('Analytics settings', () => {
-    panelExpanded = !panelExpanded;
-    renderChoice();
-    if (panelExpanded) acceptButton.focus?.();
-  }, 'site-analytics__settings');
-  settings.setAttribute('aria-expanded', String(panelExpanded));
-  const acceptButton = makeButton('Accept analytics', () => {
-    saveChoice('accepted');
-    panelExpanded = false;
-    renderChoice();
-    queueGoogleTag();
-  }, 'site-analytics__accept');
-  const declineButton = makeButton('Decline analytics', () => withdraw(), 'site-analytics__decline');
-  const privacy = d.createElement('a');
-  privacy.href = '/privacy.html';
-  privacy.textContent = 'Privacy notice';
-  privacy.className = 'site-analytics__privacy';
-  privacy.setAttribute('rel', 'nofollow');
-  controls.appendChild(acceptButton);
-  controls.appendChild(declineButton);
-  content.appendChild(message);
-  content.appendChild(controls);
-  content.appendChild(privacy);
-  region.appendChild(settings);
-  region.appendChild(content);
-  d.body.appendChild(region);
-
-  function renderChoice() {
-    region.className = `site-analytics ${panelExpanded ? 'site-analytics--expanded' : 'site-analytics--collapsed'}`;
-    content.hidden = !panelExpanded;
-    settings.setAttribute('aria-expanded', String(panelExpanded));
-    if (choice === 'accepted') {
-      message.textContent = 'Analytics is enabled. You can change your choice at any time.';
-    } else if (choice === 'declined') {
-      message.textContent = 'Analytics is disabled. You can change your choice at any time.';
-    } else {
-      message.textContent = 'Choose whether this site may use Google Analytics. See the privacy notice.';
-      controls.hidden = false;
-    }
-  }
-
-  renderChoice();
   d.addEventListener('click', trackLink);
   d.addEventListener('scroll', checkNoteRead, { passive: true });
   d.addEventListener('visibilitychange', updateVisibleTime);
   w.setInterval(updateVisibleTime, 1000);
   w.addEventListener('storage', event => {
     if (event.key !== storageKey) return;
-    let next = 'undecided';
     try {
       const stored = event.newValue && JSON.parse(event.newValue);
-      if (validChoiceRecord(stored)) next = stored.choice;
+      if (validChoiceRecord(stored) && stored.choice === 'declined') disableMeasurement();
     } catch {
-      next = 'undecided';
+      // Invalid legacy records do not change the default measurement policy.
     }
-    if (next === 'declined' || next === 'undecided') {
-      if (choice === 'accepted' || gaRequested) withdraw();
-      else {
-        choice = next;
-        choiceExpiresAt = 0;
-        panelExpanded = next === 'undecided';
-        renderChoice();
-      }
-      return;
-    }
-    lastTimeUpdate = Date.now();
-    wasVisible = d.visibilityState === 'visible';
-    choice = 'accepted';
-    choiceExpiresAt = JSON.parse(event.newValue).expiresAt;
-    panelExpanded = false;
-    renderChoice();
-    queueGoogleTag();
   });
 
-  if (choice === 'accepted') queueGoogleTag();
+  if (analyticsEnabled) queueGoogleTag();
+  else disableMeasurement();
 })();

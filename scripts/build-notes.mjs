@@ -42,8 +42,7 @@ function document({ title, description, url, lang = 'en', note, main, index = fa
   <link rel="alternate" type="application/rss+xml" title="Notes — Nacho Viejo" href="/notes/feed.xml">
   <link rel="stylesheet" href="/css/notes.css?v=20261020-soundtrack">
   <link rel="stylesheet" href="/css/site-header.css?v=20261026">
-  <link rel="stylesheet" href="/css/site-analytics.css?v=20261026">
-  <script src="/js/site-analytics.js?v=20261022" defer></script>
+  <script src="/js/site-analytics.js?v=20261111-no-settings" defer></script>
 ${index ? '  <link rel="preload" href="/notes/assets/caveat-notes-500.woff2" as="font" type="font/woff2" crossorigin>\n' : ''}
   <meta property="og:type" content="${note ? 'article' : 'website'}">
   <meta property="og:site_name" content="saski — Notes">
@@ -64,7 +63,6 @@ ${index ? '  <script src="/js/notes.js?v=20261006" defer></script>\n' : ''}</hea
     <a class="site-mark" href="/" aria-label="saski home">saski</a>
     <nav class="social-links" aria-label="Social links">
       <a href="/notes/" aria-label="Notes on people and software"${index ? ' aria-current="page"' : ''}><span>Notes</span></a>
-      <a href="/cv/" aria-label="Professional CV"><span>CV</span></a>
       <a href="https://github.com/saski" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
         <span>GitHub</span>
       </a>
@@ -121,7 +119,7 @@ function articlePage(note, notes) {
       <article class="reader">
         <a class="back-link" href="/notes/" lang="en">← All notes</a>
         <header>${metadata(note)}<h1>${escape(note.title)}</h1>
-          <p class="provenance" lang="en">By <a href="/cv/" rel="author">Nacho Viejo</a> · Originally published on ${isWebsiteOrigin ? 'saski.com' : 'LinkedIn'}<br>Web edition updated <time datetime="${note.web_updated_at}">${date(note.web_updated_at)}</time></p>
+          <p class="provenance" lang="en">By Nacho Viejo · Originally published on ${isWebsiteOrigin ? 'saski.com' : 'LinkedIn'}<br>Web edition updated <time datetime="${note.web_updated_at}">${date(note.web_updated_at)}</time></p>
         </header>
         <div class="note-body">${note.body}${note.image ? `
           <figure><img src="${escape(note.image.src)}" width="${note.image.width}" height="${note.image.height}" alt="${escape(note.image.alt)}" decoding="async"><figcaption>${escape(note.image.caption)}</figcaption></figure>` : ''}</div>

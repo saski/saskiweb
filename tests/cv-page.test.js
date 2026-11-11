@@ -167,5 +167,5 @@ test('publishes a crawlable identity layer for the public profile', () => {
   assert.match(robots, /Sitemap: https:\/\/www\.saski\.com\/sitemap\.xml/);
   assert.match(sitemap, /https:\/\/www\.saski\.com\/cv\//);
   assert.match(home, /<title>saski — Nacho Viejo, Engineering Manager<\/title>/);
-  assert.match(home, /href="\/cv\/"/);
+  assert.doesNotMatch(home, /href="\/cv\/"/);
 });

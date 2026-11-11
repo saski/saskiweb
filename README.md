@@ -6,11 +6,11 @@
 - `/cv/` — responsive, print-friendly professional CV
 - `/notes/` — an editorial index of writing on people, software and learning in public
 - `/notes/feed.xml` — full-text RSS feed
-- `/privacy.html` — readership measurement and analytics choices
+- `/privacy.html` — readership measurement and privacy
 
-Google Analytics is optional. The site asks before loading it, and the Analytics
-settings button lets visitors change their choice later. Cloudflare provides
-the site's existing aggregate traffic and performance reports.
+Google Analytics runs by default on instrumented production pages without an
+on-site settings panel. Previously saved, valid opt-outs remain respected.
+Cloudflare provides the site's existing aggregate traffic and performance reports.
 
 The CV page offers a direct PDF download in addition to printing. The reviewed
 October 5, 2026 PDF is stored alongside the page as
@@ -37,6 +37,6 @@ approved color source.
 
 ## Notes
 
-Notes contains original website notes and selected LinkedIn writing brought home to saski.com. Entries keep their original publication date and language, with a permanent URL and related reading. Imported pieces also link to the original conversation. Each note identifies its author with a link to the CV and shows when the web edition was last updated. The index can be filtered by topic; every note is readable without JavaScript or a LinkedIn account.
+Notes contains original website notes and selected LinkedIn writing brought home to saski.com. Entries keep their original publication date and language, with a permanent URL and related reading. Imported pieces also link to the original conversation. Each note identifies its author and shows when the web edition was last updated. The index can be filtered by topic; every note is readable without JavaScript or a LinkedIn account.
 
 For authoring, local preview, checks and publishing, see [DEVELOPMENT.md](DEVELOPMENT.md).

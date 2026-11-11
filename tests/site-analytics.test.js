@@ -5,7 +5,6 @@ const test = require('node:test');
 const vm = require('node:vm');
 
 const client = readFileSync(path.join(__dirname, '../js/site-analytics.js'), 'utf8');
-const stylesheet = readFileSync(path.join(__dirname, '../css/site-analytics.css'), 'utf8');
 
 class Element {
   constructor(tagName) {
@@ -121,39 +120,28 @@ function harness({
     intervals.forEach(callback => callback());
   };
   return { window, document, location, storage, intervals, events, allNodes, button, click,
-    addLink, loadGoogleScript, articleBody, tick, hasHref };
+    addLink, loadGoogleScript, articleBody, tick, hasHref, runAgain: () => vm.runInNewContext(client, context) };
 }
 
-test('does not load Google before consent, on decline, or on localhost', () => {
-  const untouched = harness();
-  assert.equal(untouched.document.head.children.length, 0);
-  assert.deepEqual(untouched.events, []);
-  assert.equal(untouched.document.body.children[0].getAttribute('role'), 'region');
-  assert.equal(untouched.document.body.children[0].getAttribute('aria-label'), 'Analytics settings');
-  assert.ok(untouched.hasHref(untouched.document.body.children[0], '/privacy.html'));
-  untouched.click('Decline analytics');
-  assert.equal(untouched.document.head.children.length, 0);
-
-  const local = harness({ href: 'http://localhost:8080/notes/review-capacity-replay/?utm_source=linkedin' });
-  local.click('Accept analytics');
-  assert.equal(local.document.head.children.length, 0);
-  assert.ok(local.button('Analytics settings'));
-});
-
-test('consent styling keeps hidden flex controls collapsed and exposes a compact settings state', () => {
-  assert.match(stylesheet, /\.site-analytics__choices\[hidden\][\s\S]*?display:\s*none\s*!important/);
-  assert.match(stylesheet, /\.site-analytics--collapsed\s*\{/);
-  assert.match(stylesheet, /\.site-analytics--collapsed \.site-analytics__settings/);
-});
-
-test('accept loads GA4 once with sanitized configuration and one manual page view', () => {
+test('starts measurement on production without inserting settings controls or recording a visitor choice', () => {
   const h = harness();
-  h.click('Accept analytics');
-  assert.equal(h.document.body.children[0].className, 'site-analytics site-analytics--collapsed');
-  const choice = JSON.parse(h.storage['saski.analytics-consent.v1']);
-  assert.equal(choice.version, 1);
-  assert.equal(choice.choice, 'accepted');
-  assert.equal(choice.expiresAt - choice.savedAt, 180 * 24 * 60 * 60 * 1000);
+  assert.equal(h.document.head.children.length, 1);
+  assert.equal(h.document.body.children.length, 0);
+  assert.equal(h.button('Analytics settings'), undefined);
+  assert.equal(h.storage['saski.analytics-consent.v1'], undefined);
+});
+
+test('never loads Google or inserts settings controls outside the production HTTPS hosts', () => {
+  for (const href of ['http://localhost:8080/notes/', 'https://preview.saski.com/notes/', 'http://www.saski.com/notes/']) {
+    const h = harness({ href });
+    assert.equal(h.document.head.children.length, 0, href);
+    assert.equal(h.document.body.children.length, 0, href);
+    assert.deepEqual(h.events, [], href);
+  }
+});
+
+test('loads GA4 once with sanitized configuration and one manual page view', () => {
+  const h = harness();
   const script = h.loadGoogleScript();
 
   assert.equal(script.src, 'https://www.googletagmanager.com/gtag/js?id=G-MSW6WJWN1M');
@@ -174,19 +162,16 @@ test('accept loads GA4 once with sanitized configuration and one manual page vie
   assert.equal(h.events.filter(([command, name]) => command === 'event' && name === 'page_view').length, 1);
   assert.equal(JSON.stringify(h.events).includes('private@example.com'), false);
 
-  h.click('Analytics settings');
-  h.click('Accept analytics');
+  h.runAgain();
   assert.equal(h.document.head.children.filter(node => node.tagName === 'SCRIPT').length, 1);
   assert.equal(h.events.filter(([command, name]) => command === 'event' && name === 'page_view').length, 1);
-  assert.ok(h.hasHref(h.document.body.children[0], '/privacy.html'));
 });
 
-test('accepted demo visits send a fixed page view with hash and query stripped', () => {
+test('demo visits send a fixed page view with hash and query stripped', () => {
   const h = harness({
     href: 'https://www.saski.com/notes/assets/review-capacity-demo-g01.html?utm_source=linkedin&utm_medium=social&utm_campaign=g01_review_capacity&utm_content=linkedin_followup_v1#rework-section',
     pathname: '/notes/assets/review-capacity-demo-g01.html',
   });
-  h.click('Accept analytics');
   h.loadGoogleScript();
 
   const pageView = h.events.find(([command, name]) => command === 'event' && name === 'page_view');
@@ -205,14 +190,18 @@ test('accepted demo visits send a fixed page view with hash and query stripped',
   assert.equal(JSON.stringify(pageView).includes('#rework-section'), false);
 });
 
-test('demo page views stay absent before consent and after decline', () => {
-  const fresh = harness({ pathname: '/notes/assets/review-capacity-demo-g01.html' });
-  assert.deepEqual(fresh.events, []);
-  assert.equal(fresh.document.head.children.length, 0);
+function legacyChoice(choice, savedAt = Date.now() - 1000) {
+  return JSON.stringify({ version: 1, choice, savedAt, expiresAt: savedAt + 180 * 86400000 });
+}
 
-  fresh.click('Decline analytics');
-  assert.deepEqual(fresh.events, []);
-  assert.equal(fresh.document.head.children.length, 0);
+test('respects an existing opt-out on both articles and the standalone demo without displaying controls', () => {
+  for (const pathname of ['/notes/review-capacity-replay/', '/notes/assets/review-capacity-demo-g01.html']) {
+    const h = harness({ pathname, storage: { 'saski.analytics-consent.v1': legacyChoice('declined') } });
+    assert.equal(h.document.head.children.length, 0);
+    assert.equal(h.document.body.children.length, 0);
+    assert.deepEqual(h.events, []);
+    assert.equal(h.window['ga-disable-G-MSW6WJWN1M'], true);
+  }
 });
 
 test('denies malformed attribution and unrelated referrers and only sends approved click categories', () => {
@@ -221,7 +210,6 @@ test('denies malformed attribution and unrelated referrers and only sends approv
     referrer: 'https://attacker.example/path?email=private@example.com',
     pathname: '/notes/agent-activity-dashboard/',
   });
-  h.click('Accept analytics');
   h.loadGoogleScript();
   const config = h.events.find(([command]) => command === 'config')[2];
   for (const key of ['campaign_source', 'campaign_medium', 'campaign_name', 'campaign_content', 'campaign_term', 'campaign_id']) {
@@ -246,7 +234,6 @@ test('denies malformed attribution and unrelated referrers and only sends approv
 
 test('demo and CV downloads require approved destinations and fixed event values', () => {
   const h = harness({ pathname: '/cv/' });
-  h.click('Accept analytics');
   h.loadGoogleScript();
   h.addLink('https://www.saski.com/notes/assets/review-capacity-demo-g01.html?secret=x', { 'data-analytics': 'demo' });
   h.addLink('https://www.saski.com/demo/unapproved.html', { 'data-analytics': 'demo' });
@@ -262,7 +249,6 @@ test('demo and CV downloads require approved destinations and fixed event values
 
 test('note_read requires 30 visible seconds and 75 percent article scroll progress', () => {
   const h = harness();
-  h.click('Accept analytics');
   h.loadGoogleScript();
   h.window.scrollY = 400;
   h.document.dispatch('scroll');
@@ -282,12 +268,10 @@ test('note_read requires 30 visible seconds and 75 percent article scroll progre
   assert.deepEqual({ ...reads[0][2] }, { content_id: 'review-capacity-replay', target: 'note', method: 'read' });
 });
 
-test('decline after consent disables tracking, clears cookies and reloads; storage changes withdraw in another tab', () => {
+test('a legacy opt-out from another tab disables tracking, clears its cookies and reloads', () => {
   const h = harness();
-  h.click('Accept analytics');
   h.loadGoogleScript();
-  h.click('Analytics settings');
-  h.click('Decline analytics');
+  h.window.dispatch('storage', { key: 'saski.analytics-consent.v1', newValue: legacyChoice('declined') });
   assert.equal(h.location.reloadCount, 1);
   assert.equal(h.window['ga-disable-G-MSW6WJWN1M'], true);
   assert.equal(h.document.cookieWrites.length, 6);
@@ -297,71 +281,48 @@ test('decline after consent disables tracking, clears cookies and reloads; stora
   const before = h.events.length;
   h.document.dispatch('click', { target: h.addLink('https://github.com/saski/arnesto') });
   assert.equal(h.events.length, before);
-
-  const crossTab = harness();
-  crossTab.click('Accept analytics');
-  crossTab.loadGoogleScript();
-  const savedAt = Date.now();
-  crossTab.window.dispatch('storage', {
-    key: 'saski.analytics-consent.v1',
-    newValue: JSON.stringify({ version: 1, choice: 'declined', savedAt, expiresAt: savedAt + 180 * 86400000 }),
-  });
-  assert.equal(crossTab.location.reloadCount, 1);
-  assert.equal(crossTab.window['ga-disable-G-MSW6WJWN1M'], true);
 });
 
-test('decline clears only this GA property cookies even when this page never loaded the tag', () => {
-  const h = harness({ pathname: '/privacy.html' });
-  h.click('Decline analytics');
+test('an existing opt-out clears only this property cookies without loading Google', () => {
+  const h = harness({ pathname: '/privacy.html', storage: { 'saski.analytics-consent.v1': legacyChoice('declined') } });
   assert.equal(h.document.head.children.length, 0);
   assert.equal(h.location.reloadCount ?? 0, 0);
   assert.equal(h.document.cookieWrites.length, 6);
-  assert.deepEqual(h.document.cookieWrites.map(cookie => cookie.split('=')[0]).filter((name, index, all) => all.indexOf(name) === index), [
-    '_ga', '_ga_MSW6WJWN1M',
-  ]);
+  assert.deepEqual(h.document.cookieWrites.map(cookie => cookie.split('=')[0]).filter((name, index, all) => all.indexOf(name) === index), ['_ga', '_ga_MSW6WJWN1M']);
 });
 
-test('withdrawal before Google script load prevents the delayed load callback from sending a page view', () => {
+test('an opt-out before the tag loads prevents its delayed callback from sending a page view', () => {
   const h = harness();
-  h.click('Accept analytics');
   const script = h.document.head.children.find(node => node.tagName === 'SCRIPT');
-  h.click('Analytics settings');
-  h.click('Decline analytics');
+  h.window.dispatch('storage', { key: 'saski.analytics-consent.v1', newValue: legacyChoice('declined') });
   script.dispatch('load');
-  assert.equal(h.events.filter(([command, name]) => command === 'event' && name === 'page_view').length, 0);
-  assert.equal(h.events.filter(([command, name]) => command === 'event' && name !== 'page_view').length, 0);
+  assert.equal(h.events.filter(([command]) => command === 'event').length, 0);
 });
 
-test('a stored choice with a future timestamp is invalid and a live accepted choice expires safely', () => {
-  const future = Date.now();
-  const invalid = harness({ storage: { 'saski.analytics-consent.v1': JSON.stringify({
-    version: 1, choice: 'accepted', savedAt: future + 1000, expiresAt: future + 1000 + 180 * 86400000,
-  }) } });
-  assert.equal(invalid.document.head.children.length, 0);
-  assert.equal(invalid.storage['saski.analytics-consent.v1'], undefined);
-
-  const live = harness();
-  live.click('Accept analytics');
-  live.loadGoogleScript();
-  live.tick(180 * 86400 + 1);
-  assert.equal(live.window['ga-disable-G-MSW6WJWN1M'], true);
-  assert.equal(live.storage['saski.analytics-consent.v1'], undefined);
-  assert.equal(live.location.reloadCount, 1);
-  assert.equal(live.document.body.children[0].className, 'site-analytics site-analytics--expanded');
-});
-
-test('invalid or expired stored choices are denied and storage exceptions leave usable controls', () => {
-  const invalid = harness({ storage: { 'saski.analytics-consent.v1': JSON.stringify({ version: 2, choice: 'accepted' }) } });
-  assert.equal(invalid.document.head.children.length, 0);
-  assert.ok(invalid.button('Accept analytics'));
-
-  const expired = harness({ storage: { 'saski.analytics-consent.v1': JSON.stringify({
-    version: 1, choice: 'accepted', savedAt: Date.now() - 200 * 86400000, expiresAt: Date.now() - 1,
-  }) } });
-  assert.equal(expired.document.head.children.length, 0);
-
+test('invalid, expired or inaccessible legacy preferences use the default without inventing acceptance', () => {
+  const invalidRecords = [
+    JSON.stringify({ version: 2, choice: 'accepted' }),
+    legacyChoice('accepted', Date.now() + 1000),
+    legacyChoice('declined', Date.now() - 200 * 86400000),
+    'invalid JSON',
+  ];
+  for (const record of invalidRecords) {
+    const h = harness({ storage: { 'saski.analytics-consent.v1': record } });
+    assert.equal(h.document.head.children.length, 1);
+    assert.equal(h.storage['saski.analytics-consent.v1'], undefined);
+    assert.equal(h.document.body.children.length, 0);
+  }
   const blocked = harness({ storageThrows: true });
-  blocked.click('Accept analytics');
   assert.equal(blocked.document.head.children.length, 1);
   blocked.loadGoogleScript();
+});
+
+test('measurement continues without creating or renewing a legacy opt-in record', () => {
+  const h = harness();
+  h.loadGoogleScript();
+  h.tick(180 * 86400 + 1);
+  assert.equal(h.window['ga-disable-G-MSW6WJWN1M'], false);
+  assert.equal(h.storage['saski.analytics-consent.v1'], undefined);
+  assert.equal(h.location.reloadCount ?? 0, 0);
+  assert.equal(h.document.body.children.length, 0);
 });
